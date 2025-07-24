@@ -1,0 +1,31 @@
+1. app
+This is the top-most layer. It contains the setup for the entire application, including global styles, providers (like Redux Store or React Context), routing setup, and the main app layout. It knows about everything and assembles the application.
+
+2. pages
+A page is a complete screen of the application that corresponds to a specific route (e.g., /profile, /feed, /settings). Pages are composed of widgets and features to create a fully functional screen. A page should not contain its own business logic but should instead orchestrate widgets and features.
+
+3. widgets
+Widgets are large, independent UI blocks that make up a page. They are self-contained and often represent a significant section of the interface. Think of a widget as a "feature of a feature."
+
+Examples: A site header, a sidebar, a complex feed of posts, a user profile card.
+
+Composition: A widget is composed of smaller features and entities.
+
+4. features
+A feature represents a piece of user interaction or business logic that provides direct value to the user. This is the "verb" part of your application—what the user does.
+
+Examples: UserLogin, PostComment, AddToCart, UpdateUserProfile.
+
+Composition: A feature usually includes UI elements (like a button and a form), state management logic (like a hook to send data to the server), and interacts with entities.
+
+5. entities
+An entity represents a core business object or concept. This is the "noun" part of your application. It holds the data and the UI to display that data, but no direct business logic.
+
+Examples: User, Product, Comment, Order.
+
+An User entity might contain a component for displaying an avatar, a hook to fetch user data, and the user's data model/type.
+
+6. shared
+This is the lowest layer, containing code that can be used anywhere in the application. It has no knowledge of the business logic.
+
+Examples: Reusable UI components (Button, Input, Spinner), utility functions (formatDate), configuration files, API clients, and helper hooks.
