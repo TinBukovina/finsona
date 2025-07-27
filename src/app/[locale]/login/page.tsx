@@ -1,5 +1,6 @@
-import LoginPage from "2_Pages/login_page/LoginPage";
 import React from "react";
+
+import { LoginPage } from "2_Pages";
 
 export default function page() {
   return <LoginPage />;

@@ -14,6 +14,9 @@
     "switch_signup_btn": "Sign up",
     "switch_login_btn": "Log in",
     "email_input_text": "Email Address",
-    "password_input_text": "Password"
+    "password_input_text": "Password",
+    "send_passcode": "Send passcode",
+    "enter_passcode": "Enter passcode",
+    "no_passcode_btn": "Did not receive passcode?"
   }
 }
