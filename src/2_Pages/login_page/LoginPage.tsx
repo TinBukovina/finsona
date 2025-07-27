@@ -57,7 +57,7 @@ export default function LoginPage() {
             <LoginInput placeholder={t("password_input_text")} />
             <Link
               href={"/forgot-password"}
-              className="w-fit text-sm text-primary hover:underline"
+              className="w-fit text-sm text-primary hover:underline focus:outline-none focus:underline"
             >
               {t("forgot_password")}
             </Link>
@@ -69,7 +69,10 @@ export default function LoginPage() {
         {/*_DON'T HAVE AN ACCOUNT TEXT_*/}
         <div className="flex flex-col gap-0 items-center text-sm text-center">
           <p>{t("dont_have_account")}</p>
-          <Link href={"/signup"} className="w-fit text-primary hover:underline">
+          <Link
+            href={"/signup"}
+            className="w-fit text-primary hover:underline focus:outline-none focus:underline"
+          >
             {t("switch_signup_btn")}
           </Link>
         </div>

@@ -31,7 +31,7 @@ export default function ButtonWithIcon({
   svgInfo,
 }: ButtonWithIconProps) {
   return (
-    <div className={cn(BttonStyles())}>
+    <div tabIndex={0} className={cn(BttonStyles())}>
       <IconTemplate
         path={svgInfo.path}
         viewBox={svgInfo.viewBox}
