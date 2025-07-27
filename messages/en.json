@@ -2,5 +2,18 @@
   "HomePage": {
     "title": "Title",
     "description": "Description"
+  },
+  "LoginPage": {
+    "title": "Welcome to Finsona",
+    "description": "Please log in or sign up below.",
+    "email_login_btn": "Continue with Email",
+    "normal_login_section_title": "Log in",
+    "forgot_password": "Forgot Password?",
+    "normal_login_btn": "Log in",
+    "dont_have_account": "Don't have an account?",
+    "switch_signup_btn": "Sign up",
+    "switch_login_btn": "Log in",
+    "email_input_text": "Email Address",
+    "password_input_text": "Password"
   }
 }

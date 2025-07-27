@@ -15,7 +15,7 @@ export default async function LocaleLayout({
   }
 
   return (
-    <div className="w-100% h-screen">
+    <div className="w-100% h-dvh">
       <NextIntlClientProvider>{children}</NextIntlClientProvider>
     </div>
   );

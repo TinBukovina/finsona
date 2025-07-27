@@ -1,1 +1,2 @@
-export { default as supabaseAdmin } from "./api/supabase_admin";
+// Exporting icon template for svg-s
+export { default as IconTemplate } from "./ui/IconTemplate";
