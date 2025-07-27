@@ -20,9 +20,16 @@
     ],
     "baseUrl": "src/",
     "paths": {
-      "@/*": ["./src/*"]
+      "@scn/*": ["6_shared/lib/*"],
+      "@scn_components/*": ["6_shared/ui/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "src/app/[locale]/not-foundjs"
+  ],
   "exclude": ["node_modules"]
 }
