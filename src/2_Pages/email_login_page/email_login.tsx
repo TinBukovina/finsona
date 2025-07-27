@@ -16,12 +16,13 @@ import {
 } from "@scn_components/input-otp";
 
 export default function EmailLoginPage() {
-  const t = useTranslations("LoginPage");
+  const t = useTranslations("email_login_page");
 
   const router = useRouter();
 
   const [step, setStep] = useState<"one" | "two">("one");
 
+  // Step Two return UI
   if (step === "two") {
     return (
       <div className="w-100% h-dvh flex items-center justify-center overflow-hidden">
@@ -53,7 +54,7 @@ export default function EmailLoginPage() {
 
             {/*_TITLE*/}
             <div className="text-center text-h5 xs:text-left">
-              {t("enter_passcode")}
+              {t("enter_passcode_title")}
             </div>
           </div>
 
@@ -75,13 +76,14 @@ export default function EmailLoginPage() {
 
             {/*_LOGIN BUTTON_*/}
             <Button variant={"link"} className="mx-auto">
-              {t("no_passcode_btn")}
+              {t("no_passcode_link")}
             </Button>
           </div>
         </div>
       </div>
     );
   } else {
+    // Step one return UI
     return (
       <div className="w-100% h-dvh flex items-center justify-center overflow-hidden">
         {/*_LOG IN CARD_*/}
@@ -120,13 +122,13 @@ export default function EmailLoginPage() {
             </div>
           </div>
 
-          <LoginInput placeholder={t("email_input_text")} />
+          <LoginInput placeholder={t("email_input")} />
 
           {/*_LOGIN BUTTON_*/}
           <Button
             onClick={() => setStep((prev) => (prev === "one" ? "two" : "one"))}
           >
-            {t("send_passcode")}
+            {t("send_passcode_btn")}
           </Button>
         </div>
       </div>

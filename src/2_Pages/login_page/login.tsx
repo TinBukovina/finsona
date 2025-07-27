@@ -9,7 +9,7 @@ import { Link } from "i18n/navigation";
 import { Button } from "@scn_components/button";
 
 export default function LoginPage() {
-  const t = useTranslations("LoginPage");
+  const t = useTranslations("login_page");
 
   const stackedEmailSvgInfoRef = useRef(stacked_email_r_400());
 
@@ -50,11 +50,11 @@ export default function LoginPage() {
         {/*_NORMAL LOGIN SECTION_*/}
         <div className="flex flex-col gap-4 text-card-foreground">
           {/*_TITLE_*/}
-          <div className="text-h6">{t("normal_login_btn")}</div>
+          <div className="text-h6">{t("login_sub_title")}</div>
           {/*_INPUTS AND FORGOT PASSWORD LINK_*/}
           <div className="flex flex-col gap-2">
-            <LoginInput placeholder={t("email_input_text")} />
-            <LoginInput placeholder={t("password_input_text")} />
+            <LoginInput placeholder={t("email_input")} />
+            <LoginInput placeholder={t("password_input")} />
             <Link
               href={"/forgot-password"}
               className="w-fit text-sm text-primary hover:underline focus:outline-none focus:underline"
@@ -63,7 +63,7 @@ export default function LoginPage() {
             </Link>
           </div>
           {/*_LOGIN BUTTON_*/}
-          <Button>{t("normal_login_btn")}</Button>
+          <Button>{t("login_btn")}</Button>
         </div>
 
         {/*_DON'T HAVE AN ACCOUNT TEXT_*/}
@@ -73,7 +73,7 @@ export default function LoginPage() {
             href={"/signup"}
             className="w-fit text-primary hover:underline focus:outline-none focus:underline"
           >
-            {t("switch_signup_btn")}
+            {t("signup_link")}
           </Link>
         </div>
       </div>

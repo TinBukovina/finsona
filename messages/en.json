@@ -3,20 +3,38 @@
     "title": "Title",
     "description": "Description"
   },
-  "LoginPage": {
+  "login_page": {
     "title": "Welcome to Finsona",
-    "description": "Please log in or sign up below.",
+    "description": "Please log in below.",
     "email_login_btn": "Continue with Email",
-    "normal_login_section_title": "Log in",
+    "login_sub_title": "Log in",
     "forgot_password": "Forgot Password?",
-    "normal_login_btn": "Log in",
+    "login_btn": "Log in",
+    "email_input": "Email Address",
+    "password_input": "Password",
     "dont_have_account": "Don't have an account?",
-    "switch_signup_btn": "Sign up",
-    "switch_login_btn": "Log in",
-    "email_input_text": "Email Address",
-    "password_input_text": "Password",
-    "send_passcode": "Send passcode",
-    "enter_passcode": "Enter passcode",
-    "no_passcode_btn": "Did not receive passcode?"
+    "signup_link": "Sign up"
+  },
+  "email_login_page": {
+    "title": "Welcome to Finsona",
+    "description": "Enter email for passcode.",
+    "email_input": "Email Address",
+    "send_passcode_btn": "Send passcode",
+    "enter_passcode_title": "Enter passcode",
+    "no_passcode_link": "Did not receive passcode?"
+  },
+  "signup_page": {
+    "title": "Welcome to Finsona",
+    "description": "Please sign up below.",
+    "signup_sub_title": "Sign up",
+    "first_name_input": "First name",
+    "last_name_input": "Last name",
+    "email_input": "Email Address",
+    "password_input": "Password",
+    "signup_btn": "Sign up",
+    "already_have_an_account": "Already have an account?",
+    "login_link": "Login",
+    "confirm_email_sub_title": "Confirm your email address",
+    "confirm_email_description": "An activation link has been sent to your email."
   }
 }
