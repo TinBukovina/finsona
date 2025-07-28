@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import React, { useRef, useState } from "react";
-import { Link, useRouter } from "i18n/navigation";
+import { Link } from "i18n/navigation";
 
 import LoginInput from "./login_page/LoginInput";
 import { Button } from "@scn_components/button";
