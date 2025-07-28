@@ -7,6 +7,7 @@ import { stacked_email_r_400 } from "@scn/svgPaths";
 import LoginInput from "./LoginInput";
 import { Link, useRouter } from "i18n/navigation";
 import { Button } from "@scn_components/button";
+import zxcvbn from "zxcvbn";
 
 export default function LoginPage() {
   const t = useTranslations("login_page");
@@ -26,7 +27,19 @@ export default function LoginPage() {
     setIsLoading(true);
     setError(null);
 
-    console.log(email, password);
+    // Check if all inputs are entered
+    if (!email || !password) {
+      setError(t("error_missing_inputs"));
+      setIsLoading(false);
+      return;
+    }
+
+    // Check if email is valid
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      setError("Email is not valid.");
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const response = await fetch("/api/auth/login", {
@@ -40,12 +53,18 @@ export default function LoginPage() {
       if (response.ok) {
         router.refresh();
       } else {
-        const errorData = await response.text();
-        setError(errorData || "There was a error while trying to log in.");
+        const responseData = await response.json();
+
+        if (response.status === 401) {
+          setError(responseData.message || t("error_invalid_credentials"));
+        } else {
+          console.error(responseData.message);
+          setError(t("error_server_generic"));
+        }
       }
     } catch (error) {
-      console.error(error);
-      throw error;
+      console.error("Network or fetch error:", error);
+      setError(t("error_network"));
     } finally {
       setIsLoading(false);
     }
@@ -98,12 +117,14 @@ export default function LoginPage() {
               placeholder={t("email_input")}
               value={email}
               setValue={setEmail}
+              disabled={isLoading}
             />
             <LoginInput
               placeholder={t("password_input")}
               value={password}
               setValue={setPassword}
               type="password"
+              disabled={isLoading}
             />
             <Link
               href={"/forgot-password"}
@@ -113,7 +134,18 @@ export default function LoginPage() {
             </Link>
           </div>
           {/*_LOGIN BUTTON_*/}
-          <Button>{t("login_btn")}</Button>
+          <Button disabled={isLoading}>
+            {isLoading ? t("logingin_in") : t("login_btn")}
+          </Button>
+
+          {/* 3. Centralizirani prikaz greške */}
+
+          <p
+            className="text-sm text-muted-foreground text-center"
+            style={{ visibility: error ? "visible" : "hidden" }}
+          >
+            {error ? error : "j"}
+          </p>
         </form>
 
         {/*_DON'T HAVE AN ACCOUNT TEXT_*/}

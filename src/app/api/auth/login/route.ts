@@ -14,7 +14,14 @@ export async function POST(request: Request) {
       .single();
 
     if (!user) {
-      return new NextResponse("User not found", { status: 404 });
+      return NextResponse.json(
+        {
+          message: "Wrong credentials.",
+        },
+        {
+          status: 401,
+        }
+      );
     }
 
     const isPasswordCorrect = await bcrypt.compare(
@@ -23,7 +30,14 @@ export async function POST(request: Request) {
     );
 
     if (!isPasswordCorrect) {
-      return new NextResponse("Incorrect credentials", { status: 401 });
+      return NextResponse.json(
+        {
+          message: "Wrong credentials.",
+        },
+        {
+          status: 401,
+        }
+      );
     }
 
     const token = await signJwt({ id: user.id, email: user.email });

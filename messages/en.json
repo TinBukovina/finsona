@@ -10,10 +10,16 @@
     "login_sub_title": "Log in",
     "forgot_password": "Forgot Password?",
     "login_btn": "Log in",
+    "logingin_in": "Logging in...",
     "email_input": "Email Address",
     "password_input": "Password",
     "dont_have_account": "Don't have an account?",
-    "signup_link": "Sign up"
+    "signup_link": "Sign up",
+    "error_invalid_credentials": "Wrong credentials.",
+    "error_server_generic": "There was a problem on the server.",
+    "error_network": "There was problem connectin to the server.",
+    "error_missing_inputs": "You need to fill all inputs.",
+    "error_weak_password": "Password is too weak."
   },
   "email_login_page": {
     "title": "Welcome to Finsona",

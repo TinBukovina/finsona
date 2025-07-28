@@ -8,6 +8,8 @@ interface LoginInputProps {
   value: string;
   setValue: React.Dispatch<React.SetStateAction<string>>;
   type?: string;
+  passwordStrength?: boolean;
+  disabled?: boolean;
 }
 
 export default function LoginInput({
@@ -15,6 +17,8 @@ export default function LoginInput({
   value,
   setValue,
   type = "text",
+  passwordStrength = false,
+  disabled = false,
 }: LoginInputProps) {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -39,7 +43,7 @@ export default function LoginInput({
   })();
 
   const StyleForPasswordStrength =
-    type === "password" && isFocused
+    passwordStrength && isFocused
       ? {
           boxShadow: `0 0 0 2px ${generetingColorBasedOnPasswordStrength}E6`,
           borderColor: "transparent",
@@ -57,7 +61,7 @@ export default function LoginInput({
         {placeholder}
       </p>
       <input
-        className={`px-4 py-2 w-full border border-solid border-border rounded-max focus:border-0`}
+        className={`px-4 py-2 w-full border border-solid border-border rounded-max focus:border-0 disabled:pointer-events-none disabled:opacity-50`}
         placeholder={isFocused ? "" : placeholder}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
@@ -65,6 +69,7 @@ export default function LoginInput({
         onChange={(e) => setValue(e.target.value)}
         type={type}
         style={StyleForPasswordStrength}
+        disabled={disabled}
       />
     </div>
   );
