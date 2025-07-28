@@ -1,17 +1,55 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import ButtonWithIcon from "./ButtonWithIcon";
 import { stacked_email_r_400 } from "@scn/svgPaths";
 import LoginInput from "./LoginInput";
-import { Link } from "i18n/navigation";
+import { Link, useRouter } from "i18n/navigation";
 import { Button } from "@scn_components/button";
 
 export default function LoginPage() {
   const t = useTranslations("login_page");
+  const router = useRouter();
+
+  // State for managing form
+  const [email, setEmail] = useState<string>("test@gmail.com");
+  const [password, setPassword] = useState<string>("password");
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const stackedEmailSvgInfoRef = useRef(stacked_email_r_400());
+
+  // Function taht runs when user clicks login btn
+  async function handleLoginBtnClicked(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
+
+    console.log(email, password);
+
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (response.ok) {
+        router.refresh();
+      } else {
+        const errorData = await response.text();
+        setError(errorData || "There was a error while trying to log in.");
+      }
+    } catch (error) {
+      console.error(error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   return (
     <div className="w-100% h-dvh flex items-center justify-center overflow-hidden">
@@ -48,13 +86,25 @@ export default function LoginPage() {
         </div>
 
         {/*_NORMAL LOGIN SECTION_*/}
-        <div className="flex flex-col gap-4 text-card-foreground">
+        <form
+          onSubmit={handleLoginBtnClicked}
+          className="flex flex-col gap-4 text-card-foreground"
+        >
           {/*_TITLE_*/}
           <div className="text-h6">{t("login_sub_title")}</div>
           {/*_INPUTS AND FORGOT PASSWORD LINK_*/}
           <div className="flex flex-col gap-2">
-            <LoginInput placeholder={t("email_input")} />
-            <LoginInput placeholder={t("password_input")} />
+            <LoginInput
+              placeholder={t("email_input")}
+              value={email}
+              setValue={setEmail}
+            />
+            <LoginInput
+              placeholder={t("password_input")}
+              value={password}
+              setValue={setPassword}
+              type="password"
+            />
             <Link
               href={"/forgot-password"}
               className="w-fit text-sm text-primary hover:underline focus:outline-none focus:underline"
@@ -64,7 +114,7 @@ export default function LoginPage() {
           </div>
           {/*_LOGIN BUTTON_*/}
           <Button>{t("login_btn")}</Button>
-        </div>
+        </form>
 
         {/*_DON'T HAVE AN ACCOUNT TEXT_*/}
         <div className="flex flex-col gap-0 items-center text-sm text-center">

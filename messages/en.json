@@ -31,6 +31,7 @@
     "last_name_input": "Last name",
     "email_input": "Email Address",
     "password_input": "Password",
+    "repeat_password_input": "Repeat password",
     "signup_btn": "Sign up",
     "already_have_an_account": "Already have an account?",
     "login_link": "Login",

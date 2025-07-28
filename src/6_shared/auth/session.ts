@@ -15,15 +15,18 @@ export async function getSession(): Promise<UserJwtPayload | null> {
 }
 
 // Function for updating session token
-export function updateSession(request: NextRequest, response: NextResponse) {
+export async function updateSession(
+  request: NextRequest,
+  response: NextResponse
+) {
   const token = request.cookies.get("session-token")?.value;
-  const decoded = token ? verifyJwt(token) : null;
+  const decoded = token ? await verifyJwt(token) : null;
 
   // Cheching if token is there and if it is valid
   if (!decoded) return response;
 
   // Cretring new token with the same data, but with new expiring date
-  const newToken = signJwt(decoded);
+  const newToken = await signJwt(decoded);
 
   // Setting up new sessoin token in cookies with new expiring date
   response.cookies.set("session-token", newToken, {

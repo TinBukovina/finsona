@@ -3,20 +3,24 @@ import { routing } from "i18n/routing";
 import createMiddleware from "next-intl/middleware";
 import { NextRequest, NextResponse } from "next/server";
 
-const publicRoutes = ["/login", "/register"];
+const publicRoutes = ["/login", "/signup"];
 
-export default createMiddleware(routing);
+// Middleware for localization
+const intlMiddleware = createMiddleware(routing);
 
-export function middleware(request: NextRequest) {
-  const path = request.nextUrl.pathname;
-  const token = request.cookies.get("session-token")?.value;
-
-  const isPublicRoute = publicRoutes.some((publicPath) =>
-    path.includes(publicPath)
+export async function middleware(request: NextRequest) {
+  const publicPathnameRegex = RegExp(
+    `^(/(${routing.locales.join("|")}))?(${publicRoutes.join("|")})/?$`,
+    "i"
   );
+  const isPublicRoute = publicPathnameRegex.test(request.nextUrl.pathname);
+
+  // Turning on localization
+  const response = intlMiddleware(request);
 
   // Checking if there is a session token, and if it is we decrypt it
-  const decodedToken = token ? verifyJwt(token) : null;
+  const token = request.cookies.get("session-token")?.value;
+  const decodedToken = token ? await verifyJwt(token) : null;
 
   if (isPublicRoute) {
     // If user has a valid session token on a public route, redirect him to application
@@ -25,7 +29,7 @@ export function middleware(request: NextRequest) {
     }
 
     // Don't do anything if route if public
-    return NextResponse.next();
+    return response;
   }
 
   // Checking if there is a session token
@@ -36,7 +40,7 @@ export function middleware(request: NextRequest) {
   }
 
   // If user is on protected route with valid token, do nothing
-  return NextResponse.next();
+  return response;
 }
 
 export const config = {

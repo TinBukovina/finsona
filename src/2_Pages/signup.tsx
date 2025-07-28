@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import React, { useRef, useState } from "react";
+import React, { use, useRef, useState } from "react";
 import { Link } from "i18n/navigation";
 
 import LoginInput from "./login_page/LoginInput";
@@ -11,6 +11,15 @@ import { stacked_email_r_400 } from "@scn/svgPaths";
 
 export default function SignupPage() {
   const t = useTranslations("signup_page");
+
+  // State for managing form
+  const [firstName, setFirstName] = useState<string>("Tin");
+  const [secondName, setSecondName] = useState<string>("Bukovina");
+  const [email, setEmail] = useState<string>("test1@gmail.com");
+  const [password, setPassword] = useState<string>("password");
+  const [repeatPassword, setRepeatPassword] = useState<string>("password");
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [isConformationStarted, setIsConformationStarted] = useState(false);
 
@@ -82,11 +91,34 @@ export default function SignupPage() {
           {/*_INPUTS AND FORGOT PASSWORD LINK_*/}
           <div className="flex flex-col gap-2">
             <div className="flex gap-3">
-              <LoginInput placeholder={t("first_name_input")} />
-              <LoginInput placeholder={t("last_name_input")} />
+              <LoginInput
+                placeholder={t("first_name_input")}
+                value={firstName}
+                setValue={setFirstName}
+              />
+              <LoginInput
+                placeholder={t("last_name_input")}
+                value={secondName}
+                setValue={setSecondName}
+              />
             </div>
-            <LoginInput placeholder={t("email_input")} />
-            <LoginInput placeholder={t("password_input")} />
+            <LoginInput
+              placeholder={t("email_input")}
+              value={email}
+              setValue={setEmail}
+            />
+            <LoginInput
+              placeholder={t("password_input")}
+              value={password}
+              setValue={setPassword}
+              type="password"
+            />
+            <LoginInput
+              placeholder={t("repeat_password_input")}
+              value={repeatPassword}
+              setValue={setRepeatPassword}
+              type="password"
+            />
           </div>
           {/*_LOGIN BUTTON_*/}
           <Button onClick={() => setIsConformationStarted((prev) => !prev)}>

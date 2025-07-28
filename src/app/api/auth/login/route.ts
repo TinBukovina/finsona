@@ -1,7 +1,6 @@
 import supabaseAdmin from "6_shared/api/supabase_admin";
 import { signJwt } from "6_shared/auth/auth";
 import bcrypt from "bcryptjs";
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -27,7 +26,7 @@ export async function POST(request: Request) {
       return new NextResponse("Incorrect credentials", { status: 401 });
     }
 
-    const token = signJwt({ id: user.id, email: user.email });
+    const token = await signJwt({ id: user.id, email: user.email });
 
     const response = NextResponse.json(
       { message: "login successful" },
