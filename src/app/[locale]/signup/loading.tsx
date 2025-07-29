@@ -5,7 +5,7 @@ export default function Loading() {
     <div
       className={
         "h-dvh " +
-        "xs:border xs:border-border xs:h-[514.3px] xs:rounded-card xs:min-w-min xs:max-w-sm " +
+        "xs:border xs:border-border xs:h-[555.3px] xs:rounded-card xs:min-w-min xs:max-w-sm " +
         "flex flex-col justify-start gap-6 w-full bg-card p-4 relative"
       }
     >

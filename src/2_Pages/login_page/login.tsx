@@ -1,74 +1,13 @@
-"use client";
-
 import { useTranslations } from "next-intl";
-import React, { useRef, useState } from "react";
+import React from "react";
+import { Link } from "i18n/navigation";
+
 import ButtonWithIcon from "./ButtonWithIcon";
 import { stacked_email_r_400 } from "@scn/svgPaths";
-import LoginInput from "./LoginInput";
-import { Link, useRouter } from "i18n/navigation";
-import { Button } from "@scn_components/button";
-import zxcvbn from "zxcvbn";
+import { LoginForm } from "./LoginForm";
 
 export default function LoginPage() {
   const t = useTranslations("login_page");
-  const router = useRouter();
-
-  // State for managing form
-  const [email, setEmail] = useState<string>("test@gmail.com");
-  const [password, setPassword] = useState<string>("password");
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const stackedEmailSvgInfoRef = useRef(stacked_email_r_400());
-
-  // Function taht runs when user clicks login btn
-  async function handleLoginBtnClicked(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setIsLoading(true);
-    setError(null);
-
-    // Check if all inputs are entered
-    if (!email || !password) {
-      setError(t("error_missing_inputs"));
-      setIsLoading(false);
-      return;
-    }
-
-    // Check if email is valid
-    if (!/\S+@\S+\.\S+/.test(email)) {
-      setError("Email is not valid.");
-      setIsLoading(false);
-      return;
-    }
-
-    try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (response.ok) {
-        router.refresh();
-      } else {
-        const responseData = await response.json();
-
-        if (response.status === 401) {
-          setError(responseData.message || t("error_invalid_credentials"));
-        } else {
-          console.error(responseData.message);
-          setError(t("error_server_generic"));
-        }
-      }
-    } catch (error) {
-      console.error("Network or fetch error:", error);
-      setError(t("error_network"));
-    } finally {
-      setIsLoading(false);
-    }
-  }
 
   return (
     <div
@@ -88,8 +27,8 @@ export default function LoginPage() {
       {/*_LOG IN WITH EMAIL OPTION_*/}
       <ButtonWithIcon
         svgInfo={{
-          path: stackedEmailSvgInfoRef.current.path,
-          viewBox: stackedEmailSvgInfoRef.current.viewBox,
+          path: stacked_email_r_400().path,
+          viewBox: stacked_email_r_400().viewBox,
         }}
       >
         {t("email_login_btn")}
@@ -102,48 +41,8 @@ export default function LoginPage() {
         <div className="h-[1px] w-full bg-border"></div>
       </div>
 
-      {/*_NORMAL LOGIN SECTION_*/}
-      <form
-        onSubmit={handleLoginBtnClicked}
-        className="flex flex-col gap-4 text-card-foreground"
-      >
-        {/*_TITLE_*/}
-        <div className="text-h6">{t("login_sub_title")}</div>
-        {/*_INPUTS AND FORGOT PASSWORD LINK_*/}
-        <div className="flex flex-col gap-2">
-          <LoginInput
-            placeholder={t("email_input")}
-            value={email}
-            setValue={setEmail}
-            disabled={isLoading}
-          />
-          <LoginInput
-            placeholder={t("password_input")}
-            value={password}
-            setValue={setPassword}
-            type="password"
-            disabled={isLoading}
-          />
-          <Link
-            href={"/forgot-password"}
-            className="w-fit text-sm text-primary hover:underline focus:outline-none focus:underline active:scale-95"
-          >
-            {t("forgot_password")}
-          </Link>
-        </div>
-        {/*_LOGIN BUTTON_*/}
-        <Button disabled={isLoading}>
-          {isLoading ? t("logingin_in") : t("login_btn")}
-        </Button>
-
-        {/*_SHOWING ERROR INPUTS_*/}
-        <p
-          className="text-sm text-muted-foreground text-center"
-          style={{ visibility: error ? "visible" : "hidden" }}
-        >
-          {error ? error : "j"}
-        </p>
-      </form>
+      {/*_LOGIN FORM SECTION_*/}
+      <LoginForm />
 
       {/*_DON'T HAVE AN ACCOUNT TEXT_*/}
       <div className="flex flex-col gap-0 items-center text-sm text-center">

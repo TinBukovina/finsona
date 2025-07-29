@@ -1,29 +1,91 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import React, { use, useRef, useState } from "react";
-import { Link } from "i18n/navigation";
+import React, { useRef, useState } from "react";
+import { Link, useRouter } from "i18n/navigation";
+import zxcvbn from "zxcvbn";
 
-import LoginInput from "./login_page/LoginInput";
 import { Button } from "@scn_components/button";
-import { IconTemplate } from "6_shared";
+import { IconTemplate, SpinnerLoader } from "6_shared";
 import { stacked_email_r_400 } from "@scn/svgPaths";
+import LoginInput from "2_Pages/login_page/LoginInput";
 
 export default function SignupPage() {
   const t = useTranslations("signup_page");
+
+  const router = useRouter();
 
   // State for managing form
   const [firstName, setFirstName] = useState<string>("Tin");
   const [secondName, setSecondName] = useState<string>("Bukovina");
   const [email, setEmail] = useState<string>("test1@gmail.com");
-  const [password, setPassword] = useState<string>("password");
-  const [repeatPassword, setRepeatPassword] = useState<string>("password");
+  const [password, setPassword] = useState<string>("Testuser123!");
+  const [repeatPassword, setRepeatPassword] = useState<string>("Testuser123!");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  // State for managing form setps
   const [isConformationStarted, setIsConformationStarted] = useState(false);
 
   const emailSvgRef = useRef(stacked_email_r_400());
+
+  async function handleSignup(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
+
+    // Check if all fields are filled
+    if (!firstName || !secondName || !email || !password || !repeatPassword) {
+      setError(t("error_missing_inputs"));
+      setIsLoading(false);
+      return;
+    }
+
+    // Check if email is valid
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      setError(t("error_invalid_email"));
+      setIsLoading(false);
+      return;
+    }
+
+    // Check if passwords metch
+    if (password !== repeatPassword) {
+      setError(t("error_passwords_not_match"));
+      setIsLoading(false);
+      return;
+    }
+
+    // Check if password is strong enough
+    if (zxcvbn(password).score < 3) {
+      setError(t("error_weak_password"));
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          password,
+          fullName: `${firstName} ${secondName}`,
+        }),
+      });
+
+      if (response.ok) {
+        setIsConformationStarted(true);
+      } else {
+        const responseData = await response.json();
+        setError(responseData.message || t("error_server_generic"));
+      }
+    } catch (error) {
+      console.error(error);
+      setError(t("error_network"));
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   // Checking if confirmation email was sent to display right UI
   if (isConformationStarted) {
@@ -56,13 +118,12 @@ export default function SignupPage() {
           </p>
         </div>
 
-        <Button onClick={() => setIsConformationStarted((prev) => !prev)}>
-          OK
-        </Button>
+        <Button onClick={() => router.push("/login")}>OK</Button>
       </div>
     );
   }
 
+  // Default UI for signup
   return (
     <div
       className={
@@ -79,10 +140,14 @@ export default function SignupPage() {
         </div>
       </div>
 
-      {/*SIGNUP SECTION_*/}
-      <div className="flex flex-col gap-4 text-card-foreground">
+      {/*SIGNUP FORM SECTION_*/}
+      <form
+        onSubmit={handleSignup}
+        className="flex flex-col gap-4 text-card-foreground"
+      >
         {/*_TITLE_*/}
         <div className="text-h6">{t("signup_sub_title")}</div>
+
         {/*_INPUTS AND FORGOT PASSWORD LINK_*/}
         <div className="flex flex-col gap-2">
           <div className="flex gap-3">
@@ -90,36 +155,50 @@ export default function SignupPage() {
               placeholder={t("first_name_input")}
               value={firstName}
               setValue={setFirstName}
+              disabled={isLoading}
             />
             <LoginInput
               placeholder={t("last_name_input")}
               value={secondName}
               setValue={setSecondName}
+              disabled={isLoading}
             />
           </div>
           <LoginInput
             placeholder={t("email_input")}
             value={email}
             setValue={setEmail}
+            disabled={isLoading}
           />
           <LoginInput
             placeholder={t("password_input")}
             value={password}
             setValue={setPassword}
             type="password"
+            passwordStrength={true}
+            disabled={isLoading}
           />
           <LoginInput
             placeholder={t("repeat_password_input")}
             value={repeatPassword}
             setValue={setRepeatPassword}
             type="password"
+            passwordStrength={true}
+            disabled={isLoading}
           />
         </div>
-        {/*_LOGIN BUTTON_*/}
-        <Button onClick={() => setIsConformationStarted((prev) => !prev)}>
-          {t("signup_btn")}
-        </Button>
-      </div>
+        {/*_SINGUP BUTTON_*/}
+        <Button disabled={isLoading}>{t("signup_btn")}</Button>
+      </form>
+
+      {/*ERROR*/}
+      <p
+        className={`text-sm text-muted-foreground text-center ${
+          error ? "visible" : "invisible"
+        }`}
+      >
+        {error ? error : "error"}
+      </p>
 
       {/*_ALREADY HAVE AN ACCOUNT_*/}
       <div className="flex flex-col gap-0 items-center text-sm text-center">

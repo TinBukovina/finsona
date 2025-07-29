@@ -43,7 +43,7 @@ export default function LoginInput({
   })();
 
   const StyleForPasswordStrength =
-    passwordStrength && isFocused
+    passwordStrength && value.length > 0
       ? {
           boxShadow: `0 0 0 2px ${generetingColorBasedOnPasswordStrength}E6`,
           borderColor: "transparent",
