@@ -5,17 +5,24 @@ import LoginInput from "./LoginInput";
 import { Link } from "i18n/navigation";
 import { useTranslations } from "next-intl";
 import { Button } from "6_shared";
+import Modal from "@scn_components/modal/Modal";
+import { useToast } from "@scn_components/toast/ToastProvider";
 
 export function LoginForm({}) {
   const router = useRouter();
 
   const t = useTranslations("login_page");
 
+  const { addToast } = useToast();
+
+  // State for handeling popup
+  const [mountedWindow, setMountedWindow] = useState<boolean>(false);
+
   // State for managing form
-  const [email, setEmail] = useState("test@gmail.com");
-  const [password, setPassword] = useState("password");
+  const [email, setEmail] = useState<string>("test@gmail.com");
+  const [password, setPassword] = useState<string>("password");
   const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // Function taht runs when user clicks login btn
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -48,11 +55,11 @@ export function LoginForm({}) {
         router.refresh();
       } else {
         const responseData = await response.json();
-        setError(responseData.message || t("error_server_generic"));
+        addToast(responseData.message || t("error_server_generic"), "error");
       }
     } catch (error) {
       console.error(error);
-      setError(t("error_network"));
+      addToast(t("error_network"), "error");
     } finally {
       setIsLoading(false);
     }
@@ -63,6 +70,13 @@ export function LoginForm({}) {
       onSubmit={handleLogin}
       className="flex flex-col gap-4 text-card-foreground"
     >
+      <Modal open={mountedWindow}>
+        <div className="absolute top-0 left-0 w-full h-full text-h1 text-foreground">
+          bok
+        </div>
+      </Modal>
+
+      <div>{JSON.stringify(mountedWindow)}</div>
       <div className="text-h6">{t("login_sub_title")}</div>
       <div className="flex flex-col gap-2">
         {/*_EMAIL_*/}

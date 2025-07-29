@@ -30,6 +30,7 @@ export default function LoginPage() {
           path: stacked_email_r_400().path,
           viewBox: stacked_email_r_400().viewBox,
         }}
+        href="/email-login"
       >
         {t("email_login_btn")}
       </ButtonWithIcon>

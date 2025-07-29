@@ -9,11 +9,14 @@ import { Button } from "@scn_components/button";
 import { IconTemplate, SpinnerLoader } from "6_shared";
 import { stacked_email_r_400 } from "@scn/svgPaths";
 import LoginInput from "2_Pages/login_page/LoginInput";
+import { useToast } from "@scn_components/toast/ToastProvider";
 
 export default function SignupPage() {
   const t = useTranslations("signup_page");
 
   const router = useRouter();
+
+  const { addToast } = useToast();
 
   // State for managing form
   const [firstName, setFirstName] = useState<string>("Tin");
@@ -77,11 +80,12 @@ export default function SignupPage() {
         setIsConformationStarted(true);
       } else {
         const responseData = await response.json();
-        setError(responseData.message || t("error_server_generic"));
+
+        addToast(responseData.message || t("error_server_generic"), "error");
       }
     } catch (error) {
-      console.error(error);
-      setError(t("error_network"));
+      console.log(error);
+      addToast(t("error_network"), "error");
     } finally {
       setIsLoading(false);
     }

@@ -25,7 +25,10 @@ export async function POST(request: Request) {
       .maybeSingle();
 
     if (existingUser) {
-      return new NextResponse("User already exists", { status: 409 });
+      return NextResponse.json(
+        { message: "User already exists" },
+        { status: 409 }
+      );
     }
 
     const password_hash = await bcrypt.hash(password, 12);
@@ -51,7 +54,7 @@ export async function POST(request: Request) {
     const verificationUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/verify-email?token=${verificationToken}`;
 
     // Send email with Resend
-    const { data, error: resendError } = await resend.emails.send({
+    const { error: resendError } = await resend.emails.send({
       from: "Acme <onboarding@resend.dev>",
       to: email,
       subject: "Verify you email - Finsona",

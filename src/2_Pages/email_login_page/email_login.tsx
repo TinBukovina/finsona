@@ -2,7 +2,6 @@
 
 import { useTranslations } from "next-intl";
 import React, { useState } from "react";
-import LoginInput from "../login_page/LoginInput";
 
 import { Button } from "@scn_components/button";
 import { useRouter } from "i18n/navigation";
@@ -14,11 +13,14 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "@scn_components/input-otp";
+import LoginInput from "2_Pages/login_page/LoginInput";
 
 export default function EmailLoginPage() {
   const t = useTranslations("email_login_page");
 
   const router = useRouter();
+
+  const [email, setEmail] = useState<string>("tinbukovina1c@gmail.com");
 
   const [step, setStep] = useState<"one" | "two">("one");
 
@@ -122,7 +124,11 @@ export default function EmailLoginPage() {
             </div>
           </div>
 
-          <LoginInput placeholder={t("email_input")} />
+          <LoginInput
+            placeholder={t("email_input")}
+            value={email}
+            setValue={setEmail}
+          />
 
           {/*_LOGIN BUTTON_*/}
           <Button

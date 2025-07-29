@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { ToastProvider } from "@scn_components/toast/ToastProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,9 +26,13 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased w-100% h-dvh overflow-auto`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased w-100% h-dvh overflow-auto relative`}
       >
-        {children}
+        <ToastProvider>
+          {children}
+          <div id="portal-root"></div>
+          <div id="toast-root"></div>
+        </ToastProvider>
       </body>
     </html>
   );
