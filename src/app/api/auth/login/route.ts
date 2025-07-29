@@ -58,6 +58,7 @@ export async function POST(request: Request) {
       httpOnly: true, // Spreijčava pristup kolačiću putem JavaScripta
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict", // Pomaže u zaštiti od CSRF napada
+      maxAge: 60 * 60 * 24, // 24h
       path: "/",
     });
 
