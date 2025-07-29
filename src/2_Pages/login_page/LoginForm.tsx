@@ -70,13 +70,6 @@ export function LoginForm({}) {
       onSubmit={handleLogin}
       className="flex flex-col gap-4 text-card-foreground"
     >
-      <Modal open={mountedWindow}>
-        <div className="absolute top-0 left-0 w-full h-full text-h1 text-foreground">
-          bok
-        </div>
-      </Modal>
-
-      <div>{JSON.stringify(mountedWindow)}</div>
       <div className="text-h6">{t("login_sub_title")}</div>
       <div className="flex flex-col gap-2">
         {/*_EMAIL_*/}

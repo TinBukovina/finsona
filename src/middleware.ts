@@ -3,7 +3,7 @@ import { routing } from "i18n/routing";
 import createMiddleware from "next-intl/middleware";
 import { NextRequest, NextResponse } from "next/server";
 
-const publicRoutes = ["/login", "/signup", "/email-login"];
+const publicRoutes = ["/login", "/signup", "/email-login", "/forgot-password"];
 
 // Middleware for localization
 const intlMiddleware = createMiddleware(routing);

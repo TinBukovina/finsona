@@ -102,8 +102,8 @@ export default function EmailLoginPage() {
           "relative flex flex-col justify-center gap-6 w-full bg-card p-4 fill-card-foreground text-card-foreground"
         }
       >
+        {/*_BACK ICON BUTTON_*/}
         <div className={"flex flex-col gap-4"}>
-          {/*_BACK ICON BUTTON_*/}
           <div
             className={
               "absolute top-5 left-5 " +

@@ -55,7 +55,7 @@ export async function POST(request: Request) {
 
     // Send email with Resend
     const { error: resendError } = await resend.emails.send({
-      from: "Acme <onboarding@resend.dev>",
+      from: "Finsona <onboarding@resend.dev>",
       to: email,
       subject: "Verify you email - Finsona",
       html: `<p>Please, click the following link to verify your email:</p><a href="${verificationUrl}">Potvrdi email</a>`,

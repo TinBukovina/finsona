@@ -1,7 +1,7 @@
 import { jwtVerify, SignJWT, type JWTPayload } from "jose";
 
 interface SignOptionInterface {
-  expiresIn: "1h";
+  expiresIn: "1h" | "15min";
 }
 
 const DEFAULT_SIGN_OPTION: SignOptionInterface = {
