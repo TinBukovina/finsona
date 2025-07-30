@@ -1,52 +1,75 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useRouter } from "i18n/navigation";
 
 import { useToast } from "@scn_components/toast/ToastProvider";
 import { Button, IconTemplate, PUBLIC_ROUTES_CONFIG } from "6_shared";
 import { west__arror_r_400 } from "@scn/svgPaths";
 import LoginInput from "2_Pages/login_page/LoginInput";
+import { useSearchParams } from "next/navigation";
 import zxcvbn from "zxcvbn";
 
-export default function ForgotPasswordPage() {
+export default function ResetPasswordPage() {
   const router = useRouter();
 
-  const [email, setEmail] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [password, setPassword] = useState<string>("");
+  const [repeatPassword, setRepeatPassword] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
   const { addToast } = useToast();
+
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
+
+  useEffect(() => {
+    if (!token) {
+      addToast("No reset token found.", "error");
+      router.push(PUBLIC_ROUTES_CONFIG.login);
+    }
+  }, [token, router, addToast]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     // Check if all inputs are entered
-    if (!email) {
+    if (!password || !repeatPassword) {
       setError("All inputs need to be filled.");
       setIsLoading(false);
       return;
     }
 
-    // Check if email is valid
-    if (!/\S+@\S+\.\S+/.test(email)) {
-      setError("Invalid email.");
+    // Check if passwords metch
+    if (password !== repeatPassword) {
+      setError("Passwords do not match");
+      setIsLoading(false);
+      return;
+    }
+
+    // Check if password is strong enough
+    if (zxcvbn(password).score < 3) {
+      setError("Password is too weak.");
       setIsLoading(false);
       return;
     }
 
     try {
-      await fetch("/api/auth/request-password-reset", {
+      const response = await fetch("/api/auth/reset-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ token, password }),
       });
 
-      addToast("Check your email for a reset link.", "success");
-      router.push(PUBLIC_ROUTES_CONFIG.login);
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message);
+
+      addToast("Password reset successfully!", "success");
+      router.push("/auth/login");
     } catch (error) {
-      console.error(error);
-      addToast("Internal server error.", "error");
+      console.log(error);
+      addToast("Failed to reset password.", "error");
     } finally {
       setIsLoading(false);
     }
@@ -81,26 +104,34 @@ export default function ForgotPasswordPage() {
 
       {/*_TITLE AND DESCRIPTION_*/}
       <div className="flex flex-col gap-2">
-        <div className=" text-h5 text-primary">Resset your password</div>
-        <div className="text-normal text-muted-foreground">
-          Enter your email to get password reset link.
-        </div>
+        <div className=" text-h5 text-primary">Enter your new password</div>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <LoginInput
-          placeholder={"Email"}
-          value={email}
-          setValue={setEmail}
-          disabled={isLoading}
-        />
+      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+        <div className="flex flex-col gap-2">
+          <LoginInput
+            placeholder={"Password"}
+            value={password}
+            setValue={setPassword}
+            disabled={isLoading}
+            type="password"
+            passwordStrength={true}
+          />
+          <LoginInput
+            placeholder={"Repeat password"}
+            value={repeatPassword}
+            setValue={setRepeatPassword}
+            disabled={isLoading}
+            type="password"
+            passwordStrength={true}
+          />
+        </div>
 
         {/*_LOGIN BUTTON_*/}
         <Button disabled={isLoading} className="w-full">
           Send reset link
         </Button>
       </form>
-
       <p
         className={`text-center text-sm text-muted-foreground ${error ? "visible" : "invisible"}`}
       >

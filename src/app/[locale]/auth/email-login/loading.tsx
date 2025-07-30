@@ -22,11 +22,21 @@ export default function Loader() {
         </div>
       </div>
 
-      {/*_EMAIL INPUT_*/}
-      <SkeletonLoader className="h-[42px] w-[100%] bg-muted-foreground/50 rounded-max my-0 mt-2" />
+      <div className="flex flex-col gap-4">
+        {/*_EMAIL INPUT_*/}
+        <SkeletonLoader className="h-[42px] w-[100%] bg-muted-foreground/50 rounded-max my-0 mt-2" />
 
-      {/*_LOGIN BUTTON_*/}
-      <SkeletonLoader className="h-[40px] w-[100%] bg-primary/50 rounded-max my-0" />
+        {/*_LOGIN BUTTON_*/}
+        <SkeletonLoader className="h-[40px] w-[100%] bg-primary/50 rounded-max my-0" />
+      </div>
+
+      <div className="w-full h-[13px] bg-primary invisible" />
+
+      {/*_DON'T HAVE AN ACCOUNT TEXT_*/}
+      <div className="flex flex-col gap-2 items-center text-sm text-center w-full">
+        <SkeletonLoader className="h-[13px] w-[140px] bg-card-foreground/50 rounded-max my-0" />
+        <SkeletonLoader className="h-[13px] w-[40px] bg-primary/50 rounded-max my-0" />
+      </div>
     </div>
   );
 }

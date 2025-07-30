@@ -8,3 +8,6 @@ export {
   InputOTPSlot,
   InputOTPSeparator,
 } from "./ui/input-otp";
+
+// Exporting public config routes
+export { PUBLIC_ROUTES_CONFIG } from "./config/routes";

@@ -1,9 +1,16 @@
+import { PUBLIC_ROUTES_CONFIG } from "6_shared";
 import { verifyJwt } from "6_shared/auth/auth";
 import { routing } from "i18n/routing";
 import createMiddleware from "next-intl/middleware";
 import { NextRequest, NextResponse } from "next/server";
 
-const publicRoutes = ["/login", "/signup", "/email-login", "/forgot-password"];
+const publicRoutes = [
+  PUBLIC_ROUTES_CONFIG.login,
+  PUBLIC_ROUTES_CONFIG.signup,
+  PUBLIC_ROUTES_CONFIG.email_login,
+  PUBLIC_ROUTES_CONFIG.forgot_password,
+  PUBLIC_ROUTES_CONFIG.reset_password,
+];
 
 // Middleware for localization
 const intlMiddleware = createMiddleware(routing);
@@ -34,7 +41,7 @@ export async function middleware(request: NextRequest) {
 
   // Checking if there is a session token
   if (!decodedToken) {
-    const response = NextResponse.redirect(new URL("/login", request.url));
+    const response = NextResponse.redirect(new URL("/auth/login", request.url));
     response.cookies.delete("session-token");
     return response;
   }

@@ -4,7 +4,7 @@ import { useRouter } from "i18n/navigation";
 import LoginInput from "./LoginInput";
 import { Link } from "i18n/navigation";
 import { useTranslations } from "next-intl";
-import { Button } from "6_shared";
+import { Button, PUBLIC_ROUTES_CONFIG } from "6_shared";
 import Modal from "@scn_components/modal/Modal";
 import { useToast } from "@scn_components/toast/ToastProvider";
 
@@ -90,7 +90,7 @@ export function LoginForm({}) {
         />
         {/*_FORGOT PASSWORD LINK_*/}
         <Link
-          href={"/forgot-password"}
+          href={PUBLIC_ROUTES_CONFIG.forgot_password}
           className="w-fit text-sm text-primary hover:underline focus:outline-none focus:underline active:scale-95"
         >
           {t("forgot_password")}

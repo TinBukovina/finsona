@@ -1,13 +1,31 @@
+"use client";
+
 import { useTranslations } from "next-intl";
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "i18n/navigation";
 
 import ButtonWithIcon from "./ButtonWithIcon";
 import { stacked_email_r_400 } from "@scn/svgPaths";
 import { LoginForm } from "./LoginForm";
+import { useSearchParams } from "next/navigation";
+import { useToast } from "@scn_components/toast/ToastProvider";
+import { PUBLIC_ROUTES_CONFIG } from "6_shared";
 
 export default function LoginPage() {
   const t = useTranslations("login_page");
+  const { addToast } = useToast();
+
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams.get("verified") === "true") {
+      addToast("Account verified", "success");
+    }
+
+    if (searchParams.get("verified") === "verification-failed") {
+      addToast("Verification failed", "error");
+    }
+  }, [searchParams, addToast]);
 
   return (
     <div
@@ -30,7 +48,7 @@ export default function LoginPage() {
           path: stacked_email_r_400().path,
           viewBox: stacked_email_r_400().viewBox,
         }}
-        href="/email-login"
+        href={PUBLIC_ROUTES_CONFIG.email_login}
       >
         {t("email_login_btn")}
       </ButtonWithIcon>
@@ -49,7 +67,7 @@ export default function LoginPage() {
       <div className="flex flex-col gap-0 items-center text-sm text-center">
         <p>{t("dont_have_account")}</p>
         <Link
-          href={"/signup"}
+          href={PUBLIC_ROUTES_CONFIG.signup}
           className="w-fit text-primary hover:underline focus:outline-none focus:underline active:scale-95"
         >
           {t("signup_link")}

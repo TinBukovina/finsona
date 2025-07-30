@@ -122,7 +122,7 @@ export default function SignupPage() {
           </p>
         </div>
 
-        <Button onClick={() => router.push("/login")}>OK</Button>
+        <Button onClick={() => router.push("/auth/login")}>OK</Button>
       </div>
     );
   }
@@ -208,7 +208,7 @@ export default function SignupPage() {
       <div className="flex flex-col gap-0 items-center text-sm text-center">
         <p>{t("already_have_an_account")}</p>
         <Link
-          href={"/login"}
+          href={"/auth/login"}
           className="w-fit text-primary hover:underline focus:outline-none focus:underline"
         >
           {t("login_link")}

@@ -1,10 +1,10 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { use, useCallback, useEffect, useState } from "react";
 
 import { Button } from "@scn_components/button";
-import { useRouter } from "i18n/navigation";
+import { Link, useRouter } from "i18n/navigation";
 import { IconTemplate } from "6_shared";
 import { west__arror_r_400 } from "@scn/svgPaths";
 import {
@@ -25,12 +25,27 @@ export default function EmailLoginPage() {
   const [email, setEmail] = useState<string>("tinbukovina1c@gmail.com");
   const [passcode, setPasscode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const [step, setStep] = useState<"email" | "passcode">("email");
 
   const handleRequestPasscode = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+
+    // Check if all inputs are entered
+    if (!email) {
+      setError("All inputs need to be filled.");
+      setIsLoading(false);
+      return;
+    }
+
+    // Check if email is valid
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      setError("Invalid email.");
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const response = await fetch("/api/auth/request-passcode", {
@@ -71,7 +86,7 @@ export default function EmailLoginPage() {
         const responseData = await response.json();
         if (!response.ok) {
           addToast(responseData.message || "Invalid passcode.", "error");
-          setPasscode(""); // Resetiraj kod u slučaju greške
+          setPasscode("");
         } else {
           addToast("Login successful!", "success");
           router.refresh();
@@ -192,17 +207,35 @@ export default function EmailLoginPage() {
           </div>
         </div>
 
-        <LoginInput
-          placeholder={t("email_input")}
-          value={email}
-          setValue={setEmail}
-          disabled={isLoading}
-        />
+        <div className="flex flex-col gap-4">
+          <LoginInput
+            placeholder={t("email_input")}
+            value={email}
+            setValue={setEmail}
+            disabled={isLoading}
+          />
 
-        {/*_LOGIN BUTTON_*/}
-        <Button onClick={handleRequestPasscode} disabled={isLoading}>
-          {t("send_passcode_btn")}
-        </Button>
+          {/*_LOGIN BUTTON_*/}
+          <Button onClick={handleRequestPasscode} disabled={isLoading}>
+            {t("send_passcode_btn")}
+          </Button>
+        </div>
+
+        <p
+          className={`text-center text-sm text-muted-foreground ${error ? "visible" : "invisible"}`}
+        >
+          {error ? error : "error"}
+        </p>
+
+        <div className="flex flex-col gap-0 items-center text-sm text-center">
+          <p>{"Don't have an account?"}</p>
+          <Link
+            href={"/auth/login"}
+            className="w-fit text-primary hover:underline focus:outline-none focus:underline"
+          >
+            Sign up
+          </Link>
+        </div>
       </div>
     );
   }
