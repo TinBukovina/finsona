@@ -5,14 +5,17 @@ import React, { useRef, useState } from "react";
 import { Link, useRouter } from "i18n/navigation";
 import zxcvbn from "zxcvbn";
 
-import { Button } from "@scn_components/button";
-import { IconTemplate, SpinnerLoader } from "6_shared";
-import { stacked_email_r_400 } from "@scn/svgPaths";
-import LoginInput from "2_Pages/login_page/LoginInput";
-import { useToast } from "@scn_components/toast/ToastProvider";
+import {
+  Button,
+  IconTemplate,
+  Input,
+  stacked_email_r_400,
+  useToast,
+} from "6_shared";
 
 export default function SignupPage() {
   const t = useTranslations("signup_page");
+  const tError = useTranslations("auth_err_msgs");
 
   const router = useRouter();
 
@@ -21,7 +24,7 @@ export default function SignupPage() {
   // State for managing form
   const [firstName, setFirstName] = useState<string>("Tin");
   const [secondName, setSecondName] = useState<string>("Bukovina");
-  const [email, setEmail] = useState<string>("test1@gmail.com");
+  const [email, setEmail] = useState<string>("tinbukovina1c@gmail.com");
   const [password, setPassword] = useState<string>("Testuser123!");
   const [repeatPassword, setRepeatPassword] = useState<string>("Testuser123!");
   const [error, setError] = useState<string | null>(null);
@@ -32,6 +35,7 @@ export default function SignupPage() {
 
   const emailSvgRef = useRef(stacked_email_r_400());
 
+  // Logic for signup
   async function handleSignup(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setIsLoading(true);
@@ -39,28 +43,28 @@ export default function SignupPage() {
 
     // Check if all fields are filled
     if (!firstName || !secondName || !email || !password || !repeatPassword) {
-      setError(t("error_missing_inputs"));
+      setError(tError("error_missing_inputs"));
       setIsLoading(false);
       return;
     }
 
     // Check if email is valid
     if (!/\S+@\S+\.\S+/.test(email)) {
-      setError(t("error_invalid_email"));
+      setError(tError("error_invalid_email"));
       setIsLoading(false);
       return;
     }
 
     // Check if passwords metch
     if (password !== repeatPassword) {
-      setError(t("error_passwords_not_match"));
+      setError(tError("error_passwords_not_match"));
       setIsLoading(false);
       return;
     }
 
     // Check if password is strong enough
     if (zxcvbn(password).score < 3) {
-      setError(t("error_weak_password"));
+      setError(tError("error_weak_password"));
       setIsLoading(false);
       return;
     }
@@ -81,11 +85,14 @@ export default function SignupPage() {
       } else {
         const responseData = await response.json();
 
-        addToast(responseData.message || t("error_server_generic"), "error");
+        addToast(
+          responseData.message || tError("error_server_generic"),
+          "error"
+        );
       }
     } catch (error) {
       console.log(error);
-      addToast(t("error_network"), "error");
+      addToast(tError("error_network"), "error");
     } finally {
       setIsLoading(false);
     }
@@ -155,26 +162,26 @@ export default function SignupPage() {
         {/*_INPUTS AND FORGOT PASSWORD LINK_*/}
         <div className="flex flex-col gap-2">
           <div className="flex gap-3">
-            <LoginInput
+            <Input
               placeholder={t("first_name_input")}
               value={firstName}
               setValue={setFirstName}
               disabled={isLoading}
             />
-            <LoginInput
+            <Input
               placeholder={t("last_name_input")}
               value={secondName}
               setValue={setSecondName}
               disabled={isLoading}
             />
           </div>
-          <LoginInput
+          <Input
             placeholder={t("email_input")}
             value={email}
             setValue={setEmail}
             disabled={isLoading}
           />
-          <LoginInput
+          <Input
             placeholder={t("password_input")}
             value={password}
             setValue={setPassword}
@@ -182,7 +189,7 @@ export default function SignupPage() {
             passwordStrength={true}
             disabled={isLoading}
           />
-          <LoginInput
+          <Input
             placeholder={t("repeat_password_input")}
             value={repeatPassword}
             setValue={setRepeatPassword}

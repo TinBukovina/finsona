@@ -3,11 +3,9 @@
 import { useState } from "react";
 import { Link, useRouter } from "i18n/navigation";
 
-import { useToast } from "@scn_components/toast/ToastProvider";
-import { Button, IconTemplate, PUBLIC_ROUTES_CONFIG } from "6_shared";
-import { west__arror_r_400 } from "@scn/svgPaths";
-import LoginInput from "2_Pages/login_page/LoginInput";
-import zxcvbn from "zxcvbn";
+import { Button, IconTemplate, Input, PUBLIC_ROUTES_CONFIG } from "6_shared";
+import { useToast } from "@/6_shared/ui/toast";
+import { west__arror_r_400 } from "@/6_shared/lib/svgPaths";
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
@@ -88,7 +86,7 @@ export default function ForgotPasswordPage() {
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <LoginInput
+        <Input
           placeholder={"Email"}
           value={email}
           setValue={setEmail}

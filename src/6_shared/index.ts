@@ -1,13 +1,14 @@
 // Exporting UI components
-export { default as IconTemplate } from "./ui/IconTemplate";
-export { Button } from "./ui/button";
-export { default as SpinnerLoader } from "./ui/spinner-loader";
-export {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSlot,
-  InputOTPSeparator,
-} from "./ui/input-otp";
+export * from "./ui/components/index";
 
 // Exporting public config routes
 export { PUBLIC_ROUTES_CONFIG } from "./config/routes";
+
+// Exporting loaders
+export * from "./ui/loaders/index";
+
+// Toasts
+export * from "./ui/toast/index";
+
+// Lib
+export * from "./lib/index";

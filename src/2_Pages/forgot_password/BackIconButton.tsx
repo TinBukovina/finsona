@@ -1,9 +1,9 @@
 "use client";
+import React from "react";
+import { useRouter } from "next/router";
 
 import { IconTemplate } from "6_shared";
-import { west__arror_r_400 } from "@scn/svgPaths";
-import { useRouter } from "next/router";
-import React from "react";
+import { west__arror_r_400 } from "@/6_shared/lib/svgPaths";
 
 export default function BackIconButton() {
   const router = useRouter();

@@ -15,12 +15,8 @@
     "password_input": "Password",
     "dont_have_account": "Don't have an account?",
     "signup_link": "Sign up",
-    "error_invalid_credentials": "Wrong credentials.",
-    "error_server_generic": "There was a problem on the server.",
-    "error_network": "There was problem connectin to the server.",
-    "error_missing_inputs": "You need to fill all inputs.",
-    "error_weak_password": "Password is too weak.",
-    "error_invalid_email": "Invalid email."
+    "verification_success": "Account verified!",
+    "verification_fail": "Account verification failed."
   },
   "email_login_page": {
     "title": "Welcome to Finsona",
@@ -28,7 +24,9 @@
     "email_input": "Email Address",
     "send_passcode_btn": "Send passcode",
     "enter_passcode_title": "Enter passcode",
-    "no_passcode_link": "Did not receive passcode?"
+    "no_passcode_link": "Did not receive passcode?",
+    "login_success": "Login successful!",
+    "passcode_sent": "Passcode was sent to your email!"
   },
   "signup_page": {
     "title": "Welcome to Finsona",
@@ -43,13 +41,18 @@
     "already_have_an_account": "Already have an account?",
     "login_link": "Login",
     "confirm_email_sub_title": "Confirm your email address",
-    "confirm_email_description": "An activation link has been sent to your email.",
+    "confirm_email_description": "An activation link has been sent to your email."
+  },
+  "auth_err_msgs": {
     "error_invalid_credentials": "Wrong credentials.",
     "error_server_generic": "There was a problem on the server.",
     "error_network": "There was problem connectin to the server.",
     "error_missing_inputs": "You need to fill all inputs.",
     "error_weak_password": "Password is too weak.",
     "error_passwords_not_match": "Passwords do not match.",
-    "error_invalid_email": "Invalid email."
+    "error_invalid_email": "Invalid email.",
+    "error_invalid_token": "Invalid or expired token.",
+    "error_invalid_passcode": "Invalid or expired passcode.",
+    "error_no_passcode": "Unable to send passcode."
   }
 }

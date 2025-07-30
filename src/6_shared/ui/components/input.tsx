@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import zxcvbn from "zxcvbn";
 
-interface LoginInputProps {
+interface InputProps {
   placeholder?: string;
   value: string;
   setValue: React.Dispatch<React.SetStateAction<string>>;
@@ -12,14 +12,14 @@ interface LoginInputProps {
   disabled?: boolean;
 }
 
-export default function LoginInput({
+export default function Input({
   placeholder = "",
   value,
   setValue,
   type = "text",
   passwordStrength = false,
   disabled = false,
-}: LoginInputProps) {
+}: InputProps) {
   const [isFocused, setIsFocused] = useState(false);
 
   const testResult = zxcvbn(value);

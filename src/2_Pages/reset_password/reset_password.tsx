@@ -4,9 +4,8 @@ import { useEffect, useState } from "react";
 import { Link, useRouter } from "i18n/navigation";
 
 import { useToast } from "@scn_components/toast/ToastProvider";
-import { Button, IconTemplate, PUBLIC_ROUTES_CONFIG } from "6_shared";
+import { Button, IconTemplate, Input, PUBLIC_ROUTES_CONFIG } from "6_shared";
 import { west__arror_r_400 } from "@scn/svgPaths";
-import LoginInput from "2_Pages/login_page/LoginInput";
 import { useSearchParams } from "next/navigation";
 import zxcvbn from "zxcvbn";
 
@@ -109,7 +108,7 @@ export default function ResetPasswordPage() {
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
         <div className="flex flex-col gap-2">
-          <LoginInput
+          <Input
             placeholder={"Password"}
             value={password}
             setValue={setPassword}
@@ -117,7 +116,7 @@ export default function ResetPasswordPage() {
             type="password"
             passwordStrength={true}
           />
-          <LoginInput
+          <Input
             placeholder={"Repeat password"}
             value={repeatPassword}
             setValue={setRepeatPassword}

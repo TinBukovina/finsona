@@ -1,6 +1,6 @@
 import React from "react";
 
-import ResetPasswordPage from "2_Pages/reset_password/reset_password";
+import { ResetPasswordPage } from "2_Pages";
 
 export default function page() {
   return <ResetPasswordPage />;

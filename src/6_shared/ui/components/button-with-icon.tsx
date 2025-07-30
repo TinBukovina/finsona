@@ -1,9 +1,8 @@
 import React from "react";
-
-import { IconTemplate } from "6_shared";
+import { Link } from "i18n/navigation";
 import { cva } from "class-variance-authority";
-import { cn } from "@scn/utils";
-import { Link, useRouter } from "i18n/navigation";
+
+import { cn, IconTemplate } from "6_shared";
 
 interface ButtonWithIconProps {
   children: React.ReactNode;

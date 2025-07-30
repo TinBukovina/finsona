@@ -1,30 +1,26 @@
 "use client";
+
 import React, { useState } from "react";
-import { useRouter } from "i18n/navigation";
-import LoginInput from "./LoginInput";
-import { Link } from "i18n/navigation";
+import { useRouter, Link } from "i18n/navigation";
 import { useTranslations } from "next-intl";
-import { Button, PUBLIC_ROUTES_CONFIG } from "6_shared";
-import Modal from "@scn_components/modal/Modal";
-import { useToast } from "@scn_components/toast/ToastProvider";
+
+import { Button, Input, PUBLIC_ROUTES_CONFIG, useToast } from "6_shared";
 
 export function LoginForm({}) {
   const router = useRouter();
 
   const t = useTranslations("login_page");
+  const tError = useTranslations("auth_err_msgs");
 
   const { addToast } = useToast();
 
-  // State for handeling popup
-  const [mountedWindow, setMountedWindow] = useState<boolean>(false);
-
   // State for managing form
-  const [email, setEmail] = useState<string>("test@gmail.com");
-  const [password, setPassword] = useState<string>("password");
+  const [email, setEmail] = useState<string>("tinbukovina1c@gmail.com");
+  const [password, setPassword] = useState<string>("Testuser123!");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // Function taht runs when user clicks login btn
+  // Function for handling login logic
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
@@ -32,14 +28,14 @@ export function LoginForm({}) {
 
     // Check if all inputs are entered
     if (!email || !password) {
-      setError(t("error_missing_inputs"));
+      setError(tError("error_missing_inputs"));
       setIsLoading(false);
       return;
     }
 
     // Check if email is vaild
     if (!/\S+@\S+\.\S+/.test(email)) {
-      setError(t("error_invalid_email"));
+      setError(tError("error_invalid_email"));
       setIsLoading(false);
       return;
     }
@@ -55,11 +51,14 @@ export function LoginForm({}) {
         router.refresh();
       } else {
         const responseData = await response.json();
-        addToast(responseData.message || t("error_server_generic"), "error");
+        addToast(
+          responseData.message || tError("error_server_generic"),
+          "error"
+        );
       }
     } catch (error) {
       console.error(error);
-      addToast(t("error_network"), "error");
+      addToast(tError("error_network"), "error");
     } finally {
       setIsLoading(false);
     }
@@ -70,10 +69,12 @@ export function LoginForm({}) {
       onSubmit={handleLogin}
       className="flex flex-col gap-4 text-card-foreground"
     >
+      {/*_TITLE_*/}
       <div className="text-h6">{t("login_sub_title")}</div>
+
       <div className="flex flex-col gap-2">
         {/*_EMAIL_*/}
-        <LoginInput
+        <Input
           placeholder={t("email_input")}
           value={email}
           setValue={setEmail}
@@ -81,7 +82,7 @@ export function LoginForm({}) {
           type="email"
         />
         {/*_PASSWORD_*/}
-        <LoginInput
+        <Input
           placeholder={t("password_input")}
           value={password}
           setValue={setPassword}
@@ -96,11 +97,19 @@ export function LoginForm({}) {
           {t("forgot_password")}
         </Link>
       </div>
+
+      {/*_LOGIN BUTTON_*/}
       <Button disabled={isLoading}>
         {isLoading ? t("logingin_in") : t("login_btn")}
       </Button>
-      {error && (
-        <p className="text-sm text-destructive text-center mt-2">{error}</p>
+
+      {/*_Display error_*/}
+      {error ? (
+        <p className="text-sm text-muted-foreground text-center mt-2">
+          {error}
+        </p>
+      ) : (
+        <p className="invisible text-sm mt-2">v</p>
       )}
     </form>
   );

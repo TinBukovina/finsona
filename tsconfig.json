@@ -20,6 +20,7 @@
     ],
     "baseUrl": "src/",
     "paths": {
+      "@/*": ["./*"],
       "@scn/*": ["6_shared/lib/*"],
       "@scn_components/*": ["6_shared/ui/*"]
     }

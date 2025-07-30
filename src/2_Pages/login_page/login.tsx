@@ -3,29 +3,33 @@
 import { useTranslations } from "next-intl";
 import React, { useEffect } from "react";
 import { Link } from "i18n/navigation";
-
-import ButtonWithIcon from "./ButtonWithIcon";
-import { stacked_email_r_400 } from "@scn/svgPaths";
-import { LoginForm } from "./LoginForm";
 import { useSearchParams } from "next/navigation";
-import { useToast } from "@scn_components/toast/ToastProvider";
-import { PUBLIC_ROUTES_CONFIG } from "6_shared";
+
+import { LoginForm } from "./LoginForm";
+import {
+  ButtonWithIcon,
+  PUBLIC_ROUTES_CONFIG,
+  stacked_email_r_400,
+  useToast,
+} from "6_shared";
 
 export default function LoginPage() {
   const t = useTranslations("login_page");
+
   const { addToast } = useToast();
 
   const searchParams = useSearchParams();
 
+  // useEffect for informating user is email verification succeeded
   useEffect(() => {
     if (searchParams.get("verified") === "true") {
-      addToast("Account verified", "success");
+      addToast(t("verification_success"), "success");
     }
 
     if (searchParams.get("verified") === "verification-failed") {
-      addToast("Verification failed", "error");
+      addToast("verification_fail", "error");
     }
-  }, [searchParams, addToast]);
+  }, [searchParams, addToast, t]);
 
   return (
     <div
@@ -35,14 +39,16 @@ export default function LoginPage() {
         "flex flex-col justify-center gap-6 w-full bg-card p-4"
       }
     >
-      {/*_TITLE AND DESCRIPTION_*/}
       <div className="flex flex-col gap-2">
+        {/*_TITLE_*/}
         <div className=" text-h5 text-primary">{t("title")}</div>
+        {/*_DESCRIPTION_*/}
         <div className="text-normal text-muted-foreground">
           {t("description")}
         </div>
       </div>
-      {/*_LOG IN WITH EMAIL OPTION_*/}
+
+      {/*_LOG IN WITH EMAIL BTN_*/}
       <ButtonWithIcon
         svgInfo={{
           path: stacked_email_r_400().path,

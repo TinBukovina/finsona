@@ -1,48 +1,53 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import React, { use, useCallback, useEffect, useState } from "react";
-
-import { Button } from "@scn_components/button";
+import React, { useEffect, useState } from "react";
 import { Link, useRouter } from "i18n/navigation";
-import { IconTemplate } from "6_shared";
-import { west__arror_r_400 } from "@scn/svgPaths";
+
 import {
+  Button,
+  IconTemplate,
+  Input,
   InputOTP,
   InputOTPGroup,
   InputOTPSeparator,
   InputOTPSlot,
-} from "@scn_components/input-otp";
-import LoginInput from "2_Pages/login_page/LoginInput";
-import { useToast } from "@scn_components/toast/ToastProvider";
+  useToast,
+  west__arror_r_400,
+} from "6_shared";
 
 export default function EmailLoginPage() {
   const t = useTranslations("email_login_page");
+  const tError = useTranslations("auth_err_msgs");
+
   const { addToast } = useToast();
 
   const router = useRouter();
 
+  // State for managing form
   const [email, setEmail] = useState<string>("tinbukovina1c@gmail.com");
   const [passcode, setPasscode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // State for managing form steps
   const [step, setStep] = useState<"email" | "passcode">("email");
 
+  // logic for managing login with email
   const handleRequestPasscode = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     // Check if all inputs are entered
     if (!email) {
-      setError("All inputs need to be filled.");
+      setError(tError("error_missing_inputs"));
       setIsLoading(false);
       return;
     }
 
     // Check if email is valid
     if (!/\S+@\S+\.\S+/.test(email)) {
-      setError("Invalid email.");
+      setError(tError("error_invalid_email"));
       setIsLoading(false);
       return;
     }
@@ -56,26 +61,26 @@ export default function EmailLoginPage() {
 
       const responseData = await response.json();
       if (!response.ok) {
-        addToast(responseData.message || "Could not send passcode.", "error");
+        addToast(responseData.message || tError("error_no_passcode"), "error");
       } else {
-        addToast("Passcode sent to your email!", "success");
+        addToast(t("passcode_sent"), "success");
         setStep("passcode");
       }
     } catch (error) {
       console.log(error);
-      addToast("Could not send passcode.", "error");
+      addToast(tError("error_no_passcode"), "error");
     } finally {
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    // Definiramo asinkronu funkciju unutar efekta
+    // Fucntion for verifying entered passcode
     const verify = async () => {
-      // Provjera je dvostruka, ali osigurava da se ne pokrene ako se stanje promijeni tijekom izvršavanja
       if (passcode.length !== 6 || isLoading) return;
 
       setIsLoading(true);
+
       try {
         const response = await fetch("/api/auth/verify-passcode", {
           method: "POST",
@@ -85,25 +90,29 @@ export default function EmailLoginPage() {
 
         const responseData = await response.json();
         if (!response.ok) {
-          addToast(responseData.message || "Invalid passcode.", "error");
+          addToast(
+            responseData.message || tError("error_invalid_passcode"),
+            "error"
+          );
           setPasscode("");
         } else {
-          addToast("Login successful!", "success");
+          addToast(t("login_success"), "success");
           router.refresh();
         }
       } catch (error) {
         console.log(error);
-        addToast("Invalid or expired passcode.", "error");
+        addToast(tError("error_invalid_passcode"), "error");
         setPasscode("");
       } finally {
         setIsLoading(false);
       }
     };
 
-    // Pozivamo funkciju samo ako su uvjeti zadovoljeni
+    // Automatically calling function when all 6 digits are entered
     if (passcode.length === 6 && !isLoading) {
       verify();
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [passcode, email, router, addToast]);
 
@@ -208,7 +217,7 @@ export default function EmailLoginPage() {
         </div>
 
         <div className="flex flex-col gap-4">
-          <LoginInput
+          <Input
             placeholder={t("email_input")}
             value={email}
             setValue={setEmail}
