@@ -1,27 +1,34 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Link, useRouter } from "i18n/navigation";
-
-import { useToast } from "@scn_components/toast/ToastProvider";
-import { Button, IconTemplate, Input, PUBLIC_ROUTES_CONFIG } from "6_shared";
-import { west__arror_r_400 } from "@scn/svgPaths";
 import { useSearchParams } from "next/navigation";
+import { Link, useRouter } from "i18n/navigation";
 import zxcvbn from "zxcvbn";
+
+import {
+  Button,
+  Input,
+  PUBLIC_ROUTES_CONFIG,
+  useToast,
+  west__arror_r_400,
+} from "6_shared";
+import IconButton from "@/6_shared/ui/components/icon-button";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
+  // Reset password toekn
+  const token = searchParams.get("token");
+  const { addToast } = useToast();
+
+  // State for managing form
   const [password, setPassword] = useState<string>("");
   const [repeatPassword, setRepeatPassword] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const { addToast } = useToast();
-
-  const searchParams = useSearchParams();
-  const token = searchParams.get("token");
-
+  // useEffect for checking if token exist
   useEffect(() => {
     if (!token) {
       addToast("No reset token found.", "error");
@@ -29,6 +36,7 @@ export default function ResetPasswordPage() {
     }
   }, [token, router, addToast]);
 
+  // Logic for reseting password
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -83,31 +91,19 @@ export default function ResetPasswordPage() {
       }
     >
       {/*_BACK ICON BUTTON_*/}
-      <div className={"flex flex-col gap-4"}>
-        <div
-          className={
-            "absolute top-5 left-5 " +
-            "xs:static " +
-            "flex items-center justify-center p-1  w-fit rounded-max hover:bg-accent hover:text-accent-foreground hover:fill-accent-foreground hover:cursor-pointer active:scale-85 hover:scale-110 transition-all"
-          }
-          onClick={() => router.back()}
-        >
-          <IconTemplate
-            path={west__arror_r_400().path}
-            viewBox={west__arror_r_400().viewBox}
-            width="24px"
-            height="24px"
-          />
-        </div>
-      </div>
+      <IconButton
+        svgData={west__arror_r_400()}
+        handleOnClick={() => router.back()}
+      />
 
-      {/*_TITLE AND DESCRIPTION_*/}
+      {/*_TITLE_*/}
       <div className="flex flex-col gap-2">
         <div className=" text-h5 text-primary">Enter your new password</div>
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
         <div className="flex flex-col gap-2">
+          {/*_PASSWORD INPUT_*/}
           <Input
             placeholder={"Password"}
             value={password}
@@ -116,6 +112,7 @@ export default function ResetPasswordPage() {
             type="password"
             passwordStrength={true}
           />
+          {/*_REPEAT PASSWORD INPUT_*/}
           <Input
             placeholder={"Repeat password"}
             value={repeatPassword}
@@ -131,12 +128,15 @@ export default function ResetPasswordPage() {
           Send reset link
         </Button>
       </form>
+
+      {/*_ERROR DISPLAY_*/}
       <p
         className={`text-center text-sm text-muted-foreground ${error ? "visible" : "invisible"}`}
       >
         {error ? error : "error"}
       </p>
 
+      {/*_DON'T HAVE AN ACCOUNT_*/}
       <div className="flex flex-col gap-0 items-center text-sm text-center">
         <p>{"Don't have an account?"}</p>
         <Link

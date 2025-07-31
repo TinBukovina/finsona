@@ -3,18 +3,26 @@
 import { useState } from "react";
 import { Link, useRouter } from "i18n/navigation";
 
-import { Button, IconTemplate, Input, PUBLIC_ROUTES_CONFIG } from "6_shared";
-import { useToast } from "@/6_shared/ui/toast";
-import { west__arror_r_400 } from "@/6_shared/lib/svgPaths";
+import {
+  Button,
+  Input,
+  PUBLIC_ROUTES_CONFIG,
+  useToast,
+  west__arror_r_400,
+} from "6_shared";
+import IconButton from "@/6_shared/ui/components/icon-button";
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
 
+  const { addToast } = useToast();
+
+  // State for managing the form
   const [email, setEmail] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const { addToast } = useToast();
 
+  // Logic for handeling password reset
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -59,33 +67,22 @@ export default function ForgotPasswordPage() {
       }
     >
       {/*_BACK ICON BUTTON_*/}
-      <div className={"flex flex-col gap-4"}>
-        <div
-          className={
-            "absolute top-5 left-5 " +
-            "xs:static " +
-            "flex items-center justify-center p-1  w-fit rounded-max hover:bg-accent hover:text-accent-foreground hover:fill-accent-foreground hover:cursor-pointer active:scale-85 hover:scale-110 transition-all"
-          }
-          onClick={() => router.back()}
-        >
-          <IconTemplate
-            path={west__arror_r_400().path}
-            viewBox={west__arror_r_400().viewBox}
-            width="24px"
-            height="24px"
-          />
-        </div>
-      </div>
+      <IconButton
+        svgData={west__arror_r_400()}
+        handleOnClick={() => router.back()}
+      />
 
-      {/*_TITLE AND DESCRIPTION_*/}
       <div className="flex flex-col gap-2">
+        {/*_TITLE_*/}
         <div className=" text-h5 text-primary">Resset your password</div>
+        {/*_DESCRIPTION_*/}
         <div className="text-normal text-muted-foreground">
           Enter your email to get password reset link.
         </div>
       </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        {/*_EMAIL INPUT_*/}
         <Input
           placeholder={"Email"}
           value={email}
@@ -99,12 +96,14 @@ export default function ForgotPasswordPage() {
         </Button>
       </form>
 
+      {/*_ERROR DISPLAY_*/}
       <p
         className={`text-center text-sm text-muted-foreground ${error ? "visible" : "invisible"}`}
       >
         {error ? error : "error"}
       </p>
 
+      {/*_ALREADY HAVE AN ACCOUNT_*/}
       <div className="flex flex-col gap-0 items-center text-sm text-center">
         <p>{"Don't have an account?"}</p>
         <Link
