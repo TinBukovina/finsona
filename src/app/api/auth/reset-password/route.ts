@@ -14,9 +14,9 @@ export async function POST(request: Request) {
 
     // 1. Veraying password reset token
     const secret = new TextEncoder().encode(process.env.PASSWORD_RESET_SECRET!);
-    const { payload } = await jwtVerify(token, secret);
+    const { payload: user } = await jwtVerify(token, secret);
 
-    if (!payload.id) {
+    if (!user.id) {
       return NextResponse.json({ message: "Invalid token." }, { status: 401 });
     }
 
@@ -27,7 +27,7 @@ export async function POST(request: Request) {
     const { error } = await supabaseAdmin
       .from("users")
       .update({ password_hash })
-      .eq("id", payload.id);
+      .eq("id", user.id);
 
     if (error) {
       throw error;

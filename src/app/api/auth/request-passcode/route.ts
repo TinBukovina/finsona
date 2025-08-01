@@ -17,7 +17,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // 1. Generating passcode
+    // 1. Generating random passcode
     const passcode = Math.floor(100000 + Math.random() * 900000).toString();
 
     // 2. Hashing passcode

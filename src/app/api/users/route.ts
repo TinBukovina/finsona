@@ -1,4 +1,4 @@
-import { supabaseAdmin } from "6_shared";
+import supabaseAdmin from "@/6_shared/api/supabase_admin";
 import { NextResponse } from "next/server";
 
 export async function GET() {
