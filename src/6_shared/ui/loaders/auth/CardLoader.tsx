@@ -1,10 +1,6 @@
-import React from "react";
+import React, { PropsWithChildren } from "react";
 
-export default function CardLoader({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function CardLoader({ children }: PropsWithChildren) {
   return (
     <div
       className={

@@ -2,7 +2,7 @@
 export * from "./ui/components/index";
 
 // Exporting public config routes
-export { PUBLIC_ROUTES_CONFIG } from "./config/routes";
+export { PUBLIC_ROUTES_CONFIG, PRIVATE_ROUTES_CONFIG } from "./config/routes";
 
 // Exporting loaders
 export * from "./ui/loaders/index";

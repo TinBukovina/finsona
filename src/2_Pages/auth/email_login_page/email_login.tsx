@@ -12,6 +12,7 @@ import {
   InputOTPGroup,
   InputOTPSeparator,
   InputOTPSlot,
+  PUBLIC_ROUTES_CONFIG,
   useToast,
   west__arror_r_400,
 } from "6_shared";
@@ -239,7 +240,7 @@ export default function EmailLoginPage() {
         <div className="flex flex-col gap-0 items-center text-sm text-center">
           <p>{"Don't have an account?"}</p>
           <Link
-            href={"/auth/login"}
+            href={PUBLIC_ROUTES_CONFIG.signup}
             className="w-fit text-primary hover:underline focus:outline-none focus:underline"
           >
             Sign up

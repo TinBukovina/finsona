@@ -1,4 +1,4 @@
-import { PUBLIC_ROUTES_CONFIG } from "6_shared";
+import { PRIVATE_ROUTES_CONFIG, PUBLIC_ROUTES_CONFIG } from "6_shared";
 import { verifyJwt } from "6_shared/auth/auth";
 import { routing } from "i18n/routing";
 import createMiddleware from "next-intl/middleware";
@@ -32,7 +32,9 @@ export async function middleware(request: NextRequest) {
   if (isPublicRoute) {
     // If user has a valid session token on a public route, redirect him to application
     if (decodedToken) {
-      return NextResponse.redirect(new URL("/", request.url));
+      return NextResponse.redirect(
+        new URL(PRIVATE_ROUTES_CONFIG.budget, request.url)
+      );
     }
 
     // Don't do anything if route if public

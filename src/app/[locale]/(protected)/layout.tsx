@@ -1,8 +1,11 @@
 import React, { PropsWithChildren } from "react";
 
+import { Sidebar } from "@/3_widgets/side-navigation";
+
 export default function layout({ children }: PropsWithChildren) {
   return (
-    <div className="w-full h-dvh flex items-center justify-center overflow-hidden bg-card xs:bg-background">
+    <div className="flex gap-4 bg-background h-dvh">
+      <Sidebar />
       {children}
     </div>
   );

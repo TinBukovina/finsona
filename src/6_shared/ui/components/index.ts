@@ -9,3 +9,4 @@ export {
 export { default as SpinnerLoader } from "./spinner-loader";
 export { default as ButtonWithIcon } from "./button-with-icon";
 export { default as Input } from "./input";
+export { default as SidebarLink } from "./SidebarLink";

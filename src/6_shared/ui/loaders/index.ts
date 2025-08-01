@@ -7,3 +7,6 @@ export { default as DivLoader } from "./components/DivLoader";
 // auth loaders
 export { default as CardLoader } from "./auth/CardLoader";
 export { default as FooterLoader } from "./auth/FooterLoader";
+
+// Sidebar loaders
+export { default as SidebarNavLinksLoader } from "./widgets/SidebarNavLinksLoader";

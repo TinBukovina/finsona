@@ -6,7 +6,8 @@ export interface LoaderProps {
     | "foreground"
     | "card_foreground"
     | "muted_foreground"
-    | "border";
+    | "border"
+    | "input";
   text?:
     | "xs"
     | "sm"
@@ -31,6 +32,7 @@ export const backgroundColors = {
   card_foreground: "bg-card-foreground/50",
   muted_foreground: "bg-muted-foreground/50",
   border: "bg-border/50",
+  input: "bg-input/50",
 };
 
 // Centralize object for font size

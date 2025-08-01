@@ -5,3 +5,10 @@ export const PUBLIC_ROUTES_CONFIG = {
   forgot_password: "/auth/forgot-password",
   reset_password: "/auth/reset-password",
 };
+
+export const PRIVATE_ROUTES_CONFIG = {
+  dashboard: "/dashboard",
+  budget: "/budget",
+  transactions: "/transactions",
+  settings: "/settings",
+};

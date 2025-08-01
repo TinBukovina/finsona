@@ -1,7 +1,6 @@
 import supabaseAdmin from "6_shared/api/supabase_admin";
 import { signJwt } from "6_shared/auth/auth";
 import bcrypt from "bcryptjs";
-import { SignJWT } from "jose";
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 

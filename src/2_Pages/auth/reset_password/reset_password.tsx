@@ -140,7 +140,7 @@ export default function ResetPasswordPage() {
       <div className="flex flex-col gap-0 items-center text-sm text-center">
         <p>{"Don't have an account?"}</p>
         <Link
-          href={"/auth/login"}
+          href={PUBLIC_ROUTES_CONFIG.signup}
           className="w-fit text-primary hover:underline focus:outline-none focus:underline"
         >
           Sign up

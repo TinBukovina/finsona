@@ -9,6 +9,7 @@ import {
   Button,
   IconTemplate,
   Input,
+  PUBLIC_ROUTES_CONFIG,
   stacked_email_r_400,
   useToast,
 } from "6_shared";
@@ -215,7 +216,7 @@ export default function SignupPage() {
       <div className="flex flex-col gap-0 items-center text-sm text-center">
         <p>{t("already_have_an_account")}</p>
         <Link
-          href={"/auth/login"}
+          href={PUBLIC_ROUTES_CONFIG.login}
           className="w-fit text-primary hover:underline focus:outline-none focus:underline"
         >
           {t("login_link")}

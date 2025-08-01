@@ -4,7 +4,13 @@ import React, { useState } from "react";
 import { useRouter, Link } from "i18n/navigation";
 import { useTranslations } from "next-intl";
 
-import { Button, Input, PUBLIC_ROUTES_CONFIG, useToast } from "6_shared";
+import {
+  Button,
+  Input,
+  PRIVATE_ROUTES_CONFIG,
+  PUBLIC_ROUTES_CONFIG,
+  useToast,
+} from "6_shared";
 
 export function LoginForm({}) {
   const router = useRouter();
@@ -48,7 +54,7 @@ export function LoginForm({}) {
       });
 
       if (response.ok) {
-        router.refresh();
+        router.push(PRIVATE_ROUTES_CONFIG.budget);
       } else {
         const responseData = await response.json();
         addToast(
