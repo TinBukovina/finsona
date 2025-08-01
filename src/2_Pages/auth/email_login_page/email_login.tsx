@@ -138,8 +138,7 @@ export default function EmailLoginPage() {
             onClick={() => router.back()}
           >
             <IconTemplate
-              path={west__arror_r_400().path}
-              viewBox={west__arror_r_400().viewBox}
+              svg={west__arror_r_400()}
               width="24px"
               height="24px"
             />
@@ -201,8 +200,7 @@ export default function EmailLoginPage() {
             onClick={() => router.back()}
           >
             <IconTemplate
-              path={west__arror_r_400().path}
-              viewBox={west__arror_r_400().viewBox}
+              svg={west__arror_r_400()}
               width="24px"
               height="24px"
             />

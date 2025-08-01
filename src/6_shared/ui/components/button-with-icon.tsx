@@ -34,12 +34,7 @@ export default function ButtonWithIcon({
 }: ButtonWithIconProps) {
   const content = (
     <>
-      <IconTemplate
-        path={svgInfo.path}
-        viewBox={svgInfo.viewBox}
-        width="24px"
-        height="24px"
-      />
+      <IconTemplate svg={svgInfo} width="24px" height="24px" />
       <p>{children}</p>
     </>
   );

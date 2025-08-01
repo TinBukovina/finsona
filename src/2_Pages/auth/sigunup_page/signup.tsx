@@ -114,12 +114,7 @@ export default function SignupPage() {
 
         {/*_DECORATION ICON_*/}
         <div className="mx-auto fill-primary">
-          <IconTemplate
-            path={emailSvgRef.current.path}
-            viewBox={emailSvgRef.current.viewBox}
-            width="3rem"
-            height="3rem"
-          />
+          <IconTemplate svg={emailSvgRef.current} width="3rem" height="3rem" />
         </div>
 
         {/*_INFO SECTION_*/}

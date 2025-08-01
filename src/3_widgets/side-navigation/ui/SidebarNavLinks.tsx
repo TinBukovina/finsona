@@ -12,6 +12,10 @@ import {
   SidebarLink,
 } from "@/6_shared";
 
+interface SidebarNavLinksProps {
+  isExpanded: boolean;
+}
+
 const navLinks = [
   {
     href: PRIVATE_ROUTES_CONFIG.budget,
@@ -35,7 +39,7 @@ const navLinks = [
   },
 ];
 
-export default function SidebarNavLinks() {
+export default function SidebarNavLinks({ isExpanded }: SidebarNavLinksProps) {
   const pathname = usePathname();
 
   return (
@@ -46,6 +50,7 @@ export default function SidebarNavLinks() {
           href={link.href}
           svgData={link.svgData}
           isActive={pathname.includes(link.href)}
+          hideText={!isExpanded}
         >
           {link.label}
         </SidebarLink>

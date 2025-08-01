@@ -5,7 +5,11 @@ import { useRouter } from "@/i18n/navigation";
 
 import { logout_r_400, SidebarLink, useToast } from "@/6_shared";
 
-export function LogoutBtn() {
+interface LogoutBtnProps {
+  hideText?: boolean;
+}
+
+export function LogoutBtn({ hideText = false }: LogoutBtnProps) {
   const router = useRouter();
   const { addToast } = useToast();
 
@@ -37,6 +41,7 @@ export function LogoutBtn() {
       svgData={logout_r_400()}
       onClick={handleLogout}
       isDisabled={isLoading}
+      hideText={hideText}
     >
       Logout
     </SidebarLink>

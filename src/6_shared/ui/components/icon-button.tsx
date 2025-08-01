@@ -23,12 +23,7 @@ export default function IconButton({
       }
       onClick={handleOnClick}
     >
-      <IconTemplate
-        path={svgData.path}
-        viewBox={svgData.viewBox}
-        width="24px"
-        height="24px"
-      />
+      <IconTemplate svg={svgData} width="24px" height="24px" />
     </div>
   );
 }

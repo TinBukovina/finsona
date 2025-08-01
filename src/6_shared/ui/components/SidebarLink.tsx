@@ -1,7 +1,8 @@
-import { cn, IconTemplate } from "@/6_shared";
+import React from "react";
 import { Link } from "@/i18n/navigation";
 import { cva, VariantProps } from "class-variance-authority";
-import React from "react";
+
+import { cn, IconTemplate } from "@/6_shared";
 
 // React.HTMLAttributes<HTMLDivElement> - omogućava da element ima onClick i className
 interface SidebarLinkProps
@@ -15,10 +16,11 @@ interface SidebarLinkProps
   };
   isActive?: boolean;
   isDisabled?: boolean;
+  hideText?: boolean;
 }
 
 const sidebarLinkVariants = cva(
-  "flex gap-2 w-full px-3 py-2 rounded-max text-normal",
+  "flex gap-2 p-2 rounded-max text-normal active:scale-95 transition-transform ease-in-out hover:scale-103",
   {
     variants: {
       active: {
@@ -30,10 +32,15 @@ const sidebarLinkVariants = cva(
         true: "pointer-events-none opacity-50 cursor-not-allowed",
         false: "cursor-pointer",
       },
+      expanded: {
+        true: "w-full px-3",
+        false: "w-fit",
+      },
     },
     defaultVariants: {
       active: false,
       disabled: false,
+      expanded: false,
     },
   }
 );
@@ -44,6 +51,7 @@ export default function SidebarLink({
   svgData,
   isActive = false,
   isDisabled = false,
+  hideText = false,
   className,
   onClick,
 }: SidebarLinkProps) {
@@ -55,20 +63,14 @@ export default function SidebarLink({
           sidebarLinkVariants({
             active: isActive,
             disabled: isDisabled,
+            expanded: !hideText,
             className,
           })
         )}
         onClick={onClick}
       >
-        {svgData && (
-          <IconTemplate
-            path={svgData.path}
-            viewBox={svgData.viewBox}
-            width="24px"
-            height="24px"
-          />
-        )}
-        <p>{children}</p>
+        {svgData && <IconTemplate svg={svgData} width="24px" height="24px" />}
+        <p className={hideText ? "hidden" : ""}>{children}</p>
       </div>
     );
   }
@@ -81,19 +83,13 @@ export default function SidebarLink({
         sidebarLinkVariants({
           active: isActive,
           disabled: isDisabled,
+          expanded: !hideText,
           className,
         })
       )}
     >
-      {svgData && (
-        <IconTemplate
-          path={svgData.path}
-          viewBox={svgData.viewBox}
-          width="24px"
-          height="24px"
-        />
-      )}
-      <p>{children}</p>
+      {svgData && <IconTemplate svg={svgData} width="24px" height="24px" />}
+      <p className={hideText ? "hidden" : ""}>{children}</p>
     </Link>
   );
 }
