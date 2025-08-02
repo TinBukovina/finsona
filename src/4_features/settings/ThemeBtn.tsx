@@ -32,9 +32,9 @@ export default function ThemeBtn() {
   return (
     <div
       className={
-        `flex justify-center items-center p-2 bg-secondary fill-secondary-foreground rounded-max` +
+        `flex justify-center items-center p-2 bg-secondary fill-secondary-foreground rounded-max border border-border` +
         " " +
-        `hover:bg-primary hover:scale-103 hover:fill-primary-foreground hover:cursor-pointer active:scale-93 transition-all`
+        `hover:bg-primary hover:fill-primary-foreground hover:cursor-pointer active:scale-93 transition-all`
       }
       onClick={() => {
         updateSettings({ theme: mode === "light" ? "dark" : "light" });
