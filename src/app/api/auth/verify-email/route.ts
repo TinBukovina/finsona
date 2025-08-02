@@ -1,6 +1,6 @@
-import supabaseAdmin from "6_shared/api/supabase_admin";
-import { verifyJwt } from "6_shared/auth/auth";
 import { NextRequest, NextResponse } from "next/server";
+
+import { supabaseAdmin, verifyJwt } from "@/6_shared/server";
 
 export async function GET(request: NextRequest) {
   try {
@@ -16,6 +16,7 @@ export async function GET(request: NextRequest) {
       return new NextResponse("Invalid or expired token", { status: 400 });
     }
 
+    // Checkig if user exists
     const { error } = await supabaseAdmin
       .from("users")
       .update({ is_verified: true })
@@ -23,6 +24,21 @@ export async function GET(request: NextRequest) {
 
     if (error) {
       throw error;
+    }
+
+    // Adding default settings to new created user
+    const { error: settingsInsertError } = await supabaseAdmin
+      .from("user_settings")
+      .insert({
+        id: decoded.id,
+        default_currency: "EUR",
+        month_start_day: 1,
+        theme: "dark",
+        language: "en",
+      });
+
+    if (settingsInsertError) {
+      throw settingsInsertError;
     }
 
     const loginUrl = new URL("/auth/login", process.env.NEXT_PUBLIC_BASE_URL!);

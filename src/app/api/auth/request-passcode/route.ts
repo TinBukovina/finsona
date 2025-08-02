@@ -1,7 +1,8 @@
-import supabaseAdmin from "6_shared/api/supabase_admin";
-import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
 import { Resend } from "resend";
+
+import { supabaseAdmin } from "@/6_shared/server";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 

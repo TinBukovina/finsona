@@ -1,8 +1,9 @@
-import { PUBLIC_ROUTES_CONFIG } from "6_shared";
-import supabaseAdmin from "6_shared/api/supabase_admin";
-import { SignJWT } from "jose";
 import { NextResponse } from "next/server";
+import { SignJWT } from "jose";
 import { Resend } from "resend";
+
+import { PUBLIC_ROUTES_CONFIG } from "6_shared";
+import { supabaseAdmin } from "@/6_shared/server";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 

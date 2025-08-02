@@ -1,7 +1,8 @@
-import supabaseAdmin from "6_shared/api/supabase_admin";
-import bcrypt from "bcryptjs";
-import { jwtVerify } from "jose";
 import { NextResponse } from "next/server";
+import { jwtVerify } from "jose";
+import bcrypt from "bcryptjs";
+
+import { supabaseAdmin } from "@/6_shared/server";
 
 export async function POST(request: Request) {
   try {

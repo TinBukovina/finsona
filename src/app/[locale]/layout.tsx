@@ -2,6 +2,8 @@ import { routing } from "i18n/routing";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
 
+import AppContent from "./AppContent";
+
 export default async function LocaleLayout({
   children,
   params,
@@ -16,7 +18,9 @@ export default async function LocaleLayout({
 
   return (
     <div className="w-100% h-dvh">
-      <NextIntlClientProvider>{children}</NextIntlClientProvider>
+      <NextIntlClientProvider>
+        <AppContent>{children}</AppContent>
+      </NextIntlClientProvider>
     </div>
   );
 }

@@ -1,8 +1,10 @@
+import { PropsWithChildren } from "react";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+
 import "./globals.css";
-import { ToastProvider } from "@scn_components/toast";
-import { PropsWithChildren } from "react";
+import { UserSettingsProveder } from "@/5_entities/user";
+import { ToastProvider } from "@/6_shared";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,11 +27,13 @@ export default function RootLayout({ children }: PropsWithChildren) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased w-100% h-dvh overflow-auto relative bg-transparent`}
       >
-        <ToastProvider>
-          {children}
-          <div id="portal-root"></div>
-          <div id="toast-root"></div>
-        </ToastProvider>
+        <UserSettingsProveder>
+          <ToastProvider>
+            {children}
+            <div id="portal-root"></div>
+            <div id="toast-root"></div>
+          </ToastProvider>
+        </UserSettingsProveder>
       </body>
     </html>
   );
