@@ -1,5 +1,5 @@
 import React from "react";
 
 export default function page() {
-  return <div>Transaction page</div>;
+  return <div className="w-full h-full">Transaction page</div>;
 }

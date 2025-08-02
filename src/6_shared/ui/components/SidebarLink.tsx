@@ -20,7 +20,7 @@ interface SidebarLinkProps
 }
 
 const sidebarLinkVariants = cva(
-  "flex gap-2 p-2 rounded-max text-normal active:scale-95 transition-transform ease-in-out hover:scale-103",
+  "flex gap-2 p-2 rounded-max text-normal  transition-transform ease-in-out hover:scale-103 active:scale-95",
   {
     variants: {
       active: {
