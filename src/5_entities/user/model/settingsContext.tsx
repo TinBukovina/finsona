@@ -15,7 +15,7 @@ export interface UserSettings {
 }
 
 const INITIAL_SETTINGS: UserSettings = {
-  theme: "light",
+  theme: "dark",
   default_currency: "EUR",
   language: "en",
   month_start_day: 1,

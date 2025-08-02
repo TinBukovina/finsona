@@ -20,13 +20,13 @@ interface SidebarLinkProps
 }
 
 const sidebarLinkVariants = cva(
-  "flex gap-2 p-2 rounded-max text-normal  transition-transform ease-in-out hover:scale-103 active:scale-95",
+  "flex gap-2 p-2 rounded-max text-normal  transition-transform ease-in-out active:scale-95 hover:scale-102",
   {
     variants: {
       active: {
         true: "bg-primary text-primary-foreground fill-primary-foreground font-medium",
         false:
-          "text-sidebar-foreground fill-sidebar-foreground hover:bg-accent hover:text-accent-foreground hover:fill-accent-foreground",
+          "text-sidebar-foreground fill-sidebar-foreground hover:bg-accent/60 hover:text-accent-foreground hover:fill-accent-foreground",
       },
       disabled: {
         true: "pointer-events-none opacity-50 cursor-not-allowed",

@@ -28,7 +28,7 @@ export default function Sidebar() {
 
   return (
     <div
-      className={`hidden sm:shrink-0 sm:flex flex-col gap-4 justify-start ${isExpanded ? "md:w-[230px]" : "w-fit"} h-full bg-sidebar-background top-0 left-0 border-r border-border overflow-auto`}
+      className={`hidden sm:shrink-0 sm:flex flex-col gap-4 justify-start ${isExpanded ? "md:w-[200px] lg:w-[230px]" : "w-fit"} h-full bg-sidebar-background top-0 left-0 border-r border-border overflow-auto`}
     >
       <div className="flex justify-between p-4">
         {/*_LOGO_*/}

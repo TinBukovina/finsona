@@ -25,7 +25,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="en" className="dark">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased w-100% h-dvh overflow-auto relative bg-transparent`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased w-100% h-dvh overflow-auto relative bg-background`}
       >
         <UserSettingsProveder>
           <ToastProvider>

@@ -1,24 +1,20 @@
-import { ThemeBtn } from "@/4_features";
-import {
-  IconTemplate,
-  keyboard_arrow_down_r_400,
-  person_r_400,
-  sunny_r_400,
-} from "@/6_shared";
 import React from "react";
+
+import { ThemeBtn } from "@/4_features";
+import { SelectAccountCombobox } from "@/4_features/SelectAccount";
+import { IconTemplate, person_r_400 } from "@/6_shared";
 
 export default function Navigation() {
   return (
-    <div className="flex justify-between items-center w-full bg-sidebar-background text-sidebar-foreground px-8 py-2">
+    <div
+      className={
+        "flex bg-background border-b-2 border-border justify-between items-center w-full  text-sidebar-foreground px-2 py-2" +
+        " " +
+        `sm:px-8 sm:bg-sidebar-background sm:border-b-0`
+      }
+    >
       {/*_ACCOUNT SELECTION_*/}
-      <div className="shrink-0 flex justify-between items-center px-4 py-2 max-w-[200px] w-full bg-secondary rounded-max text-secondary-foreground fill-secondary-foreground">
-        <p className="text-normal font-medium">Personal wallet</p>
-        <IconTemplate
-          svg={keyboard_arrow_down_r_400()}
-          width="24px"
-          height="24px"
-        />
-      </div>
+      <SelectAccountCombobox />
 
       {/*_ACTIONS IN NAVIGATION_*/}
       <div className="hidden sm:flex gap-3">
