@@ -1,3 +1,5 @@
+// app/layout.js
+
 import { PropsWithChildren } from "react";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -24,8 +26,14 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="en" className="dark">
+      {/*_PREVENTING USER FROM ZOOMING_*/}
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+      />
+
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased w-100% h-dvh overflow-auto relative bg-background`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased relative w-100% h-dvh overflow-auto bg-background`}
       >
         <UserSettingsProveder>
           <ToastProvider>
