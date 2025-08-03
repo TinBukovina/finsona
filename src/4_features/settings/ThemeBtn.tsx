@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import {
   bedtime_r_400,
+  Button,
+  DivLoader,
   IconTemplate,
   sunny_r_400,
   SvgReturnType,
@@ -14,6 +16,7 @@ export default function ThemeBtn() {
   const { settings, updateSettings } = useSettings();
 
   const [isHovered, setIsHovered] = useState<boolean>(false);
+  const [isMounted, setIsMounted] = useState<boolean>(false);
 
   const sunSvgRef = useRef<SvgReturnType>(sunny_r_400());
   const moonSvgRef = useRef<SvgReturnType>(bedtime_r_400());
@@ -28,6 +31,17 @@ export default function ThemeBtn() {
       : isHovered
         ? sunSvgRef.current
         : moonSvgRef.current;
+
+  // It is for preventing hydration error bcause of conditional svg rendering depending on theme
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return (
+      <DivLoader width="42px" height="42px" bg="secondary" border={true} />
+    );
+  }
 
   return (
     <div

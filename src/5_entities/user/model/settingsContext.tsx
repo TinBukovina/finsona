@@ -6,6 +6,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
+import Cookies from "js-cookie";
 
 export interface UserSettings {
   theme: "light" | "dark";
@@ -14,18 +15,18 @@ export interface UserSettings {
   month_start_day: number;
 }
 
-const INITIAL_SETTINGS: UserSettings = {
+const DEFAULT_SETTINGS: UserSettings = {
   theme: "dark",
   default_currency: "EUR",
   language: "en",
   month_start_day: 1,
 };
 
-const SETTINGS_STORAGE_KEY = "finsona-user-settings";
+export const SETTINGS_STORAGE_KEY = "finsona-user-settings";
 
 interface UserSettingsContextType {
   settings: UserSettings;
-  isLoading: boolean;
+  isSyncing: boolean;
   updateSettings: (newSettings: Partial<UserSettings>) => void;
 }
 
@@ -34,30 +35,24 @@ const UserSettingsContext = React.createContext<UserSettingsContextType | null>(
 );
 
 export function UserSettingsProveder({ children }: PropsWithChildren) {
-  const [settings, setSettings] = useState<UserSettings>(INITIAL_SETTINGS);
+  const [settings, setSettings] = useState<UserSettings>(() => {
+    try {
+      const storedSettings = localStorage.getItem(SETTINGS_STORAGE_KEY);
+      return storedSettings ? JSON.parse(storedSettings) : DEFAULT_SETTINGS;
+    } catch (error) {
+      console.warn(
+        "Failed to parse settings from Local Storage, using default.",
+        error
+      );
+      return DEFAULT_SETTINGS;
+    }
+  });
 
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isSyncing, setIsSyncing] = useState<boolean>(true);
 
-  // useEffect for loading initial settings
+  // useEffect for syncing app settings with db settings
   useEffect(() => {
-    async function loadingInitialSettings() {
-      // First trying to get settings from LS while fetching it from database
-      try {
-        const storedSettingsString = localStorage.getItem(SETTINGS_STORAGE_KEY);
-        const storedSettings: UserSettings | null = storedSettingsString
-          ? JSON.parse(storedSettingsString)
-          : null;
-
-        if (storedSettings) {
-          setSettings(storedSettings);
-        }
-      } catch (error) {
-        console.warn(
-          "Error loading initial settings from local storage",
-          error
-        );
-      }
-
+    async function syncSettingsWithDb() {
       // Trying to fetch settings from database
       try {
         const response = await fetch("/api/user/settings");
@@ -75,11 +70,11 @@ export function UserSettingsProveder({ children }: PropsWithChildren) {
       } catch (error) {
         console.error("Feilt to fetch settings from DB", error);
       } finally {
-        setIsLoading(false);
+        setIsSyncing(false);
       }
     }
 
-    loadingInitialSettings();
+    syncSettingsWithDb();
   }, []);
 
   // Logic for updating settings
@@ -97,6 +92,11 @@ export function UserSettingsProveder({ children }: PropsWithChildren) {
         JSON.stringify(newOptimisticSettings)
       );
 
+      Cookies.set("theme", newOptimisticSettings.theme, {
+        expires: 365,
+        path: "/",
+      });
+
       try {
         await fetch("/api/user/settings", {
           method: "POST",
@@ -112,7 +112,7 @@ export function UserSettingsProveder({ children }: PropsWithChildren) {
     [settings]
   );
 
-  const value = { settings, isLoading, updateSettings };
+  const value = { settings, isSyncing, updateSettings };
 
   return (
     <UserSettingsContext.Provider value={value}>

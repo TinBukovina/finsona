@@ -8,7 +8,7 @@ import { usePathname } from "next/navigation";
 export default function AppContent({ children }: PropsWithChildren) {
   const pathname = usePathname();
 
-  const { settings, isLoading } = useSettings();
+  const { settings, isSyncing } = useSettings();
 
   // useEffect for managing background color depending on the path
   useEffect(() => {
@@ -31,10 +31,6 @@ export default function AppContent({ children }: PropsWithChildren) {
       document.documentElement.classList.remove("dark");
     }
   }, [settings]);
-
-  if (isLoading) {
-    return <div>Loading options...</div>;
-  }
 
   return <div>{children}</div>;
 }

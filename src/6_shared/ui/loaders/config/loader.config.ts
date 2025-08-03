@@ -22,6 +22,7 @@ export interface LoaderProps {
   width?: string;
   height?: string;
   className?: string;
+  border?: boolean;
 }
 
 // Centralize object for background colors

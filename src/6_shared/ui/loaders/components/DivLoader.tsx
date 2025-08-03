@@ -12,11 +12,12 @@ export default function DivLoader({
   height = "fit-content",
   text = "normal",
   className,
+  border = false,
 }: LoaderProps) {
   return (
     <div
       className={cn(
-        "m-0 p-0 w-full bg-secondary/50 rounded-max my-0 border border-transparent animate-pulse",
+        `m-0 p-0 w-full bg-secondary/50 rounded-max my-0 border ${border ? "border-border" : "border-transparent"} animate-pulse`,
         backgroundColors[bg],
         fontSizes[text],
         className
