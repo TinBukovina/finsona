@@ -36,16 +36,20 @@ const UserSettingsContext = React.createContext<UserSettingsContextType | null>(
 
 export function UserSettingsProveder({ children }: PropsWithChildren) {
   const [settings, setSettings] = useState<UserSettings>(() => {
-    try {
-      const storedSettings = localStorage.getItem(SETTINGS_STORAGE_KEY);
-      return storedSettings ? JSON.parse(storedSettings) : DEFAULT_SETTINGS;
-    } catch (error) {
-      console.warn(
-        "Failed to parse settings from Local Storage, using default.",
-        error
-      );
-      return DEFAULT_SETTINGS;
+    if (typeof window !== "undefined") {
+      try {
+        const storedSettings = localStorage.getItem(SETTINGS_STORAGE_KEY);
+        return storedSettings ? JSON.parse(storedSettings) : DEFAULT_SETTINGS;
+      } catch (error) {
+        console.warn(
+          "Failed to parse settings from Local Storage, using default.",
+          error
+        );
+        return DEFAULT_SETTINGS;
+      }
     }
+
+    return DEFAULT_SETTINGS; // Fallback for server-side rendering
   });
 
   const [isSyncing, setIsSyncing] = useState<boolean>(true);

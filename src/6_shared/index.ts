@@ -10,5 +10,5 @@ export * from "./ui/loaders/index";
 // Toasts
 export * from "./ui/toast/index";
 
-// Lib (utild, svgs, etc.)
+// Lib (utild, svgs, hooks, etc.)
 export * from "./lib/index";

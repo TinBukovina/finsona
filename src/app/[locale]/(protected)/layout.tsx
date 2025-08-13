@@ -1,8 +1,12 @@
-import React, { PropsWithChildren } from "react";
+"use client";
+
+import React, { PropsWithChildren, useRef } from "react";
 
 import { BottomNav, Navigation, Sidebar } from "@/3_widgets";
 
-export default function layout({ children }: PropsWithChildren) {
+export default function Layout({ children }: PropsWithChildren) {
+  const scrollableContentRef = useRef<HTMLElement | null>(null);
+
   return (
     <div
       className={
@@ -12,10 +16,16 @@ export default function layout({ children }: PropsWithChildren) {
       }
     >
       <Sidebar />
-      <div className="flex flex-col gap-4 w-full h-full">
+      <div className="flex flex-col gap-2 w-full h-full">
         <Navigation />
-        {children}
-        <BottomNav />
+        <main
+          ref={scrollableContentRef}
+          className="w-full h-full overflow-auto bg-background"
+        >
+          {/* Div for preventing flickering in hidding nav on scroll */}
+          <div className="pb-20 sm:pb-0">{children}</div>
+        </main>
+        <BottomNav scrollableElementRef={scrollableContentRef} />
       </div>
     </div>
   );
