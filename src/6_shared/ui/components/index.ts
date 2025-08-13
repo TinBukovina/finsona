@@ -11,3 +11,5 @@ export { default as ButtonWithIcon } from "./button-with-icon";
 export { default as Input } from "./input";
 export { default as SidebarLink } from "./SidebarLink";
 export { default as MobileNavLink } from "./MobileNavLink";
+export * from "./select";
+export { DatePicker } from "./date-picker";

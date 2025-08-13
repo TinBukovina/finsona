@@ -12,7 +12,7 @@ export default function Page() {
       {/*PERSONAL DETAILS SETTINGS CARD*/}
       <PersonalDetailsCard />
 
-      {/*RESET  PASSWORD CARD*/}
+      {/*RESET PASSWORD CARD*/}
       <PasswordCard />
 
       {/*DISABLE ACCOUNT CARD*/}
