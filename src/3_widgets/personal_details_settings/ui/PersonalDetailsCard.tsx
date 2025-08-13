@@ -1,60 +1,67 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Button, useToast } from "@/6_shared";
+import {
+  ResponseInterface,
+  UserPersonalInfo,
+  UserSettings,
+  useSettings,
+} from "@/5_entities/user";
 
-export interface FormDataInterface {
-  email: string;
-  fullName: string;
-}
-
-const initialFormData = {
-  email: "tinbukovina1c@gmail.com",
-  fullName: "Tin Bukovina",
-};
-
-let formCopyBeforeEditing = { ...initialFormData };
+let formCopyBeforeEditing: (UserSettings & UserPersonalInfo) | null = null;
 
 export default function PersonalDetailsCard() {
   const { addToast } = useToast();
+  const { settings, updatePersonalInfo, isSyncing } = useSettings();
 
-  const [formData, setFormData] = useState<FormDataInterface>(initialFormData);
+  const [formData, setFormData] = useState<UserSettings & UserPersonalInfo>(
+    settings
+  );
 
   const [editingMode, setEditingMode] = useState<boolean>(false);
 
-  function changeSingleFormData(field: keyof FormDataInterface, value: string) {
+  // Syncing from data with settings
+  useEffect(() => {
+    setFormData(settings);
+  }, [settings]);
+
+  function changeSingleFormData(
+    field: keyof (UserSettings & UserPersonalInfo),
+    value: string
+  ) {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
   }
 
-  async function handlePersonalDetailsChange() {
-    console.log("Saving changes...");
-    try {
-      const response = await fetch("/api/user/update", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          fullName: formData.fullName,
-        }),
-      });
+  const handlePersonalDetailsChange = async () => {
+    if (!formData) return;
 
-      const result = await response.json();
+    // Šaljemo samo podatke koji se mogu mijenjati
+    const dataToUpdate = {
+      full_name: formData.full_name,
+    };
 
-      if (!response.ok) {
-        throw new Error(result.message || "Failed to save changes.");
-      }
+    const result = await updatePersonalInfo(dataToUpdate);
 
-      addToast("Profile updated!", "success");
-    } catch (error) {
-      console.log(error);
-      const errorMessage =
-        error instanceof Error ? error.message : "Failed to save changes.";
-
-      addToast(errorMessage, "error");
+    if (result.success) {
+      addToast("Profile updated successfully!", "success");
+      setEditingMode(false);
+    } else {
+      addToast(result.error || "An unknown error occurred.", "error");
     }
+  };
+
+  const handleCancel = () => {
+    setFormData(settings);
+    setEditingMode(false);
+  };
+
+  if (isSyncing || !formData) {
+    return <div>Loading...</div>;
   }
 
   return (
@@ -78,7 +85,13 @@ export default function PersonalDetailsCard() {
             placeholder="Email"
             value={formData.email}
             onChange={(e) => console.log(e.target.value)}
-            size={formData.email.length > 0 ? formData.email.length - 2 : 20}
+            size={
+              formData.email
+                ? formData.email?.length > 0
+                  ? formData.email.length - 2
+                  : 20
+                : 20
+            }
           />
         </div>
         <div className="flex gap-4 items-center">
@@ -90,10 +103,14 @@ export default function PersonalDetailsCard() {
               `focus:outline-primary focus:border-transparent disabled:pointer-events-none disabled:opacity-50`
             }
             placeholder="Full name"
-            value={formData.fullName}
-            onChange={(e) => changeSingleFormData("fullName", e.target.value)}
+            value={formData.full_name}
+            onChange={(e) => changeSingleFormData("full_name", e.target.value)}
             size={
-              formData.fullName.length > 0 ? formData.fullName.length - 4 : 20
+              formData.full_name
+                ? formData.full_name.length > 0
+                  ? formData.full_name.length - 4
+                  : 20
+                : 20
             }
           />
         </div>
@@ -104,14 +121,7 @@ export default function PersonalDetailsCard() {
           <Button className="w-fit" onClick={handlePersonalDetailsChange}>
             Save
           </Button>
-          <Button
-            variant="secondary"
-            className="w-fit"
-            onClick={() => {
-              setFormData(formCopyBeforeEditing);
-              setEditingMode(false);
-            }}
-          >
+          <Button variant="secondary" className="w-fit" onClick={handleCancel}>
             Cancel
           </Button>
         </div>

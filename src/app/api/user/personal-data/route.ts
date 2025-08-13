@@ -1,12 +1,13 @@
-import { getSession, supabaseAdmin } from "@/6_shared/server";
 import { NextResponse } from "next/server";
 
-import { FormDataInterface } from "@/3_widgets/personal_details_settings/ui/PersonalDetailsCard";
+import { getSession, supabaseAdmin } from "@/6_shared/server";
+import { UserPersonalInfo } from "@/5_entities/user";
 
-const allowedFields: (keyof FormDataInterface)[] = ["fullName"];
+const allowedFields: (keyof UserPersonalInfo)[] = ["full_name"];
 
-export async function PATCH(request: Request) {
+export async function POST(request: Request) {
   try {
+    // Getting session from user
     const session = await getSession();
     if (!session) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
@@ -14,7 +15,7 @@ export async function PATCH(request: Request) {
 
     // Filtering only allowed fields
     const body = await request.json();
-    const dataToUpdate: Partial<FormDataInterface> = {};
+    const dataToUpdate: Partial<UserPersonalInfo> = {};
     for (const field of allowedFields) {
       if (body[field] !== undefined) {
         dataToUpdate[field] = body[field];
@@ -23,9 +24,9 @@ export async function PATCH(request: Request) {
 
     // Checking if full name is long enough
     if (
-      dataToUpdate.fullName &&
-      (typeof dataToUpdate.fullName !== "string" ||
-        dataToUpdate.fullName.length < 2)
+      dataToUpdate.full_name &&
+      (typeof dataToUpdate.full_name !== "string" ||
+        dataToUpdate.full_name.length < 2)
     ) {
       return NextResponse.json(
         { message: "Full name must be a string with at least 2 characters." },
@@ -35,30 +36,34 @@ export async function PATCH(request: Request) {
 
     // Ako nema podataka za ažuriranje nakon filtriranja
     if (Object.keys(dataToUpdate).length === 0) {
-      return NextResponse.json({
-        message: "No valid data provided for update.",
-      });
+      return NextResponse.json(
+        {
+          message: "No valid data provided for update.",
+        },
+        { status: 400 }
+      );
     }
 
-    const { error } = await supabaseAdmin
+    // Saving new user personal data for a user in database
+    const { error: updatingPersonalDataError } = await supabaseAdmin
       .from("users")
       .update(dataToUpdate)
       .eq("id", session.id);
 
-    if (error) {
-      console.error("Error updating user profile:", error);
+    if (updatingPersonalDataError) {
+      console.error(updatingPersonalDataError);
       return NextResponse.json(
-        { message: "Faild to update user profile." },
+        { message: "Internal server error." },
         { status: 500 }
       );
     }
 
     return NextResponse.json(
-      { message: "User profile updated successfully." },
+      { message: "Settings updated successfully." },
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error updating user profile:", error);
+    console.error("Error updating user data:", error);
     return NextResponse.json(
       { message: "Internal server error." },
       { status: 500 }

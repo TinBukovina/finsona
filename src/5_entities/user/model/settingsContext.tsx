@@ -8,11 +8,21 @@ import React, {
 } from "react";
 import Cookies from "js-cookie";
 
+export interface ResponseInterface {
+  success: boolean;
+  error?: string;
+}
+
 export interface UserSettings {
   theme: "light" | "dark";
   default_currency: "EUR" | "USD";
   language: "en";
   month_start_day: number;
+}
+
+export interface UserPersonalInfo {
+  email?: string;
+  full_name?: string;
 }
 
 const DEFAULT_SETTINGS: UserSettings = {
@@ -22,12 +32,20 @@ const DEFAULT_SETTINGS: UserSettings = {
   month_start_day: 1,
 };
 
+const DEFAULT_PERSONAL_INFO: UserPersonalInfo = {
+  email: "",
+  full_name: "",
+};
+
+const DEFAULT_VALUE = { ...DEFAULT_SETTINGS, ...DEFAULT_PERSONAL_INFO };
+
 export const SETTINGS_STORAGE_KEY = "finsona-user-settings";
 
 interface UserSettingsContextType {
-  settings: UserSettings;
+  settings: UserSettings & UserPersonalInfo;
   isSyncing: boolean;
   updateSettings: (newSettings: Partial<UserSettings>) => void;
+  updatePersonalInfo: (newPersonalInfo: Partial<UserPersonalInfo>) => void;
 }
 
 const UserSettingsContext = React.createContext<UserSettingsContextType | null>(
@@ -35,22 +53,25 @@ const UserSettingsContext = React.createContext<UserSettingsContextType | null>(
 );
 
 export function UserSettingsProveder({ children }: PropsWithChildren) {
-  const [settings, setSettings] = useState<UserSettings>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const storedSettings = localStorage.getItem(SETTINGS_STORAGE_KEY);
-        return storedSettings ? JSON.parse(storedSettings) : DEFAULT_SETTINGS;
-      } catch (error) {
-        console.warn(
-          "Failed to parse settings from Local Storage, using default.",
-          error
-        );
-        return DEFAULT_SETTINGS;
-      }
-    }
+  const [settings, setSettings] = useState<UserSettings & UserPersonalInfo>(
+    () => {
+      if (typeof window !== "undefined") {
+        try {
+          const storedSettings = localStorage.getItem(SETTINGS_STORAGE_KEY);
+          return storedSettings ? JSON.parse(storedSettings) : DEFAULT_VALUE;
+        } catch (error) {
+          console.warn(
+            "Failed to parse settings from Local Storage, using default.",
+            error
+          );
 
-    return DEFAULT_SETTINGS; // Fallback for server-side rendering
-  });
+          return DEFAULT_VALUE;
+        }
+      }
+
+      return DEFAULT_VALUE; // Fallback for server-side rendering
+    }
+  );
 
   const [isSyncing, setIsSyncing] = useState<boolean>(true);
 
@@ -63,7 +84,7 @@ export function UserSettingsProveder({ children }: PropsWithChildren) {
         if (response.ok) {
           const dbSettings = await response.json();
 
-          if (dbSettings && dbSettings.theme) {
+          if (dbSettings) {
             setSettings(dbSettings);
             localStorage.setItem(
               SETTINGS_STORAGE_KEY,
@@ -72,7 +93,7 @@ export function UserSettingsProveder({ children }: PropsWithChildren) {
           }
         }
       } catch (error) {
-        console.error("Feilt to fetch settings from DB", error);
+        console.error("Failed to fetch settings from DB", error);
       } finally {
         setIsSyncing(false);
       }
@@ -83,7 +104,7 @@ export function UserSettingsProveder({ children }: PropsWithChildren) {
 
   // Logic for updating settings
   const updateSettings = useCallback(
-    async (newSettings: Partial<UserSettings>) => {
+    async (newSettings: Partial<UserSettings>): Promise<ResponseInterface> => {
       const newOptimisticSettings = {
         ...settings,
         ...newSettings,
@@ -102,21 +123,85 @@ export function UserSettingsProveder({ children }: PropsWithChildren) {
       });
 
       try {
-        await fetch("/api/user/settings", {
+        const response = await fetch("/api/user/settings", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(newSettings),
         });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          return {
+            success: false,
+            error: errorData.message || "Failed to save user settings.",
+          };
+        }
+
+        return { success: true };
       } catch (error) {
-        console.error("Failed to save settings to DB", error);
+        console.error("Failed to save user data to DB", error);
+
+        setSettings(settings);
+        localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
+        const message =
+          error instanceof Error ? error.message : "Network error.";
+        return { success: false, error: message };
       }
     },
     [settings]
   );
 
-  const value = { settings, isSyncing, updateSettings };
+  // Logic for updating personal info
+  const updatePersonalInfo = useCallback(
+    async (
+      newPersonalInfo: Partial<UserPersonalInfo>
+    ): Promise<ResponseInterface> => {
+      const newOptimisticSettings = {
+        ...settings,
+        ...newPersonalInfo,
+      } as UserSettings & UserPersonalInfo;
+
+      setSettings(newOptimisticSettings);
+
+      localStorage.setItem(
+        SETTINGS_STORAGE_KEY,
+        JSON.stringify(newOptimisticSettings)
+      );
+
+      try {
+        const response = await fetch("/api/user/personal-data", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newPersonalInfo),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          return {
+            success: false,
+            error: errorData.message || "Failed to save personal info.",
+          } as ResponseInterface;
+        }
+
+        return { success: true } as ResponseInterface;
+      } catch (error) {
+        console.error("Failed to save user data to DB", error);
+
+        setSettings(settings);
+        localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
+        const message =
+          error instanceof Error ? error.message : "Network error.";
+        return { success: false, error: message };
+      }
+    },
+    [settings]
+  );
+
+  const value = { settings, isSyncing, updateSettings, updatePersonalInfo };
 
   return (
     <UserSettingsContext.Provider value={value}>

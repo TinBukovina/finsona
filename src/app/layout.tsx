@@ -27,7 +27,6 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: PropsWithChildren) {
   // Setting up default theme and preventing flickering
   const cookieStore = await cookies();
-  console.log("cookieStore", cookieStore);
   const theme = cookieStore.get("theme")?.value || "dark"; // Zadana vrijednost je 'dark'
 
   return (
