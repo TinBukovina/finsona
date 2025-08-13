@@ -125,7 +125,7 @@ export default function ResetPasswordPage() {
 
         {/*_LOGIN BUTTON_*/}
         <Button disabled={isLoading} className="w-full">
-          Send reset link
+          Reset password
         </Button>
       </form>
 

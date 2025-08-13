@@ -3,6 +3,7 @@ import { verifyJwt } from "6_shared/auth/auth";
 import { routing } from "i18n/routing";
 import createMiddleware from "next-intl/middleware";
 import { NextRequest, NextResponse } from "next/server";
+import { supabaseAdmin } from "./6_shared/api";
 
 const publicRoutes = [
   PUBLIC_ROUTES_CONFIG.login,
@@ -32,9 +33,17 @@ export async function middleware(request: NextRequest) {
   if (isPublicRoute) {
     // If user has a valid session token on a public route, redirect him to application
     if (decodedToken) {
-      return NextResponse.redirect(
-        new URL(PRIVATE_ROUTES_CONFIG.budget, request.url)
-      );
+      const { data: user } = await supabaseAdmin
+        .from("users")
+        .select("disabled_at")
+        .eq("id", decodedToken.id)
+        .single();
+
+      if (!user?.disabled_at) {
+        return NextResponse.redirect(
+          new URL(PRIVATE_ROUTES_CONFIG.budget, request.url)
+        );
+      }
     }
 
     // Don't do anything if route if public
@@ -43,6 +52,19 @@ export async function middleware(request: NextRequest) {
 
   // Checking if there is a session token
   if (!decodedToken) {
+    const response = NextResponse.redirect(new URL("/auth/login", request.url));
+    response.cookies.delete("session-token");
+    return response;
+  }
+
+  // If user is on protected route with disabled account, move him to login
+  const { data: user } = await supabaseAdmin
+    .from("users")
+    .select("disabled_at")
+    .eq("id", decodedToken.id)
+    .single();
+
+  if (user?.disabled_at) {
     const response = NextResponse.redirect(new URL("/auth/login", request.url));
     response.cookies.delete("session-token");
     return response;

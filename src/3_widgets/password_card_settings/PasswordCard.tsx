@@ -3,7 +3,6 @@
 import { useSettings } from "@/5_entities/user";
 import { Button, PUBLIC_ROUTES_CONFIG, useToast } from "@/6_shared";
 import { useRouter } from "@/i18n/navigation";
-import { CONFIG_FILES } from "next/dist/shared/lib/constants";
 import React from "react";
 
 export default function PasswordCard() {
@@ -21,6 +20,9 @@ export default function PasswordCard() {
       });
 
       addToast("Check your email for a reset link.", "success");
+
+      await fetch("/api/auth/logout", { method: "POST" });
+
       router.push(PUBLIC_ROUTES_CONFIG.login);
     } catch (error) {
       console.error(error);

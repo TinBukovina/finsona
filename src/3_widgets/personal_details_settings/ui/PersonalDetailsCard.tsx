@@ -76,7 +76,7 @@ export default function PersonalDetailsCard() {
             }
             type="email"
             placeholder="Email"
-            value={formData.email}
+            value={formData.email || ""}
             onChange={(e) => console.log(e.target.value)}
             size={
               formData.email
@@ -96,7 +96,7 @@ export default function PersonalDetailsCard() {
               `focus:outline-primary focus:border-transparent disabled:pointer-events-none disabled:opacity-50`
             }
             placeholder="Full name"
-            value={formData.full_name}
+            value={formData.full_name || ""}
             onChange={(e) => changeSingleFormData("full_name", e.target.value)}
             size={
               formData.full_name
