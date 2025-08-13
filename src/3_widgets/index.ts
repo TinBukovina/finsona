@@ -7,3 +7,5 @@ export * from "./navigation";
 export * from "./settings_navigation";
 
 export * from "./personal_details_settings";
+
+export * from "./password_card_settings";

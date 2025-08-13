@@ -22,9 +22,10 @@ export default function SettingsNavigation() {
             href={link.href}
             className={
               `text-h6 px-3 py-2 border-b-2 transition-colors` +
+              " " +
               (pathname.endsWith(link.href.split("/").pop()!)
                 ? "text-primary border-primary"
-                : "text-foreground border-border hover:border-border")
+                : "text-foreground border-border hover:cursor-pointer hover:text-primary")
             }
           >
             {link.label}

@@ -5,8 +5,6 @@ import React, { useEffect, useState } from "react";
 import { Button, useToast } from "@/6_shared";
 import { UserPersonalInfo, UserSettings, useSettings } from "@/5_entities/user";
 
-let formCopyBeforeEditing: (UserSettings & UserPersonalInfo) | null = null;
-
 export default function PersonalDetailsCard() {
   const { addToast } = useToast();
   const { settings, updateUser, isSyncing } = useSettings();
@@ -125,7 +123,6 @@ export default function PersonalDetailsCard() {
           variant="secondary"
           className="w-fit"
           onClick={() => {
-            formCopyBeforeEditing = { ...formData };
             setEditingMode(true);
           }}
         >
