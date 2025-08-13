@@ -13,6 +13,8 @@ export interface ResponseInterface {
   error?: string;
 }
 
+export interface UserDataInterface extends UserSettings, UserPersonalInfo {}
+
 export interface UserSettings {
   theme: "light" | "dark";
   default_currency: "EUR" | "USD";
@@ -44,8 +46,9 @@ export const SETTINGS_STORAGE_KEY = "finsona-user-settings";
 interface UserSettingsContextType {
   settings: UserSettings & UserPersonalInfo;
   isSyncing: boolean;
-  updateSettings: (newSettings: Partial<UserSettings>) => void;
-  updatePersonalInfo: (newPersonalInfo: Partial<UserPersonalInfo>) => void;
+  updateUser: (
+    newData: Partial<UserDataInterface>
+  ) => Promise<ResponseInterface>;
 }
 
 const UserSettingsContext = React.createContext<UserSettingsContextType | null>(
@@ -80,7 +83,7 @@ export function UserSettingsProveder({ children }: PropsWithChildren) {
     async function syncSettingsWithDb() {
       // Trying to fetch settings from database
       try {
-        const response = await fetch("/api/user/settings");
+        const response = await fetch("/api/user/profile");
         if (response.ok) {
           const dbSettings = await response.json();
 
@@ -102,97 +105,59 @@ export function UserSettingsProveder({ children }: PropsWithChildren) {
     syncSettingsWithDb();
   }, []);
 
-  // Logic for updating settings
-  const updateSettings = useCallback(
-    async (newSettings: Partial<UserSettings>): Promise<ResponseInterface> => {
+  // Logic for updating user data
+  const updateUser = useCallback(
+    async (newData: Partial<UserDataInterface>): Promise<ResponseInterface> => {
+      const originalSettings = settings;
+
+      console.log(newData);
+
+      // Optimistic update
       const newOptimisticSettings = {
         ...settings,
-        ...newSettings,
-      } as UserSettings;
-
+        ...newData,
+      } as UserDataInterface;
       setSettings(newOptimisticSettings);
-
       localStorage.setItem(
         SETTINGS_STORAGE_KEY,
         JSON.stringify(newOptimisticSettings)
       );
 
-      Cookies.set("theme", newOptimisticSettings.theme, {
-        expires: 365,
-        path: "/",
-      });
+      // Update cookie if theme is changed
+      if (newData.theme) {
+        Cookies.set("theme", newData.theme, {
+          expires: 365,
+          path: "/",
+        });
+      }
 
       try {
-        const response = await fetch("/api/user/settings", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newSettings),
+        const response = await fetch("/api/user/profile", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newData),
         });
 
         if (!response.ok) {
           const errorData = await response.json();
-          return {
-            success: false,
-            error: errorData.message || "Failed to save user settings.",
-          };
+          throw new Error(errorData.message || "Failed to save changes.");
         }
 
         return { success: true };
       } catch (error) {
+        console.log(error);
         console.error("Failed to save user data to DB", error);
 
-        setSettings(settings);
-        localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
-        const message =
-          error instanceof Error ? error.message : "Network error.";
-        return { success: false, error: message };
-      }
-    },
-    [settings]
-  );
-
-  // Logic for updating personal info
-  const updatePersonalInfo = useCallback(
-    async (
-      newPersonalInfo: Partial<UserPersonalInfo>
-    ): Promise<ResponseInterface> => {
-      const newOptimisticSettings = {
-        ...settings,
-        ...newPersonalInfo,
-      } as UserSettings & UserPersonalInfo;
-
-      setSettings(newOptimisticSettings);
-
-      localStorage.setItem(
-        SETTINGS_STORAGE_KEY,
-        JSON.stringify(newOptimisticSettings)
-      );
-
-      try {
-        const response = await fetch("/api/user/personal-data", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newPersonalInfo),
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          return {
-            success: false,
-            error: errorData.message || "Failed to save personal info.",
-          } as ResponseInterface;
+        // Revert to original settings
+        setSettings(originalSettings);
+        localStorage.setItem(
+          SETTINGS_STORAGE_KEY,
+          JSON.stringify(originalSettings)
+        );
+        if (newData.theme && originalSettings?.theme) {
+          Cookies.set("theme", originalSettings.theme);
         }
 
-        return { success: true } as ResponseInterface;
-      } catch (error) {
-        console.error("Failed to save user data to DB", error);
-
-        setSettings(settings);
-        localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(settings));
         const message =
           error instanceof Error ? error.message : "Network error.";
         return { success: false, error: message };
@@ -201,7 +166,7 @@ export function UserSettingsProveder({ children }: PropsWithChildren) {
     [settings]
   );
 
-  const value = { settings, isSyncing, updateSettings, updatePersonalInfo };
+  const value = { settings, isSyncing, updateUser };
 
   return (
     <UserSettingsContext.Provider value={value}>

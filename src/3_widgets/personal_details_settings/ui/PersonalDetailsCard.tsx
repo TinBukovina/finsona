@@ -3,18 +3,13 @@
 import React, { useEffect, useState } from "react";
 
 import { Button, useToast } from "@/6_shared";
-import {
-  ResponseInterface,
-  UserPersonalInfo,
-  UserSettings,
-  useSettings,
-} from "@/5_entities/user";
+import { UserPersonalInfo, UserSettings, useSettings } from "@/5_entities/user";
 
 let formCopyBeforeEditing: (UserSettings & UserPersonalInfo) | null = null;
 
 export default function PersonalDetailsCard() {
   const { addToast } = useToast();
-  const { settings, updatePersonalInfo, isSyncing } = useSettings();
+  const { settings, updateUser, isSyncing } = useSettings();
 
   const [formData, setFormData] = useState<UserSettings & UserPersonalInfo>(
     settings
@@ -38,14 +33,14 @@ export default function PersonalDetailsCard() {
   }
 
   const handlePersonalDetailsChange = async () => {
-    if (!formData) return;
+    if (!formData || !formData.full_name) return;
 
-    // Šaljemo samo podatke koji se mogu mijenjati
-    const dataToUpdate = {
-      full_name: formData.full_name,
-    };
+    if (formData.full_name?.length < 2) {
+      addToast("Full name must be at least 2 characters long.", "error");
+      return;
+    }
 
-    const result = await updatePersonalInfo(dataToUpdate);
+    const result = await updateUser({ full_name: formData.full_name });
 
     if (result.success) {
       addToast("Profile updated successfully!", "success");
