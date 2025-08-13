@@ -1,5 +1,5 @@
 import React from "react";
 
 export default function page() {
-  return <div className="w-full h-full">Settings page</div>;
+  return <div>Application settings page</div>;
 }

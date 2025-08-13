@@ -10,5 +10,5 @@ export const PRIVATE_ROUTES_CONFIG = {
   dashboard: "/dashboard",
   budget: "/budget",
   transactions: "/transactions",
-  settings: "/settings",
+  settings: "/settings/account",
 };
