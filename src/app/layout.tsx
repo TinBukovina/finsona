@@ -1,11 +1,9 @@
-// app/layout.js
-
 import { PropsWithChildren } from "react";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import "./globals.css";
-import { UserSettingsProveder } from "@/5_entities/user";
+import { UserSettingsProvider } from "@/5_entities/user";
 import { ToastProvider } from "@/6_shared";
 import { cookies } from "next/headers";
 
@@ -27,8 +25,7 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: PropsWithChildren) {
   // Setting up default theme and preventing flickering
   const cookieStore = await cookies();
-  console.log("cookieStore", cookieStore);
-  const theme = cookieStore.get("theme")?.value || "dark"; // Zadana vrijednost je 'dark'
+  const theme = cookieStore.get("theme")?.value || "dark";
 
   return (
     <html lang="en" className={theme}>
@@ -41,13 +38,13 @@ export default async function RootLayout({ children }: PropsWithChildren) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased relative w-100% h-dvh overflow-auto bg-background`}
       >
-        <UserSettingsProveder>
+        <UserSettingsProvider>
           <ToastProvider>
             {children}
             <div id="portal-root"></div>
             <div id="toast-root"></div>
           </ToastProvider>
-        </UserSettingsProveder>
+        </UserSettingsProvider>
       </body>
     </html>
   );

@@ -16,14 +16,14 @@ export default function Layout({ children }: PropsWithChildren) {
       }
     >
       <Sidebar />
-      <div className="flex flex-col gap-2 w-full h-full">
+      <div className="flex flex-col gap-2 sm:gap-0 w-full h-full">
         <Navigation />
         <main
           ref={scrollableContentRef}
-          className="w-full h-full overflow-auto bg-background"
+          className="w-full h-full overflow-auto transparent"
         >
           {/* Div for preventing flickering in hidding nav on scroll */}
-          <div className="pb-20 sm:pb-0">{children}</div>
+          <div className="w-full h-fit pb-[71px] sm:pb-0">{children}</div>
         </main>
         <BottomNav scrollableElementRef={scrollableContentRef} />
       </div>

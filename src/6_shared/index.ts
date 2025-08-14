@@ -1,5 +1,5 @@
 // Exporting UI components
-export * from "./ui/components/index";
+export * from "./ui/components";
 
 // Exporting public config routes
 export { PUBLIC_ROUTES_CONFIG, PRIVATE_ROUTES_CONFIG } from "./config/routes";

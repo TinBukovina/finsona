@@ -10,3 +10,5 @@ export { default as FooterLoader } from "./auth/FooterLoader";
 
 // Sidebar loaders
 export { default as SidebarNavLinksLoader } from "./widgets/SidebarNavLinksLoader";
+
+export * from "./widgets/settings";

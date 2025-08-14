@@ -31,6 +31,15 @@ export async function POST(request: Request) {
       );
     }
 
+    if (user.disabled_at) {
+      return NextResponse.json(
+        {
+          message: "The account is disabled.",
+        },
+        { status: 403 }
+      );
+    }
+
     if (!user.is_verified) {
       return NextResponse.json(
         { message: "Please verify your email before logging in." },

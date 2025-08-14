@@ -54,5 +54,51 @@
     "error_invalid_token": "Invalid or expired token.",
     "error_invalid_passcode": "Invalid or expired passcode.",
     "error_no_passcode": "Unable to send passcode."
+  },
+  "settings_page": {
+    "title": "Settings",
+    "tab_account": "Account",
+    "tab_application": "Application",
+    "tab_appearance": "Appearance"
+  },
+  "settings_account_page": {
+    "personal_details_title": "Personal details",
+    "personal_details_email_input": "Email:",
+    "personal_details_full_name_input": "Name and surname:",
+    "personal_details_edit_btn": "Edit",
+    "personal_details_save_btn": "Save",
+    "personal_details_cancel_btn": "Cancel",
+    "password_reset_title": "Password",
+    "password_reset_description": "When you request your change password, we will send you email with a link to change it.",
+    "password_reset_btn": "Request password change",
+    "disable_account_title": "Disable account",
+    "disable_account_description": "Disable this account and its data. This action is permanent and cannot be undone.",
+    "disable_account_btn": "Disable account",
+    "disable_account_warning_msg": "Are you sure you want to disable your account?",
+    "disable_account_keep_btn": "Keep",
+    "disable_account_disable_btn": "Disable"
+  },
+  "settings_application_page": {
+    "currency_title": "Currency settings",
+    "currency_description": "Change currency of your account.",
+    "currency_placeholder": "Currency",
+    "paycheck_start_title": "Financial month start",
+    "paycheck_start_description": "Choose the day in a month when you want to start your budget.",
+    "paycheck_start_placeholder": "Select a day",
+    "number_format_title": "Number format",
+    "number_format_description": "Choose number format for your account.",
+    "number_format_placeholder": "Choose format"
+  },
+  "settings_appearance_page": {
+    "language_title": "Language",
+    "language_description": "Choose the preferred language for your account.",
+    "language_placeholder": "Select language",
+    "language_en_option": "English",
+    "language_hr_option": "Croatian",
+    "theme_title": "Theme",
+    "theme_description": "Choose the preferred theme for your account.",
+    "light_option": "Light",
+    "dark_option": "Dark",
+    "system_option": "System"
   }
 }

@@ -53,9 +53,12 @@ export function LoginForm({}) {
         body: JSON.stringify({ email, password }),
       });
 
+      console.log("1");
       if (response.ok) {
+        console.log("2");
         router.push(PRIVATE_ROUTES_CONFIG.budget);
       } else {
+        console.log("3");
         const responseData = await response.json();
         addToast(
           responseData.message || tError("error_server_generic"),
