@@ -3,6 +3,7 @@
 import React from "react";
 
 import {
+  NumberFormatCardLoader,
   Select,
   SelectContent,
   SelectItem,
@@ -30,7 +31,7 @@ export default function NumberFormatCard() {
   };
 
   if (isSyncing) {
-    return <div>Loding...</div>;
+    return <NumberFormatCardLoader />;
   }
 
   return (

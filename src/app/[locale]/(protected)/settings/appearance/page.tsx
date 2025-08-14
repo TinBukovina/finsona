@@ -1,5 +1,6 @@
-import { LanguageCard, ThemeCard } from "@/3_widgets";
 import React from "react";
+
+import { LanguageCard, ThemeCard } from "@/3_widgets";
 
 export default function page() {
   return (

@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { useToast } from "@/6_shared";
+import { ThemeCardLoader, useToast } from "@/6_shared";
 import { UserSettings, useSettings } from "@/5_entities/user";
 import { se } from "date-fns/locale";
 
@@ -24,14 +24,14 @@ export default function ThemeCard() {
   };
 
   if (isSyncing) {
-    return <div>Loding...</div>;
+    return <ThemeCardLoader />;
   }
 
   return (
     <div className="flex flex-col gap-5 p-4 bg-card border border-border rounded-card">
-      <h2 className="text-h6 font-semibold">Language</h2>
+      <h2 className="text-h6 font-semibold">Theme</h2>
       <p className="text-muted-foreground">
-        Choose the preferred language for your account.
+        Choose the preferred theme for your account.
       </p>
 
       <div className="flex flex-wrap gap-6">

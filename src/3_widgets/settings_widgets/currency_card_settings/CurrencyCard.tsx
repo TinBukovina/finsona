@@ -3,6 +3,7 @@
 import React from "react";
 
 import {
+  CurrencyCardLoader,
   Select,
   SelectContent,
   SelectItem,
@@ -32,7 +33,7 @@ export default function CurrencyCard() {
   };
 
   if (isSyncing) {
-    return <div>Loding...</div>;
+    return <CurrencyCardLoader />;
   }
 
   return (

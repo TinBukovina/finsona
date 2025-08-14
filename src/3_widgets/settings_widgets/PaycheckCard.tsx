@@ -3,6 +3,7 @@
 import React from "react";
 
 import {
+  PaycheckCardLoader,
   Select,
   SelectContent,
   SelectItem,
@@ -30,7 +31,7 @@ export default function PayheckCard() {
   };
 
   if (isSyncing) {
-    return <div>Loding...</div>;
+    return <PaycheckCardLoader />;
   }
 
   return (

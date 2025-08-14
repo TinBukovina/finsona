@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 
-import { Button, cn, useToast } from "@/6_shared";
+import { Button, cn, PersonalDetailsCardLoader, useToast } from "@/6_shared";
 import { UserPersonalInfo, UserSettings, useSettings } from "@/5_entities/user";
 
 export default function PersonalDetailsCard() {
@@ -54,7 +54,7 @@ export default function PersonalDetailsCard() {
   };
 
   if (isSyncing || !formData) {
-    return <div>Loading...</div>;
+    return <PersonalDetailsCardLoader />;
   }
 
   return (
@@ -70,7 +70,7 @@ export default function PersonalDetailsCard() {
           <label>Email:</label>
           <input
             className={cn(
-              "block px-3 py-1 text-muted-foreground border rounded-max disabled:opacity-50 disable:pointer-events-none transition-all  ",
+              "block px-4 py-2 text-muted-foreground border rounded-max disabled:opacity-50 disable:pointer-events-none transition-all  ",
               "outline-none",
               {
                 "border-border": false,
@@ -95,7 +95,7 @@ export default function PersonalDetailsCard() {
           <label>Name and surname:</label>
           <input
             className={cn(
-              "block px-3 py-1 text-muted-foreground border rounded-max disabled:opacity-50 disable:pointer-events-none transition-all",
+              "block px-4 py-2 text-muted-foreground border rounded-max disabled:opacity-50 disable:pointer-events-none transition-all",
               "outline-none",
               {
                 "border-border": editingMode,

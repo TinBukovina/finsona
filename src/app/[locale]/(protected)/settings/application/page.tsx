@@ -7,8 +7,10 @@ export default function page() {
     <div className="flex flex-col gap-4">
       {/*CURRENCY SETTINGS CARD*/}
       <CurrencyCard />
+
       {/*PAYCHECK START SETTINGS CARD*/}
       <PaycheckCard />
+
       {/*NUMBER FORMAT SETTINGS CARD*/}
       <NumberFormatCard />
     </div>

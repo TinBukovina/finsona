@@ -3,6 +3,7 @@
 import React from "react";
 
 import {
+  LanguageCardLoader,
   Select,
   SelectContent,
   SelectItem,
@@ -32,7 +33,7 @@ export default function LanguageCard() {
   };
 
   if (isSyncing) {
-    return <div>Loding...</div>;
+    return <LanguageCardLoader />;
   }
 
   return (

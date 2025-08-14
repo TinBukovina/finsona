@@ -1,5 +1,6 @@
 // Definition of props that loaders will have
 export interface LoaderProps {
+  children?: React.ReactNode;
   bg?:
     | "primary"
     | "secondary"
@@ -23,6 +24,8 @@ export interface LoaderProps {
   height?: string;
   className?: string;
   border?: boolean;
+  rounded?: "sm" | "default" | "lg" | "full" | "card";
+  padding?: string;
 }
 
 // Centralize object for background colors
@@ -48,4 +51,12 @@ export const fontSizes = {
   h3: "text-h3",
   h2: "text-h2",
   h1: "text-h1",
+};
+
+export const roundedSizes = {
+  sm: "rounded-sm",
+  default: "rounded-md",
+  lg: "rounded-lg",
+  card: "rounded-card",
+  full: "rounded-max",
 };
