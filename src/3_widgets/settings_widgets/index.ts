@@ -11,3 +11,7 @@ export * from "./currency_card_settings";
 export { default as PaycheckCard } from "./PaycheckCard";
 
 export { default as NumberFormatCard } from "./NumberFormatCard";
+
+export { default as LanguageCard } from "./LanguageCard";
+
+export { default as ThemeCard } from "./ThemeCard";

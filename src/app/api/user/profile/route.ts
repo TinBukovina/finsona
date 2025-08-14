@@ -10,6 +10,7 @@ const SETTINGS_FIELDS = [
   "default_currency",
   "language",
   "month_start_day",
+  "number_format",
 ];
 
 // --- GET: Fetching all data about user ---
@@ -72,6 +73,16 @@ export async function PATCH(request: Request) {
         settingsDataToUpdate[key] = body[key];
       }
     });
+
+    if (
+      Object.keys(profileDataToUpdate).length <= 0 &&
+      Object.keys(settingsDataToUpdate).length <= 0
+    ) {
+      return NextResponse.json(
+        { message: "There is no table column with that name." },
+        { status: 404 }
+      );
+    }
 
     // 2. Update 'users' table if there is data for it
     if (Object.keys(profileDataToUpdate).length > 0) {

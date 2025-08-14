@@ -12,20 +12,22 @@ import {
 } from "@/6_shared";
 import { UserSettings, useSettings } from "@/5_entities/user";
 
-export default function NumberFormatCard() {
+export default function LanguageCard() {
   const { settings, updateUser, isSyncing } = useSettings();
   const { addToast } = useToast();
 
-  const handleFormatChange = async (
-    newFormat: UserSettings["number_format"]
+  const handleLanguageChange = async (
+    newLanguage: UserSettings["language"]
   ) => {
-    const result = await updateUser({ number_format: newFormat });
+    const result = await updateUser({
+      language: newLanguage,
+    });
 
     if (result.success) {
-      addToast("Number format updated!", "success");
+      addToast("Language updated!", "success");
     } else {
       console.log(result.error);
-      addToast("Failed to update format.", "error");
+      addToast("Failed to update language.", "error");
     }
   };
 
@@ -35,24 +37,27 @@ export default function NumberFormatCard() {
 
   return (
     <div className="flex flex-col gap-5 p-4 bg-card border border-border rounded-card">
-      <h2 className="text-h6 font-semibold">Number format</h2>
+      <h2 className="text-h6 font-semibold">Language</h2>
       <p className="text-muted-foreground">
-        Choose number format for your account.
+        Choose the preferred language for your account.
       </p>
 
-      <Select value={settings.number_format} onValueChange={handleFormatChange}>
+      <Select
+        value={String(settings.language)}
+        onValueChange={handleLanguageChange}
+      >
         <SelectTrigger className="w-fit text-normal">
           <SelectValue
-            placeholder="Number Format"
+            placeholder="Language"
             className="placeholder:card-foreground "
           />
         </SelectTrigger>
         <SelectContent className="bg-popover p-[2px]">
-          <SelectItem value="EU" className="">
-            $1.234,56
+          <SelectItem value="en" className="">
+            English
           </SelectItem>
-          <SelectItem value="US" className="">
-            $1,234.56
+          <SelectItem value="hr" className="">
+            Croatian
           </SelectItem>
         </SelectContent>
       </Select>

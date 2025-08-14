@@ -16,9 +16,10 @@ export interface ResponseInterface {
 export interface UserDataInterface extends UserSettings, UserPersonalInfo {}
 
 export interface UserSettings {
-  theme: "light" | "dark";
+  theme: "light" | "dark" | "system";
   default_currency: "EUR" | "USD";
-  language: "en";
+  number_format: "EU" | "US";
+  language: "en" | "hr";
   month_start_day: number;
 }
 
@@ -30,6 +31,7 @@ export interface UserPersonalInfo {
 const DEFAULT_SETTINGS: UserSettings = {
   theme: "dark",
   default_currency: "EUR",
+  number_format: "EU",
   language: "en",
   month_start_day: 1,
 };
@@ -55,7 +57,7 @@ const UserSettingsContext = React.createContext<UserSettingsContextType | null>(
   null
 );
 
-export function UserSettingsProveder({ children }: PropsWithChildren) {
+export function UserSettingsProvider({ children }: PropsWithChildren) {
   const [settings, setSettings] = useState<UserSettings & UserPersonalInfo>(
     () => {
       if (typeof window !== "undefined") {

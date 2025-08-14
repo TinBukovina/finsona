@@ -13,7 +13,7 @@ import {
 import { useSettings } from "@/5_entities/user";
 
 export default function ThemeBtn() {
-  const { settings, updateSettings } = useSettings();
+  const { settings, updateUser } = useSettings();
 
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const [isMounted, setIsMounted] = useState<boolean>(false);
@@ -51,7 +51,7 @@ export default function ThemeBtn() {
         `hover:bg-primary hover:fill-primary-foreground hover:cursor-pointer active:scale-93 transition-all`
       }
       onClick={() => {
-        updateSettings({ theme: mode === "light" ? "dark" : "light" });
+        updateUser({ theme: mode === "light" ? "dark" : "light" });
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}

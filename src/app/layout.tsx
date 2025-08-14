@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import "./globals.css";
-import { UserSettingsProveder } from "@/5_entities/user";
+import { UserSettingsProvider } from "@/5_entities/user";
 import { ToastProvider } from "@/6_shared";
 import { cookies } from "next/headers";
 
@@ -40,13 +40,13 @@ export default async function RootLayout({ children }: PropsWithChildren) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased relative w-100% h-dvh overflow-auto bg-background`}
       >
-        <UserSettingsProveder>
+        <UserSettingsProvider>
           <ToastProvider>
             {children}
             <div id="portal-root"></div>
             <div id="toast-root"></div>
           </ToastProvider>
-        </UserSettingsProveder>
+        </UserSettingsProvider>
       </body>
     </html>
   );
