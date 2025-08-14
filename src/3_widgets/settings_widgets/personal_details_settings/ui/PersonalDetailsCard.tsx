@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 
-import { Button, useToast } from "@/6_shared";
+import { Button, cn, useToast } from "@/6_shared";
 import { UserPersonalInfo, UserSettings, useSettings } from "@/5_entities/user";
 
 export default function PersonalDetailsCard() {
@@ -69,11 +69,15 @@ export default function PersonalDetailsCard() {
         <div className="flex gap-4 items-center">
           <label>Email:</label>
           <input
-            className={
-              `block px-3 py-1 text-muted-foreground border-${false ? "border" : "transparent transparent pointer-events-none"} border rounded-max outline-1 outline-transparent` +
-              " " +
-              "focus:outline-primary focus:border-transparent disabled:pointer-events-none disabled:opacity-50"
-            }
+            className={cn(
+              "block px-3 py-1 text-muted-foreground border rounded-max disabled:opacity-50 disable:pointer-events-none transition-all  ",
+              "outline-none",
+              {
+                "border-border": false,
+                "border-transparent pointer-events-none": true,
+              },
+              "focus:ring-[3px] focus:ring-ring/50"
+            )}
             type="email"
             placeholder="Email"
             value={formData.email || ""}
@@ -90,11 +94,15 @@ export default function PersonalDetailsCard() {
         <div className="flex gap-4 items-center">
           <label>Name and surname:</label>
           <input
-            className={
-              `block px-3 py-1 text-muted-foreground border-${editingMode ? "border" : "transparent pointer-events-none"} border rounded-max outline-1 outline-transparent` +
-              " " +
-              `focus:outline-primary focus:border-transparent disabled:pointer-events-none disabled:opacity-50`
-            }
+            className={cn(
+              "block px-3 py-1 text-muted-foreground border rounded-max disabled:opacity-50 disable:pointer-events-none transition-all",
+              "outline-none",
+              {
+                "border-border": editingMode,
+                "border-transparent pointer-events-none": !editingMode,
+              },
+              "focus:ring-[3px] focus:ring-ring/50"
+            )}
             placeholder="Full name"
             value={formData.full_name || ""}
             onChange={(e) => changeSingleFormData("full_name", e.target.value)}

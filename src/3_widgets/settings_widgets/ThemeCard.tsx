@@ -40,23 +40,35 @@ export default function ThemeCard() {
             className={`w-[120px] h-[90px] bg-foreground ${settings.theme === "light" ? "border-[3px]" : "border"} ${settings.theme === "light" ? "border-primary" : "border-border"} rounded-card cursor-pointer hover:scale-105 transition-all`}
             onClick={() => handleThemeChange("light")}
           ></div>
-          <p className="w-full text-center">Light</p>
+          <p
+            className={`w-full text-center ${settings.theme === "light" ? "text-primary" : ""}`}
+          >
+            Light
+          </p>
         </div>
         <div className="flex flex-col gap-2 w-fit">
           <div
             className={`w-[120px] h-[90px] bg-background ${settings.theme === "dark" ? "border-[3px]" : "border"} ${settings.theme === "dark" ? "border-primary" : "border-border"} rounded-card cursor-pointer hover:scale-105 transition-all`}
             onClick={() => handleThemeChange("dark")}
           ></div>
-          <p className="w-full text-center">Dark</p>
+          <p
+            className={`w-full text-center ${settings.theme === "dark" ? "text-primary" : ""}`}
+          >
+            Dark
+          </p>
         </div>
-        <div className="flex flex-col gap-2 w-fit">
+        <div className="flex flex-col gap-2 w-fit ">
           <div
-            className={`flex gap-0 w-[120px] h-[90px] ${settings.theme === "system" ? "border-[3px]" : "border"} ${settings.theme === "system" ? "border-primary" : "border-border"} rounded-card cursor-pointer`}
+            className={`flex gap-0 w-[120px] h-[90px] ${settings.theme === "system" ? "border-[3px]" : "border"} ${settings.theme === "system" ? "border-primary" : "border-border"} rounded-card cursor-pointer hover:scale-105 transition-all`}
           >
             <div className="w-full h-full bg-foreground rounded-card rounded-r-none"></div>
             <div className="w-full h-full bg-background  rounded-card rounded-l-none"></div>
           </div>
-          <p className="w-full text-center">System</p>
+          <p
+            className={`w-full text-center ${settings.theme === "system" ? "text-primary" : ""}`}
+          >
+            System
+          </p>
         </div>
       </div>
     </div>
