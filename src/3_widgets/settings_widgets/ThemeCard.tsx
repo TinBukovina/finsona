@@ -59,6 +59,7 @@ export default function ThemeCard() {
         <div className="flex flex-col gap-2 w-fit ">
           <div
             className={`flex gap-0 w-[120px] h-[90px] ${settings.theme === "system" ? "border-[3px]" : "border"} ${settings.theme === "system" ? "border-primary" : "border-border"} rounded-card cursor-pointer hover:scale-105 transition-all`}
+            onClick={() => handleThemeChange("system")}
           >
             <div className="w-full h-full bg-foreground rounded-card rounded-r-none"></div>
             <div className="w-full h-full bg-background  rounded-card rounded-l-none"></div>

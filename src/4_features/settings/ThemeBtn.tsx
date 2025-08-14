@@ -4,7 +4,6 @@ import React, { useEffect, useRef, useState } from "react";
 
 import {
   bedtime_r_400,
-  Button,
   DivLoader,
   IconTemplate,
   sunny_r_400,

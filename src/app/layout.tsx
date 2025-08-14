@@ -1,5 +1,3 @@
-// app/layout.js
-
 import { PropsWithChildren } from "react";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -27,7 +25,7 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: PropsWithChildren) {
   // Setting up default theme and preventing flickering
   const cookieStore = await cookies();
-  const theme = cookieStore.get("theme")?.value || "dark"; // Zadana vrijednost je 'dark'
+  const theme = cookieStore.get("theme")?.value || "dark";
 
   return (
     <html lang="en" className={theme}>

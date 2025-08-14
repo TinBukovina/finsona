@@ -107,6 +107,30 @@ export function UserSettingsProvider({ children }: PropsWithChildren) {
     syncSettingsWithDb();
   }, []);
 
+  // Logic for managing theme change
+  useEffect(() => {
+    if (settings?.theme) {
+      const root = document.documentElement;
+      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+      const applyTheme = (themeValue: UserSettings["theme"]) => {
+        let effectiveTheme = themeValue;
+        if (themeValue === "system") {
+          effectiveTheme = mediaQuery.matches ? "dark" : "light";
+        }
+
+        root.classList = effectiveTheme;
+      };
+
+      applyTheme(settings.theme);
+
+      const handleChange = () => applyTheme(settings.theme);
+      mediaQuery.addEventListener("change", handleChange);
+
+      return () => mediaQuery.removeEventListener("change", handleChange);
+    }
+  }, [settings?.theme]);
+
   // Logic for updating user data
   const updateUser = useCallback(
     async (newData: Partial<UserDataInterface>): Promise<ResponseInterface> => {
