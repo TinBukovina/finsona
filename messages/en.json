@@ -100,5 +100,10 @@
     "light_option": "Light",
     "dark_option": "Dark",
     "system_option": "System"
+  },
+  "add_wallet_modal": {
+    "title": "Create a new wallet",
+    "cancle_btn": "Cancle",
+    "create_btn": "Create"
   }
 }

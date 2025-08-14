@@ -61,7 +61,7 @@ export default function Input({
         {placeholder}
       </p>
       <input
-        className={`px-4 py-2 w-full border border-solid border-border rounded-max focus:border-0 disabled:pointer-events-none disabled:opacity-50`}
+        className={`px-4 py-2 w-full border border-solid border-border rounded-max disabled:pointer-events-none disabled:opacity-50`}
         placeholder={isFocused ? "" : placeholder}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}

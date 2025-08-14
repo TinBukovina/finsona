@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { supabaseAdmin } from "@/6_shared/api";
+import { supabaseAdmin } from "@/6_shared/server";
 import { getSession } from "@/6_shared/auth";
 import { UserPersonalInfo, UserSettings } from "@/5_entities/user";
 
