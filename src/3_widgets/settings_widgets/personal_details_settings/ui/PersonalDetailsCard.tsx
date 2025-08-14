@@ -102,6 +102,7 @@ export default function PersonalDetailsCard() {
               {
                 "border-border": editingMode,
                 "border-transparent pointer-events-none": !editingMode,
+                "text-card-foreground": editingMode,
               },
               "focus:ring-[3px] focus:ring-ring/50"
             )}
@@ -112,8 +113,8 @@ export default function PersonalDetailsCard() {
               formData.full_name
                 ? formData.full_name.length > 0
                   ? formData.full_name.length - 4
-                  : 20
-                : 20
+                  : 15
+                : 15
             }
           />
         </div>
