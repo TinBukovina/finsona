@@ -12,8 +12,10 @@ import {
   useToast,
 } from "@/6_shared";
 import { UserSettings, useSettings } from "@/5_entities/user";
+import { useTranslations } from "next-intl";
 
 export default function NumberFormatCard() {
+  const t = useTranslations("settings_application_page");
   const { settings, updateUser, isSyncing } = useSettings();
   const { addToast } = useToast();
 
@@ -36,15 +38,13 @@ export default function NumberFormatCard() {
 
   return (
     <div className="flex flex-col gap-5 p-4 bg-card border border-border rounded-card">
-      <h2 className="text-h6 font-semibold">Number format</h2>
-      <p className="text-muted-foreground">
-        Choose number format for your account.
-      </p>
+      <h2 className="text-h6 font-semibold">{t("number_format_title")}</h2>
+      <p className="text-muted-foreground">{t("number_format_description")}</p>
 
       <Select value={settings.number_format} onValueChange={handleFormatChange}>
         <SelectTrigger className="w-fit text-normal">
           <SelectValue
-            placeholder="Number Format"
+            placeholder={t("number_format_placeholder")}
             className="placeholder:card-foreground "
           />
         </SelectTrigger>

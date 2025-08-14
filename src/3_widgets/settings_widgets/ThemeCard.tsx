@@ -4,9 +4,10 @@ import React from "react";
 
 import { ThemeCardLoader, useToast } from "@/6_shared";
 import { UserSettings, useSettings } from "@/5_entities/user";
-import { se } from "date-fns/locale";
+import { useTranslations } from "next-intl";
 
 export default function ThemeCard() {
+  const t = useTranslations("settings_appearance_page");
   const { settings, updateUser, isSyncing } = useSettings();
   const { addToast } = useToast();
 
@@ -29,10 +30,8 @@ export default function ThemeCard() {
 
   return (
     <div className="flex flex-col gap-5 p-4 bg-card border border-border rounded-card">
-      <h2 className="text-h6 font-semibold">Theme</h2>
-      <p className="text-muted-foreground">
-        Choose the preferred theme for your account.
-      </p>
+      <h2 className="text-h6 font-semibold">{t("theme_title")}</h2>
+      <p className="text-muted-foreground">{t("theme_description")}</p>
 
       <div className="flex flex-wrap gap-6">
         <div className="flex flex-col gap-2 w-fit">
@@ -43,7 +42,7 @@ export default function ThemeCard() {
           <p
             className={`w-full text-center ${settings.theme === "light" ? "text-primary" : ""}`}
           >
-            Light
+            {t("light_option")}
           </p>
         </div>
         <div className="flex flex-col gap-2 w-fit">
@@ -54,7 +53,7 @@ export default function ThemeCard() {
           <p
             className={`w-full text-center ${settings.theme === "dark" ? "text-primary" : ""}`}
           >
-            Dark
+            {t("dark_option")}
           </p>
         </div>
         <div className="flex flex-col gap-2 w-fit ">
@@ -67,7 +66,7 @@ export default function ThemeCard() {
           <p
             className={`w-full text-center ${settings.theme === "system" ? "text-primary" : ""}`}
           >
-            System
+            {t("system_option")}
           </p>
         </div>
       </div>

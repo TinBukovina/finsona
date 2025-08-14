@@ -3,11 +3,13 @@
 import { Button, useToast } from "@/6_shared";
 import Modal from "@/6_shared/ui/modal/Modal";
 import { useRouter } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 import React, { useState } from "react";
 
 export default function DisableAccountCard() {
   const router = useRouter();
 
+  const t = useTranslations("settings_account_page");
   const { addToast } = useToast();
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -39,13 +41,12 @@ export default function DisableAccountCard() {
     <div className="flex flex-col gap-5 p-4 bg-card border border-border rounded-card">
       {/*TITLE*/}
       <h2 className="text-h6 text-card-foreground font-semibold">
-        Disable account
+        {t("disable_account_title")}
       </h2>
 
       {/*DESCRIPTION*/}
       <p className="text-muted-foreground">
-        Disable this account and its data. This action is premanent and cannot
-        be undone.
+        {t("disable_account_description")}
       </p>
 
       <Button
@@ -53,7 +54,7 @@ export default function DisableAccountCard() {
         className="w-fit"
         onClick={() => setIsModalOpen(true)}
       >
-        Disable account
+        {t("disable_account_btn")}
       </Button>
 
       <Modal open={isModalOpen}>
@@ -61,7 +62,7 @@ export default function DisableAccountCard() {
         <div className="fixed inset-0 bg-background/60 flex items-center justify-center">
           <div className="flex flex-col gap-4 px-8 py-6 bg-popover border border-border rounded-card ">
             <p className="max-w-[300px] text-center">
-              Are you shure you want to disable your account?
+              {t("disable_account_warning_msg")}
             </p>
 
             {/*Buttons inside modal*/}
@@ -71,13 +72,13 @@ export default function DisableAccountCard() {
                 onClick={handleDisableAccount}
                 disabled={isLoading}
               >
-                Disable
+                {t("disable_account_disable_btn")}
               </Button>
               <Button
                 onClick={() => setIsModalOpen(false)}
                 disabled={isLoading}
               >
-                Keep
+                {t("disable_account_keep_btn")}
               </Button>
             </div>
           </div>

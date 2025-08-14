@@ -12,8 +12,10 @@ import {
   useToast,
 } from "@/6_shared";
 import { useSettings } from "@/5_entities/user";
+import { useTranslations } from "next-intl";
 
 export default function PayheckCard() {
+  const t = useTranslations("settings_application_page");
   const { settings, updateUser, isSyncing } = useSettings();
   const { addToast } = useToast();
 
@@ -36,10 +38,8 @@ export default function PayheckCard() {
 
   return (
     <div className="flex flex-col gap-5 p-4 bg-card border border-border rounded-card">
-      <h2 className="text-h6 font-semibold">Financial month start</h2>
-      <p className="text-muted-foreground">
-        Choose the day in a month when you want to start your budget.
-      </p>
+      <h2 className="text-h6 font-semibold">{t("paycheck_start_title")}</h2>
+      <p className="text-muted-foreground">{t("paycheck_start_description")}</p>
 
       <Select
         value={String(settings.month_start_day)}
@@ -47,7 +47,7 @@ export default function PayheckCard() {
       >
         <SelectTrigger className="w-fit text-normal">
           <SelectValue
-            placeholder="Date"
+            placeholder={t("paycheck_start_placeholder")}
             className="placeholder:card-foreground "
           />
         </SelectTrigger>

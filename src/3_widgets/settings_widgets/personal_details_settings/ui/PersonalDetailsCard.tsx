@@ -4,8 +4,10 @@ import React, { useEffect, useState } from "react";
 
 import { Button, cn, PersonalDetailsCardLoader, useToast } from "@/6_shared";
 import { UserPersonalInfo, UserSettings, useSettings } from "@/5_entities/user";
+import { useTranslations } from "next-intl";
 
 export default function PersonalDetailsCard() {
+  const t = useTranslations("settings_account_page");
   const { addToast } = useToast();
   const { settings, updateUser, isSyncing } = useSettings();
 
@@ -61,13 +63,13 @@ export default function PersonalDetailsCard() {
     <div className="flex flex-col gap-5 p-4 bg-card border border-border rounded-card">
       {/*TITLE*/}
       <h2 className="text-h6 text-card-foreground font-semibold">
-        Personal details
+        {t("personal_details_title")}
       </h2>
 
       {/*OPTIONS*/}
       <div className="flex flex-col gap-3">
         <div className="flex gap-4 items-center">
-          <label>Email:</label>
+          <label>{t("personal_details_email_input")}</label>
           <input
             className={cn(
               "block px-4 py-2 text-muted-foreground border rounded-max disabled:opacity-50 disable:pointer-events-none transition-all  ",
@@ -92,7 +94,7 @@ export default function PersonalDetailsCard() {
           />
         </div>
         <div className="flex gap-4 items-center">
-          <label>Name and surname:</label>
+          <label>{t("personal_details_full_name_input")}</label>
           <input
             className={cn(
               "block px-4 py-2 text-muted-foreground border rounded-max disabled:opacity-50 disable:pointer-events-none transition-all",
@@ -120,10 +122,10 @@ export default function PersonalDetailsCard() {
       {editingMode ? (
         <div className="flex gap-4">
           <Button className="w-fit" onClick={handlePersonalDetailsChange}>
-            Save
+            {t("personal_details_save_btn")}
           </Button>
           <Button variant="secondary" className="w-fit" onClick={handleCancel}>
-            Cancel
+            {t("personal_details_cancel_btn")}
           </Button>
         </div>
       ) : (
@@ -134,7 +136,7 @@ export default function PersonalDetailsCard() {
             setEditingMode(true);
           }}
         >
-          Edit
+          {t("personal_details_edit_btn")}
         </Button>
       )}
     </div>

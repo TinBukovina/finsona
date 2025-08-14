@@ -12,8 +12,10 @@ import {
   useToast,
 } from "@/6_shared";
 import { UserSettings, useSettings } from "@/5_entities/user";
+import { useTranslations } from "next-intl";
 
 export default function LanguageCard() {
+  const t = useTranslations("settings_appearance_page");
   const { settings, updateUser, isSyncing } = useSettings();
   const { addToast } = useToast();
 
@@ -38,10 +40,8 @@ export default function LanguageCard() {
 
   return (
     <div className="flex flex-col gap-5 p-4 bg-card border border-border rounded-card">
-      <h2 className="text-h6 font-semibold">Language</h2>
-      <p className="text-muted-foreground">
-        Choose the preferred language for your account.
-      </p>
+      <h2 className="text-h6 font-semibold">{t("language_title")}</h2>
+      <p className="text-muted-foreground">{t("language_description")}</p>
 
       <Select
         value={String(settings.language)}
@@ -49,16 +49,16 @@ export default function LanguageCard() {
       >
         <SelectTrigger className="w-fit text-normal">
           <SelectValue
-            placeholder="Language"
+            placeholder={t("language_placeholder")}
             className="placeholder:card-foreground "
           />
         </SelectTrigger>
         <SelectContent className="bg-popover p-[2px]">
           <SelectItem value="en" className="">
-            English
+            {t("language_en_option")}
           </SelectItem>
           <SelectItem value="hr" className="">
-            Croatian
+            {t("language_hr_option")}
           </SelectItem>
         </SelectContent>
       </Select>

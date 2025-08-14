@@ -3,15 +3,18 @@
 import React from "react";
 import { Link } from "@/i18n/navigation";
 import { usePathname } from "next/navigation";
-
-const settingsLinks = [
-  { href: "/settings/account", label: "Account" },
-  { href: "/settings/application", label: "Application" },
-  { href: "/settings/appearance", label: "Appearance" },
-];
+import { useTranslations } from "next-intl";
 
 export default function SettingsNavigation() {
   const pathname = usePathname();
+
+  const t = useTranslations("settings_page");
+
+  const settingsLinks = [
+    { href: "/settings/account", label: t("tab_account") },
+    { href: "/settings/application", label: t("tab_application") },
+    { href: "/settings/appearance", label: t("tab_appearance") },
+  ];
 
   return (
     <div className="flex">

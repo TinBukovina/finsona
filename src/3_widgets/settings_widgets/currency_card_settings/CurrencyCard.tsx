@@ -12,8 +12,10 @@ import {
   useToast,
 } from "@/6_shared";
 import { UserSettings, useSettings } from "@/5_entities/user";
+import { useTranslations } from "next-intl";
 
 export default function CurrencyCard() {
+  const t = useTranslations("settings_application_page");
   const { settings, updateUser, isSyncing } = useSettings();
   const { addToast } = useToast();
 
@@ -38,8 +40,8 @@ export default function CurrencyCard() {
 
   return (
     <div className="flex flex-col gap-5 p-4 bg-card border border-border rounded-card">
-      <h2 className="text-h6 font-semibold">Currency Settings</h2>
-      <p className="text-muted-foreground">Change currency of your account.</p>
+      <h2 className="text-h6 font-semibold">{t("currency_title")}</h2>
+      <p className="text-muted-foreground">{t("currency_description")}</p>
 
       <Select
         value={settings.default_currency || "EUR"}
@@ -47,7 +49,7 @@ export default function CurrencyCard() {
       >
         <SelectTrigger className="w-fit text-normal">
           <SelectValue
-            placeholder="Currency"
+            placeholder={t("currency_placeholder")}
             className="placeholder:card-foreground "
           />
         </SelectTrigger>
