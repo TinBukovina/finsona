@@ -2,11 +2,7 @@
 
 import React, { useState } from "react";
 
-import {
-  CreateWalletModalBtn,
-  SelectActiveWallet,
-  ThemeBtn,
-} from "@/4_features";
+import { SelectActiveWallet, ThemeBtn } from "@/4_features";
 import { cn, IconTemplate, person_r_400 } from "@/6_shared";
 import {
   DropdownMenu,
@@ -16,6 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/6_shared/ui/components/dropdown-menu";
+import { CreateWalletButton } from "@/4_features/create_wallet";
 
 export default function Navigation() {
   const [isActiveAccountButton, setIsActiveAccountButton] =
@@ -33,7 +30,7 @@ export default function Navigation() {
         {/*ACTIVE WALLET SELECTION*/}
         <SelectActiveWallet />
         {/*OPEN WALLET MODAL BTN*/}
-        <CreateWalletModalBtn />
+        <CreateWalletButton />
       </div>
 
       {/*ADD WALLET BTN*/}

@@ -20,10 +20,12 @@ export default function Layout({ children }: PropsWithChildren) {
         <Navigation />
         <main
           ref={scrollableContentRef}
-          className="w-full h-full overflow-auto transparent"
+          className="w-full h-full overflow-auto transparent "
         >
           {/* Div for preventing flickering in hidding nav on scroll */}
-          <div className="w-full h-fit pb-[71px] sm:pb-0">{children}</div>
+          <div className="w-full h-fit sm:h-full pb-[71px] sm:pb-0">
+            {children}
+          </div>
         </main>
         <BottomNav scrollableElementRef={scrollableContentRef} />
       </div>

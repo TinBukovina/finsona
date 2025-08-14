@@ -103,7 +103,14 @@
   },
   "add_wallet_modal": {
     "title": "Create a new wallet",
-    "cancle_btn": "Cancle",
-    "create_btn": "Create"
+    "cancel_btn": "Cancel",
+    "create_btn": "Create",
+    "creating_btn": "Creating...",
+    "name_placeholder": "Wallet name",
+    "type_placeholder": "Select type",
+    "type_personal": "Personal",
+    "type_business": "Business",
+    "type_savings": "Savings",
+    "validation_error": "Please fill in all fields correctly."
   }
 }
