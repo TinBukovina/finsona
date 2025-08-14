@@ -4,4 +4,4 @@ import "server-only";
 export * from "./auth/index";
 
 // Api
-export * from "./api/index";
+export { default as supabaseAdmin } from "./api/supabase_admin";

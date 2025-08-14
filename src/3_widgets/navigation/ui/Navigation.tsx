@@ -2,8 +2,7 @@
 
 import React, { useState } from "react";
 
-import { ThemeBtn } from "@/4_features";
-import { SelectAccountCombobox } from "@/4_features/SelectAccount";
+import { SelectActiveWallet, ThemeBtn } from "@/4_features";
 import { cn, IconTemplate, person_r_400 } from "@/6_shared";
 import {
   DropdownMenu,
@@ -26,8 +25,8 @@ export default function Navigation() {
         `sm:px-8 sm:bg-sidebar-background sm:border-b-0`
       }
     >
-      {/*_ACCOUNT SELECTION_*/}
-      <SelectAccountCombobox />
+      {/*ACTIVE WALLET SELECTION*/}
+      <SelectActiveWallet />
 
       {/*_ACTIONS IN NAVIGATION_*/}
       <div className="hidden sm:flex gap-3">

@@ -1,2 +1,2 @@
 // User settings congtext
-export * from "./settingsContext";
+export * from "./SettingsContext";

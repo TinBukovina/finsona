@@ -13,3 +13,5 @@ export { default as SidebarLink } from "./SidebarLink";
 export { default as MobileNavLink } from "./MobileNavLink";
 export * from "./select";
 export { DatePicker } from "./date-picker";
+export * from "./popover";
+export * from "./command";

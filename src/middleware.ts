@@ -3,7 +3,7 @@ import { verifyJwt } from "6_shared/auth/auth";
 import { routing } from "i18n/routing";
 import createMiddleware from "next-intl/middleware";
 import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin } from "./6_shared/api";
+import { supabaseAdmin } from "./6_shared/server";
 
 const publicRoutes = [
   PUBLIC_ROUTES_CONFIG.login,

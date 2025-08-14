@@ -1,2 +1,2 @@
-// Supabase admin
-export { default as supabaseAdmin } from "./supabase_admin";
+// Fetcher for swr
+export { fetcher } from "./fetcher";
