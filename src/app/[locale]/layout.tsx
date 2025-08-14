@@ -3,6 +3,7 @@ import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
 
 import AppContent from "./AppContent";
+import { Providers } from "@/1_app";
 
 export default async function LocaleLayout({
   children,
@@ -19,7 +20,9 @@ export default async function LocaleLayout({
   return (
     <div className="w-100% h-dvh">
       <NextIntlClientProvider>
-        <AppContent>{children}</AppContent>
+        <Providers>
+          <AppContent>{children}</AppContent>
+        </Providers>
       </NextIntlClientProvider>
     </div>
   );

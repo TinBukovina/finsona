@@ -2,7 +2,11 @@
 
 import React, { useState } from "react";
 
-import { SelectActiveWallet, ThemeBtn } from "@/4_features";
+import {
+  CreateWalletModalBtn,
+  SelectActiveWallet,
+  ThemeBtn,
+} from "@/4_features";
 import { cn, IconTemplate, person_r_400 } from "@/6_shared";
 import {
   DropdownMenu,
@@ -25,8 +29,14 @@ export default function Navigation() {
         `sm:px-8 sm:bg-sidebar-background sm:border-b-0`
       }
     >
-      {/*ACTIVE WALLET SELECTION*/}
-      <SelectActiveWallet />
+      <div className="flex items-center gap-4">
+        {/*ACTIVE WALLET SELECTION*/}
+        <SelectActiveWallet />
+        {/*OPEN WALLET MODAL BTN*/}
+        <CreateWalletModalBtn />
+      </div>
+
+      {/*ADD WALLET BTN*/}
 
       {/*_ACTIONS IN NAVIGATION_*/}
       <div className="hidden sm:flex gap-3">

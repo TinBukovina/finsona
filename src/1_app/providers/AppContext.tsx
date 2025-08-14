@@ -1,6 +1,9 @@
 "use client";
 
 import { createContext, PropsWithChildren, useContext, useState } from "react";
+import Cookies from "js-cookie";
+
+export const WALLET_ID_COOKIE_KEY = "active-wallet-id";
 
 interface AppState {
   activeWalletId: string | null;
@@ -20,6 +23,12 @@ export function AppProvider({ children }: PropsWithChildren) {
 
   const setActiveWallet = (walletId: string | null) => {
     setAppState((prevState) => ({ ...prevState, activeWalletId: walletId }));
+
+    if (walletId) {
+      Cookies.set(WALLET_ID_COOKIE_KEY, walletId, { expires: 365 });
+    } else {
+      Cookies.remove(WALLET_ID_COOKIE_KEY);
+    }
   };
 
   const value = { appState, setActiveWallet };

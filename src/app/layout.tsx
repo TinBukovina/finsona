@@ -7,6 +7,7 @@ import { UserSettingsProvider } from "@/5_entities/user";
 import { ToastProvider } from "@/6_shared";
 import { cookies } from "next/headers";
 import { AppProvider } from "@/1_app/providers/AppContext";
+import { Providers } from "@/1_app";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,15 +40,7 @@ export default async function RootLayout({ children }: PropsWithChildren) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased relative w-100% h-dvh overflow-auto bg-background`}
       >
-        <UserSettingsProvider>
-          <AppProvider>
-            <ToastProvider>
-              {children}
-              <div id="portal-root"></div>
-              <div id="toast-root"></div>
-            </ToastProvider>
-          </AppProvider>
-        </UserSettingsProvider>
+        {children}
       </body>
     </html>
   );

@@ -10,20 +10,6 @@ export default function Modal({ children, open }: ModalProps) {
 
   useEffect(() => {
     setMounted(true);
-
-    let portalRoot = document.getElementById("portal-root");
-
-    if (!portalRoot) {
-      portalRoot = document.createElement("div");
-      portalRoot.id = "portal-root";
-      document.body.appendChild(portalRoot);
-    }
-
-    return () => {
-      if (portalRoot && portalRoot.children.length === 0) {
-        document.body.removeChild(portalRoot);
-      }
-    };
   }, []);
 
   if (!open) {

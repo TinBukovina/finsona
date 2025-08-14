@@ -7,4 +7,4 @@ export { default as ExpandNavBtn } from "./sidebar/ExpandNavBtn";
 // Settings
 export { default as ThemeBtn } from "./settings/ThemeBtn";
 
-export * from "./select_active_wallet";
+export * from "./wallet";
