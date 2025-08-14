@@ -49,7 +49,11 @@ export default function SidebarNavLinks({ isExpanded }: SidebarNavLinksProps) {
           key={link.href}
           href={link.href}
           svgData={link.svgData}
-          isActive={pathname.includes(link.href)}
+          isActive={
+            link.label !== "Settings"
+              ? pathname.includes(link.href)
+              : pathname.includes("/settings")
+          }
           hideText={!isExpanded}
         >
           {link.label}

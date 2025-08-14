@@ -1,0 +1,104 @@
+{
+  "HomePage": {
+    "title": "Naslov",
+    "description": "Opis"
+  },
+  "login_page": {
+    "title": "Dobrodošli u Finsonu",
+    "description": "Molimo prijavite se.",
+    "email_login_btn": "Nastavite s e-mailom",
+    "login_sub_title": "Prijava",
+    "forgot_password": "Zaboravili ste lozinku?",
+    "login_btn": "Prijavi se",
+    "logingin_in": "Prijavljujem...",
+    "email_input": "E-mail adresa",
+    "password_input": "Lozinka",
+    "dont_have_account": "Nemate račun?",
+    "signup_link": "Registriraj se",
+    "verification_success": "Račun je potvrđen!",
+    "verification_fail": "Potvrda računa nije uspjela."
+  },
+  "email_login_page": {
+    "title": "Dobrodošli u Finsonu",
+    "description": "Unesite e-mail za dobivanje koda.",
+    "email_input": "E-mail adresa",
+    "send_passcode_btn": "Pošalji kod",
+    "enter_passcode_title": "Unesite kod",
+    "no_passcode_link": "Niste primili kod?",
+    "login_success": "Prijava uspješna!",
+    "passcode_sent": "Kod je poslan na vaš e-mail!"
+  },
+  "signup_page": {
+    "title": "Dobrodošli u Finsonu",
+    "description": "Molimo registrirajte se.",
+    "signup_sub_title": "Registracija",
+    "first_name_input": "Ime",
+    "last_name_input": "Prezime",
+    "email_input": "E-mail adresa",
+    "password_input": "Lozinka",
+    "repeat_password_input": "Ponovite lozinku",
+    "signup_btn": "Registriraj se",
+    "already_have_an_account": "Već imate račun?",
+    "login_link": "Prijava",
+    "confirm_email_sub_title": "Potvrdite svoju e-mail adresu",
+    "confirm_email_description": "Aktivacijski link poslan je na vaš e-mail."
+  },
+  "auth_err_msgs": {
+    "error_invalid_credentials": "Pogrešni podaci.",
+    "error_server_generic": "Došlo je do problema na poslužitelju.",
+    "error_network": "Došlo je do problema pri spajanju na poslužitelj.",
+    "error_missing_inputs": "Potrebno je ispuniti sva polja.",
+    "error_weak_password": "Lozinka je preslaba.",
+    "error_passwords_not_match": "Lozinke se ne podudaraju.",
+    "error_invalid_email": "Neispravan e-mail.",
+    "error_invalid_token": "Token je neispravan ili je istekao.",
+    "error_invalid_passcode": "Kod je neispravan ili je istekao.",
+    "error_no_passcode": "Slanje koda nije uspjelo."
+  },
+  "settings_page": {
+    "title": "Postavke",
+    "tab_account": "Račun",
+    "tab_application": "Aplikacija",
+    "tab_appearance": "Izgled"
+  },
+  "settings_account_page": {
+    "personal_details_title": "Osobni podaci",
+    "personal_details_email_input": "E-mail:",
+    "personal_details_full_name_input": "Ime i prezime:",
+    "personal_details_edit_btn": "Uredi",
+    "personal_details_save_btn": "Spremi",
+    "personal_details_cancel_btn": "Odustani",
+    "password_reset_title": "Lozinka",
+    "password_reset_description": "Kada zatražite promjenu lozinke, poslat ćemo vam e-mail s linkom za promjenu.",
+    "password_reset_btn": "Zatraži promjenu lozinke",
+    "disable_account_title": "Onemogući račun",
+    "disable_account_description": "Onemogućite ovaj račun i njegove podatke. Ova radnja je trajna i ne može se poništiti.",
+    "disable_account_btn": "Onemogući račun",
+    "disable_account_warning_msg": "Jeste li sigurni da želite onemogućiti svoj račun?",
+    "disable_account_keep_btn": "Zadrži",
+    "disable_account_disable_btn": "Onemogući"
+  },
+  "settings_application_page": {
+    "currency_title": "Postavke valute",
+    "currency_description": "Promijenite valutu svog računa.",
+    "currency_placeholder": "Valuta",
+    "paycheck_start_title": "Početak financijskog mjeseca",
+    "paycheck_start_description": "Odaberite dan u mjesecu kada želite započeti svoj budžet.",
+    "paycheck_start_placeholder": "Odaberite dan",
+    "number_format_title": "Format brojeva",
+    "number_format_description": "Odaberite format brojeva za svoj račun.",
+    "number_format_placeholder": "Odaberite format"
+  },
+  "settings_appearance_page": {
+    "language_title": "Jezik",
+    "language_description": "Odaberite željeni jezik za svoj račun.",
+    "language_placeholder": "Odaberite jezik",
+    "language_en_option": "Engleski",
+    "language_hr_option": "Hrvatski",
+    "theme_title": "Tema",
+    "theme_description": "Odaberite željenu temu za svoj račun.",
+    "light_option": "Svijetla",
+    "dark_option": "Tamna",
+    "system_option": "Sistemska"
+  }
+}
