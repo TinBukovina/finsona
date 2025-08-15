@@ -34,10 +34,12 @@ export function SelectActiveWallet() {
     setOpen(false);
   };
 
-  console.log("select element", appState.activeWalletId);
-
   useEffect(() => {
-    if (data?.wallets.length && appState.activeWalletId === null) {
+    if (
+      data?.wallets &&
+      data?.wallets.length > 0 &&
+      appState.activeWalletId === null
+    ) {
       setActiveWallet(data.wallets[0].id || null);
     }
   }, [appState.activeWalletId, data?.wallets, setActiveWallet]);

@@ -1,19 +1,19 @@
+import { cn } from "@/6_shared/lib";
 import React from "react";
 
-interface SpinerLoaderProps {
-  width?: number;
-  height?: number;
+interface SpinnerLoaderProps {
+  className?: string;
 }
 
-export default function SpinnerLoader({
-  width = 8,
-  height = 8,
-}: SpinerLoaderProps) {
+export default function SpinnerLoader({ className }: SpinnerLoaderProps) {
   return (
     <div role="status">
       <svg
         aria-hidden="true"
-        className={`w-${width} h-${height} animate-spin text-primary-foreground fill-primary`}
+        className={cn(
+          "animate-spin text-primary-foreground fill-primary",
+          className
+        )}
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
