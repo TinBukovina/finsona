@@ -122,6 +122,15 @@
     "text": "Don't have a wallet yet?",
     "button": "Create one"
   },
+  "no_budget_this_month_past_page": {
+    "text": "Dont't have a budget for this month",
+    "sub_text": "Go to current one",
+    "button": "Go"
+  },
+  "no_budget_this_month_future_page": {
+    "text": "Dont't have a budget for this month",
+    "button": "Create one"
+  },
   "add_budget_modal": {
     "title": "Create a new budget",
     "cancel_btn": "Cancel",

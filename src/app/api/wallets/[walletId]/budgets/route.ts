@@ -41,6 +41,7 @@ export async function GET(
 
     if (budgetsError) throw budgetsError;
 
+    console.log(budgets);
     return NextResponse.json<GetBudgetsResponse>(
       { message: "Success", budgets },
       { status: 200 }

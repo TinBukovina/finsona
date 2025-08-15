@@ -7,7 +7,8 @@ import { CreateBudgetModal } from "./CreateBudgetModal";
 export function CreateBudgetButton({
   children,
   className,
-}: React.ComponentProps<"button">) {
+  customMonth,
+}: React.ComponentProps<"button"> & { customMonth?: number | null }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isActive, setIsActive] = useState(false);
 
@@ -31,7 +32,11 @@ export function CreateBudgetButton({
         )}
       </button>
 
-      <CreateBudgetModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
+      <CreateBudgetModal
+        customMonth={customMonth}
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+      />
     </>
   );
 }

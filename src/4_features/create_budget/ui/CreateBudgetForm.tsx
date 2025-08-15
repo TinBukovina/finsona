@@ -3,20 +3,41 @@
 import React, { useState } from "react";
 import { useSWRConfig } from "swr";
 import { useTranslations } from "next-intl";
-import { Button, getBudgetDates, Input, useToast } from "@/6_shared";
+
 import { useAppContext } from "@/1_app";
+import { useSettings } from "@/5_entities";
+import {
+  Button,
+  Checkbox,
+  getBudgetDates,
+  Input,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  useToast,
+} from "@/6_shared";
 
 interface CreateBudgetFormProps {
+  customMonth?: number | null;
   onClose: () => void;
 }
 
-export function CreateBudgetForm({ onClose }: CreateBudgetFormProps) {
+export function CreateBudgetForm({
+  customMonth,
+  onClose,
+}: CreateBudgetFormProps) {
   const { mutate } = useSWRConfig();
   const t = useTranslations("add_budget_modal");
+
   const { addToast } = useToast();
   const { appState } = useAppContext();
+  const { settings } = useSettings();
 
   const [name, setName] = useState("");
+  const [budgetDayStart, setBudgetDayStart] = useState<number>(1);
+  const [useValueFromOptions, setUseValueFromOptions] = useState<boolean>(true);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -35,7 +56,10 @@ export function CreateBudgetForm({ onClose }: CreateBudgetFormProps) {
     }
 
     try {
-      const { startDate, endDate } = getBudgetDates();
+      const { startDate, endDate } = getBudgetDates(
+        useValueFromOptions ? settings.month_start_day : budgetDayStart,
+        customMonth
+      );
 
       const response = await fetch(
         `/api/wallets/${appState.activeWalletId}/budgets`,
@@ -53,7 +77,7 @@ export function CreateBudgetForm({ onClose }: CreateBudgetFormProps) {
       if (!response.ok) throw new Error("Failed to create budget.");
 
       addToast(t("success_toast"), "success");
-      mutate("/api/wallets");
+      mutate(`/api/wallets/${appState.activeWalletId}/budgets`);
       onClose();
       setName("");
     } catch (error) {
@@ -79,6 +103,40 @@ export function CreateBudgetForm({ onClose }: CreateBudgetFormProps) {
           placeholder={t("name_placeholder")}
           disabled={isLoading}
         />
+        <Select
+          value={String(budgetDayStart)}
+          onValueChange={(value) => setBudgetDayStart(Number(value))}
+          disabled={isLoading || useValueFromOptions}
+        >
+          <SelectTrigger className="w-full justify-between text-normal">
+            <SelectValue
+              placeholder={"Select starting day"}
+              className="placeholder:card-foreground "
+            />
+          </SelectTrigger>
+          <SelectContent className="bg-popover p-[2px]">
+            {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
+              <SelectItem key={day} value={String(day)} className="">
+                {String(day).padStart(2, "0")}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <div className="flex gap-2 items-center">
+          <Checkbox
+            checked={useValueFromOptions}
+            onCheckedChange={(value) =>
+              setUseValueFromOptions(value as boolean)
+            }
+            id="use-options-checkbox"
+          />
+          <label
+            htmlFor="use-options-checkbox"
+            className="text-muted-foreground cursor-pointer"
+          >
+            Use financial month start from options
+          </label>
+        </div>
       </div>
       <div className="flex gap-2 w-full">
         <Button

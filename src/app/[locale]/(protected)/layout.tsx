@@ -10,7 +10,7 @@ export default function Layout({ children }: PropsWithChildren) {
   return (
     <div
       className={
-        `flex gap-0 w-full h-dvh bg-background overflow-auto ` +
+        `flex gap-0 w-full h-dvh bg-background overflow-auto min-w-0` +
         " " +
         `touch-none sm:touch-auto` /*This is to prevent zoom on protected pages*/
       }

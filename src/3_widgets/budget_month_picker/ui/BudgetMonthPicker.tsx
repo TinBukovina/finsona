@@ -1,33 +1,92 @@
 "use client";
 
+import { useAppContext } from "@/1_app";
+import { BudgetInterface } from "@/5_entities";
 import {
   arrow_back_IOS_r_400,
   arrow_forward_IOS_r_400,
+  cn,
   IconTemplate,
 } from "@/6_shared";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
-const moths = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
+type Month = {
+  name: string;
+  value: number;
+};
+
+const moths: Month[] = [
+  {
+    name: "Jan",
+    value: 0,
+  },
+  {
+    name: "Feb",
+    value: 1,
+  },
+  {
+    name: "Mar",
+    value: 2,
+  },
+  {
+    name: "Apr",
+    value: 3,
+  },
+  {
+    name: "May",
+    value: 4,
+  },
+  {
+    name: "Jun",
+    value: 5,
+  },
+  {
+    name: "Jul",
+    value: 6,
+  },
+  {
+    name: "Aug",
+    value: 7,
+  },
+  {
+    name: "Sep",
+    value: 8,
+  },
+  {
+    name: "Oct",
+    value: 9,
+  },
+  {
+    name: "Nov",
+    value: 10,
+  },
+  {
+    name: "Dec",
+    value: 11,
+  },
 ];
 
-export function BudgetMonthPicker() {
-  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+interface BudgetMonthPickerProps {
+  budgets?: BudgetInterface[];
+  selectedBudget?: BudgetInterface;
+  selectedMonth: number;
+  setSelectedMonth: React.Dispatch<React.SetStateAction<number>>;
+  handleBudgetChange: (budget: string | null) => void;
+}
 
+export function BudgetMonthPicker({
+  budgets,
+  selectedBudget,
+  selectedMonth,
+  setSelectedMonth,
+  handleBudgetChange,
+}: BudgetMonthPickerProps) {
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
 
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+
+  // Check is it is possible to scroll left and right
   const checkScrollability = useCallback(() => {
     const container = scrollContainerRef.current;
 
@@ -47,7 +106,6 @@ export function BudgetMonthPicker() {
     if (container) {
       const scrollAmount = container.clientWidth * 0.2;
 
-      console.log(scrollAmount);
       container.scrollTo({
         left:
           container.scrollLeft +
@@ -59,12 +117,53 @@ export function BudgetMonthPicker() {
     }
   };
 
+  const handleMonthClick = (month: Month) => {
+    setSelectedMonth(month.value);
+
+    const newSelectedBudget = budgets?.find(
+      (budget) => new Date(budget.start_date).getMonth() === month.value
+    );
+
+    if (newSelectedBudget) {
+      handleBudgetChange(newSelectedBudget.id);
+    } else {
+      handleBudgetChange(null);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedBudget && scrollContainerRef.current) {
+      const selectedMonthValue =
+        new Date(selectedBudget.start_date).getMonth() + 1;
+
+      const selectedMonthElement = document.getElementById(
+        `month-${selectedMonthValue}`
+      );
+
+      if (selectedMonthElement) {
+        selectedMonthElement.scrollIntoView({
+          behavior: "smooth",
+          inline: "center",
+          block: "nearest",
+        });
+
+        setTimeout(() => {
+          checkScrollability();
+        }, 500);
+      }
+    }
+  }, [selectedBudget, checkScrollability]);
+
   return (
     <div className="flex items-center gap-4 w-full min-w-0">
+      {/*YEAR*/}
       <p className="px-4 py-2 h-fit bg-primary rounded-max text-primary-foreground text-h6 font-semibold">
         2025
       </p>
+
+      {/*MONTHS*/}
       <div className="flex justify-center items-center gap-4 px-4 py-2 w-full bg-card border border-border rounded-max text-card-foreground fill-card-foreground min-w-0">
+        {/*LEFT ARROW*/}
         <button
           onClick={() => handleScroll("left")}
           disabled={!canScrollLeft}
@@ -77,20 +176,37 @@ export function BudgetMonthPicker() {
           />
         </button>
 
+        {/*LIST OF MONTHS*/}
         <div
           ref={scrollContainerRef}
           className="flex gap-2 w-full text-normal overflow-x-auto scrollbar-hide"
         >
-          {moths.map((month) => (
-            <div
-              key={month}
-              className="px-6 py-1 bg-background rounded-max whitespace-nowrap"
-            >
-              {month}
-            </div>
-          ))}
+          {moths.map((month) => {
+            const isSelected = selectedBudget
+              ? new Date(selectedBudget.start_date).getMonth() === month.value
+              : selectedMonth === month.value;
+
+            return (
+              <div
+                key={month.value}
+                id={`month-${month.value}`}
+                className={cn(
+                  "px-6 py-1 bg-background rounded-max whitespace-nowrap border cursor-pointer transition-all hover:bg-accent hover:text-accent-foreground",
+                  {
+                    "bg-secondary text-secondary-foreground border-border":
+                      isSelected,
+                    "border-transparent": !isSelected,
+                  }
+                )}
+                onClick={() => handleMonthClick(month)}
+              >
+                {month.name}
+              </div>
+            );
+          })}
         </div>
 
+        {/*RIGHT ARROW*/}
         <button
           onClick={() => handleScroll("right")}
           disabled={!canScrollRight}
