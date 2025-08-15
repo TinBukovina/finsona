@@ -2,9 +2,9 @@
 
 import React, { useState } from "react";
 import { add_r_400, cn, IconTemplate } from "@/6_shared";
-import { CreateWalletModal } from "./CreateWalletModal";
+import { CreateBudgetModal } from "./CreateBudgetModal";
 
-export function CreateWalletButton({
+export function CreateBudgetButton({
   children,
   className,
 }: React.ComponentProps<"button">) {
@@ -31,7 +31,7 @@ export function CreateWalletButton({
         )}
       </button>
 
-      <CreateWalletModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
+      <CreateBudgetModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
     </>
   );
 }

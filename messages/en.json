@@ -111,6 +111,28 @@
     "type_personal": "Personal",
     "type_business": "Business",
     "type_savings": "Savings",
-    "validation_error": "Please fill in all fields correctly."
+    "validation_error": "Please fill in all fields correctly.",
+    "success_toast": "Wallet created successfully!"
+  },
+  "no_budget_page": {
+    "text": "Don't have a budget yet?",
+    "button": "Create one"
+  },
+  "no_wallet_page": {
+    "text": "Don't have a wallet yet?",
+    "button": "Create one"
+  },
+  "add_budget_modal": {
+    "title": "Create a new budget",
+    "cancel_btn": "Cancel",
+    "create_btn": "Create",
+    "creating_btn": "Creating...",
+    "name_placeholder": "Budget name",
+    "type_placeholder": "Select type",
+    "type_personal": "Personal",
+    "type_business": "Business",
+    "type_savings": "Savings",
+    "validation_error": "Please fill in all fields correctly.",
+    "success_toast": "Budget created successfully!"
   }
 }

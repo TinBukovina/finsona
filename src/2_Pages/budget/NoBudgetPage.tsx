@@ -1,8 +1,12 @@
+import { CreateBudgetButton } from "@/4_features/create_budget";
 import { Button } from "@/6_shared";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import React from "react";
 
 export function NoBudgetPage() {
+  const t = useTranslations("no_budget_page");
+
   return (
     <div className="flex justify-center items-center w-full h-full">
       <div className="flex flex-col justify-center items-center gap-6">
@@ -14,9 +18,11 @@ export function NoBudgetPage() {
             alt="Piggy Bank"
           />
 
-          <p>Need a new budget?</p>
+          <p className="text-h6">{t("text")}</p>
         </div>
-        <Button>Get Started</Button>
+        <CreateBudgetButton className="px-4 bg-primary text-primary-foreground fill-primary-foreground font-semibold hover:bg-primary/90 hover:fill-primary-foreground hover:scale-103">
+          {t("button")}
+        </CreateBudgetButton>
       </div>
     </div>
   );

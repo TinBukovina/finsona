@@ -13,8 +13,6 @@ export default function Page() {
 
   const { budgets } = data || {};
 
-  console.log(data);
-  console.log(budgets);
   if (!activeWalletId) {
     return <NoWalletSelected />;
   }

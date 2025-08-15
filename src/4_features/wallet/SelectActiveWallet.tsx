@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import react, { useEffect, useState } from "react";
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 
 import { useAppContext } from "@/1_app";
@@ -20,7 +20,7 @@ import {
 } from "@/6_shared";
 
 export function SelectActiveWallet() {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const { appState, setActiveWallet } = useAppContext();
   const { data, error, isLoading } = useWallets();
@@ -33,6 +33,12 @@ export function SelectActiveWallet() {
     setActiveWallet(newActiveWalletId);
     setOpen(false);
   };
+
+  useEffect(() => {
+    if (data?.wallets.length && appState.activeWalletId === null) {
+      setActiveWallet(data.wallets[0].id || null);
+    }
+  }, [appState.activeWalletId, data?.wallets, setActiveWallet]);
 
   const selectWalletName =
     data?.wallets?.find((wallet) => wallet.id === appState.activeWalletId)
