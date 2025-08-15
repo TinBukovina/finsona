@@ -34,6 +34,8 @@ export function SelectActiveWallet() {
     setOpen(false);
   };
 
+  console.log("select element", appState.activeWalletId);
+
   useEffect(() => {
     if (data?.wallets.length && appState.activeWalletId === null) {
       setActiveWallet(data.wallets[0].id || null);

@@ -2,6 +2,7 @@
 
 import { useAppContext } from "@/1_app";
 import { NoBudgetPage, NoWalletSelected, SomethingWentWrong } from "@/2_Pages";
+import { BudgetMonthPicker } from "@/3_widgets/budget_month_picker";
 import { useBudgets } from "@/5_entities/budgets/model/useBudgets";
 import React from "react";
 
@@ -13,6 +14,7 @@ export default function Page() {
 
   const { budgets } = data || {};
 
+  console.log("Budgets", budgets);
   if (!activeWalletId) {
     return <NoWalletSelected />;
   }
@@ -31,8 +33,8 @@ export default function Page() {
   }
 
   return (
-    <div className="">
-      <div>Budget page</div>
+    <div className="px-6 py-4 w-full h-full">
+      <BudgetMonthPicker />
     </div>
   );
 }

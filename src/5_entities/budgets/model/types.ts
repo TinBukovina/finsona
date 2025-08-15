@@ -11,3 +11,8 @@ export interface GetBudgetsResponse {
   message: string;
   budgets: BudgetInterface[];
 }
+
+export interface CreateBudgetResponse {
+  message: string;
+  newBudget: BudgetInterface;
+}

@@ -18,7 +18,7 @@ export default async function LocaleLayout({
   }
 
   return (
-    <div className="w-100% h-dvh">
+    <div className="w-full h-dvh">
       <NextIntlClientProvider>
         <Providers>
           <AppContent>{children}</AppContent>

@@ -3,7 +3,8 @@
 import React, { useState } from "react";
 import { useSWRConfig } from "swr";
 import { useTranslations } from "next-intl";
-import { Button, Input, useToast } from "@/6_shared";
+import { Button, getBudgetDates, Input, useToast } from "@/6_shared";
+import { useAppContext } from "@/1_app";
 
 interface CreateBudgetFormProps {
   onClose: () => void;
@@ -13,6 +14,7 @@ export function CreateBudgetForm({ onClose }: CreateBudgetFormProps) {
   const { mutate } = useSWRConfig();
   const t = useTranslations("add_budget_modal");
   const { addToast } = useToast();
+  const { appState } = useAppContext();
 
   const [name, setName] = useState("");
 
@@ -20,20 +22,35 @@ export function CreateBudgetForm({ onClose }: CreateBudgetFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!name || name.length <= 2) {
       addToast(t("validation_error"), "error");
       return;
     }
     setIsLoading(true);
 
-    try {
-      const response = await fetch("/api/wallets", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name }),
-      });
+    if (!appState.activeWalletId) {
+      addToast("There is no wallet selected.", "error");
+      return;
+    }
 
-      if (!response.ok) throw new Error("Failed to create wallet.");
+    try {
+      const { startDate, endDate } = getBudgetDates();
+
+      const response = await fetch(
+        `/api/wallets/${appState.activeWalletId}/budgets`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name,
+            start_date: startDate,
+            end_date: endDate,
+          }),
+        }
+      );
+
+      if (!response.ok) throw new Error("Failed to create budget.");
 
       addToast(t("success_toast"), "success");
       mutate("/api/wallets");

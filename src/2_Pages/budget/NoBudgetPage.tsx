@@ -1,5 +1,4 @@
 import { CreateBudgetButton } from "@/4_features/create_budget";
-import { Button } from "@/6_shared";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import React from "react";

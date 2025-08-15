@@ -38,7 +38,7 @@ export default async function RootLayout({ children }: PropsWithChildren) {
       />
 
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased relative w-100% h-dvh overflow-auto bg-background`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased relative w-full h-dvh max-w-[100dvw] overflow-auto bg-background`}
       >
         {children}
       </body>
