@@ -1,7 +1,10 @@
 "use client";
 
 import React, { useState, useRef, useLayoutEffect } from "react";
-import { useToast } from "@/6_shared";
+import { addSeparatorToStringNumber, useToast } from "@/6_shared";
+import { useSettings } from "@/5_entities";
+import { get } from "http";
+import { no } from "zod/v4/locales";
 
 interface EditableNameProps {
   value: string;
@@ -21,6 +24,8 @@ export function RowValue({
   onBlurAfterEdit,
 }: EditableNameProps) {
   const { addToast } = useToast();
+  const { getDecimalSeparator, getValueSeparator } = useSettings();
+
   const [inputWidth, setInputWidth] = useState(0);
   const spanRef = useRef<HTMLSpanElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -41,26 +46,40 @@ export function RowValue({
         return;
       }
 
-      onValueChange("0");
+      onValueChange("0" + getDecimalSeparator() + "00");
       return;
     }
 
     // JS doesn't understand , in Number() function
     const normalizedValue = value.replace(",", ".");
-
     const numberRegex = /^-?\d+(\.\d+)?$/;
-    if (numberRegex.test(normalizedValue)) {
-      onValueChange(normalizedValue);
-    } else {
+
+    if (!numberRegex.test(normalizedValue) && normalizedValue !== "") {
       if (isClickInside.current) {
-        addToast("You need to eneter a number!", "error");
+        addToast("You need to enter a number!", "error");
         inputRef.current?.focus();
 
         return;
       }
-
-      onValueChange("0");
+      onValueChange("0" + getDecimalSeparator() + "00");
+      return;
     }
+
+    const parts = normalizedValue.split(".");
+    const integerPart = parts[0] || "0";
+    const decimalPart = parts[1];
+
+    const formattedIntegerPart = addSeparatorToStringNumber(
+      integerPart,
+      getValueSeparator()
+    );
+
+    const formattedDecimalPart = (decimalPart || "").padEnd(2, "0").slice(0, 2);
+
+    const finalFormattedValue =
+      formattedIntegerPart + getDecimalSeparator() + formattedDecimalPart;
+
+    onValueChange(finalFormattedValue);
 
     onBlurAfterEdit();
   };

@@ -2,7 +2,7 @@
 export * from "./svgPaths";
 
 // Shadcn CN function
-export { cn } from "./utils";
+export * from "./utils";
 
 // Hooks
 export * from "./hooks";

@@ -6,9 +6,9 @@ import { Button, cn, edit_r_400, IconTemplate } from "@/6_shared";
 
 interface EditTableBtn {
   isActive: boolean;
-  setIsActive: React.Dispatch<React.SetStateAction<boolean>>;
+  handleClick?: () => void;
 }
-export function EditTableBtn({ isActive, setIsActive }: EditTableBtn) {
+export function EditTableBtn({ isActive, handleClick }: EditTableBtn) {
   return (
     <Button
       className={cn("p-2 w-fit h-fit cursor-pointer hover:scale-103", {
@@ -16,7 +16,7 @@ export function EditTableBtn({ isActive, setIsActive }: EditTableBtn) {
           !isActive,
         "bg-primary fill-primary-foreground hover:bg-primary/80": isActive,
       })}
-      onClick={() => setIsActive((prev) => !prev)}
+      onClick={handleClick}
     >
       <IconTemplate svg={edit_r_400()} width="24px" height="24px" />
     </Button>

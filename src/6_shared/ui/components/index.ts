@@ -16,3 +16,4 @@ export { DatePicker } from "./date-picker";
 export * from "./popover";
 export * from "./command";
 export * from "./checkbox";
+export * from "./improved_input";

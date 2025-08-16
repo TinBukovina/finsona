@@ -51,6 +51,8 @@ interface UserSettingsContextType {
   updateUser: (
     newData: Partial<UserDataInterface>
   ) => Promise<ResponseInterface>;
+  getValueSeparator: () => "," | ".";
+  getDecimalSeparator: () => "," | ".";
 }
 
 const UserSettingsContext = React.createContext<UserSettingsContextType | null>(
@@ -192,7 +194,29 @@ export function UserSettingsProvider({ children }: PropsWithChildren) {
     [settings]
   );
 
-  const value = { settings, isSyncing, updateUser };
+  const getDecimalSeparator = () => {
+    if (settings.number_format === "EU") {
+      return ",";
+    } else {
+      return ".";
+    }
+  };
+
+  const getValueSeparator = () => {
+    if (settings.number_format === "EU") {
+      return ".";
+    } else {
+      return ",";
+    }
+  };
+
+  const value = {
+    settings,
+    isSyncing,
+    updateUser,
+    getDecimalSeparator,
+    getValueSeparator,
+  };
 
   return (
     <UserSettingsContext.Provider value={value}>
