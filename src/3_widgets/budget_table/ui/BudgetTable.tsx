@@ -10,10 +10,27 @@ import {
 } from "@/6_shared";
 import { RemoveTableBtn } from "./RemoveTableBtn";
 import { EditTableBtn } from "./EditTableBtn";
+import { BudgetTableRow } from "./BudgetTableRow";
+
+const mockBudgetData = [
+  { id: 1, name: "Paycheck 1", value: "200.00", received: "100.00" },
+  { id: 2, name: "Side Hustle", value: "500.00", received: "500.00" },
+  { id: 3, name: "Freelance", value: "150.00", received: "120.50" },
+];
 
 export function BudgetTable() {
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const [isInEditingMode, setIsInEditingMode] = useState<boolean>(false);
+
+  const [selectedRowIndex, setSelectedRowIndex] = useState<number | null>(null);
+
+  const handleRowSelect = (index: number) => {
+    if (selectedRowIndex === index) {
+      setSelectedRowIndex(null);
+    } else {
+      setSelectedRowIndex(index);
+    }
+  };
 
   return (
     <div className="flex items-start gap-4 w-full">
@@ -53,24 +70,14 @@ export function BudgetTable() {
           <>
             {/*ROWS*/}
             <div className="flex flex-col gap-0 px-4 py-4">
-              {/*SINGLE ROW*/}
-              <div className="grid grid-cols-[1fr_120px_120px] justify-end items-center px-2 py-3 border-b-2 border-border">
-                <p>Paycheck 1</p>
-                <p className="text-right">$200.00</p>
-                <p className="text-right">$100.00</p>
-              </div>
-              {/*SINGLE ROW*/}
-              <div className="grid grid-cols-[1fr_120px_120px] justify-end items-center px-2 py-3 border-b-2 border-border">
-                <p>Paycheck 1</p>
-                <p className="text-right">$200.00</p>
-                <p className="text-right">$100.00</p>
-              </div>
-              {/*SINGLE ROW*/}
-              <div className="grid grid-cols-[1fr_120px_120px] justify-end items-center px-2 py-3 border-b-2 border-border">
-                <p>Paycheck 1</p>
-                <p className="text-right">$200.00</p>
-                <p className="text-right">$100.00</p>
-              </div>
+              {mockBudgetData.map((row, index) => (
+                <BudgetTableRow
+                  key={row.id}
+                  data={row}
+                  isSelected={index === selectedRowIndex}
+                  onSelect={() => handleRowSelect(index)}
+                />
+              ))}
             </div>
           </>
         )}

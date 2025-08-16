@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/6_shared/lib";
 import React, { useState } from "react";
 import zxcvbn from "zxcvbn";
 
@@ -19,7 +20,8 @@ export default function Input({
   type = "text",
   passwordStrength = false,
   disabled = false,
-}: InputProps) {
+  className,
+}: InputProps & React.InputHTMLAttributes<HTMLInputElement>) {
   const [isFocused, setIsFocused] = useState(false);
 
   const testResult = zxcvbn(value);
@@ -52,7 +54,10 @@ export default function Input({
       : {};
 
   return (
-    <div className="relative pt-2 min-h-[50px]">
+    <div
+      className="relative pt-2 min-h-[50px]"
+      onClick={(e) => e.stopPropagation()}
+    >
       <p
         className={`absolute top-0 left-4 px-1 bg-card  text-xs ${
           isFocused ? "block" : "hidden"
@@ -61,7 +66,10 @@ export default function Input({
         {placeholder}
       </p>
       <input
-        className={`px-4 py-2 w-full border border-solid border-border rounded-max disabled:pointer-events-none disabled:opacity-50`}
+        className={cn(
+          `px-4 py-2 w-full border border-solid border-border rounded-max disabled:pointer-events-none disabled:opacity-50`,
+          className
+        )}
         placeholder={isFocused ? "" : placeholder}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
