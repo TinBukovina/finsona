@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useState, useRef, useLayoutEffect } from "react";
-import { addSeparatorToStringNumber, useToast } from "@/6_shared";
+import React, { useState, useRef, useLayoutEffect, useEffect } from "react";
+import { useToast } from "@/6_shared";
 import { useSettings } from "@/5_entities";
-import { get } from "http";
-import { no } from "zod/v4/locales";
+import { getRightFormatedNumber } from "../uitls";
 
 interface EditableNameProps {
   value: string;
@@ -37,7 +36,6 @@ export function RowValue({
   }, [value, isEditing]);
 
   const handleBlur = () => {
-    // If value is empty
     if (value.trim() === "") {
       if (isClickInside.current) {
         addToast("You need to eneter a number!", "error");
@@ -65,19 +63,15 @@ export function RowValue({
       return;
     }
 
-    const parts = normalizedValue.split(".");
-    const integerPart = parts[0] || "0";
-    const decimalPart = parts[1];
+    console.log(normalizedValue);
 
-    const formattedIntegerPart = addSeparatorToStringNumber(
-      integerPart,
+    const finalFormattedValue = getRightFormatedNumber(
+      normalizedValue,
+      getDecimalSeparator(),
       getValueSeparator()
     );
 
-    const formattedDecimalPart = (decimalPart || "").padEnd(2, "0").slice(0, 2);
-
-    const finalFormattedValue =
-      formattedIntegerPart + getDecimalSeparator() + formattedDecimalPart;
+    console.log(finalFormattedValue);
 
     onValueChange(finalFormattedValue);
 
@@ -87,7 +81,12 @@ export function RowValue({
   if (!isEditing) {
     return (
       <p onClick={onClick} className="w-full text-right">
-        ${value}
+        $
+        {getRightFormatedNumber(
+          value,
+          getDecimalSeparator(),
+          getValueSeparator()
+        )}
       </p>
     );
   }

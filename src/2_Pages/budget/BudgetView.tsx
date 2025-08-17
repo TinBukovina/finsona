@@ -1,5 +1,7 @@
 "use client";
 
+import React, { useEffect, useState } from "react";
+
 import { useAppContext } from "@/1_app";
 import {
   NoBudgetPage,
@@ -8,12 +10,13 @@ import {
   NoWalletSelected,
   SomethingWentWrong,
 } from "@/2_Pages";
-import { BudgetTable } from "@/3_widgets";
-import { BudgetMonthPicker } from "@/3_widgets/budget_month_picker";
-import { BudgetInterface, useWallets } from "@/5_entities";
-import { useBudgets } from "@/5_entities/budgets/model/useBudgets";
+import {
+  BudgetExpenseTable,
+  BudgetIncomeTable,
+  BudgetMonthPicker,
+} from "@/3_widgets";
+import { BudgetInterface, useBudgets, useWallets } from "@/5_entities";
 import { SpinnerLoader } from "@/6_shared";
-import React, { useEffect, useState } from "react";
 
 export function BudgetView() {
   const { appState, setSelectedBudget } = useAppContext();
@@ -112,7 +115,8 @@ export function BudgetView() {
 
       <div>{selectedBudget?.name || "No budget for that month"}</div>
 
-      <BudgetTable />
+      <BudgetIncomeTable />
+      <BudgetExpenseTable />
     </>
   );
 }

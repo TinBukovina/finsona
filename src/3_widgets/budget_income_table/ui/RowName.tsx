@@ -12,7 +12,7 @@ interface EditableNameProps {
   onBlurAfterEdit: () => void;
 }
 
-export function EditRowName({
+export function RowName({
   name,
   isEditing,
   isClickInside,

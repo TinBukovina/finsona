@@ -1,10 +1,11 @@
 "use client";
 
-import React, { use, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { RemoveTableBtn } from "./RemoveTableBtn";
-import { EditRowName } from "./EditRowName";
+import { RowName } from "./RowName";
 import { RowValue } from "./RowValue";
-import { set } from "date-fns";
+import { getReplaceCalmaWithDot, getRightFormatedNumber } from "../uitls";
+import { useSettings } from "@/5_entities";
 
 type RowMode =
   | "view"
@@ -14,22 +15,32 @@ type RowMode =
   | "editingReceivedValue";
 
 interface BudgetTableRowProps {
-  data: { id: number; name: string; value: string; received: string };
+  data: { id: number; name: string; planned: string; spent: string };
   isSelected: boolean;
+  type: "spent" | "remaining";
   onSelect: (unselect?: boolean) => void;
   onClose?: () => void;
+  onNameChange: (newName: string) => void;
+  onPlannedChange: (newPlanned: string) => void;
+  onSpentChange: (newSpent: string) => void;
+  onRemainingChange: (newRemaining: string) => void;
 }
 
 export function BudgetTableRow({
   data,
   isSelected,
+  type,
   onSelect,
   onClose,
+  onNameChange,
+  onPlannedChange,
+  onSpentChange,
+  onRemainingChange,
 }: BudgetTableRowProps) {
+  const { getDecimalSeparator, getValueSeparator } = useSettings();
+
   const [mode, setMode] = useState<RowMode>("view");
-  const [name, setName] = useState(data.name);
-  const [plannedValue, setPlannedValue] = useState(data.value);
-  const [receivedValue, setReceivedValue] = useState(data.received);
+  const [spentRemainValue, setSpentRemainValue] = useState("spent");
 
   const [keepFromClosing, setKeepFromClosing] = useState<boolean>(false);
 
@@ -42,6 +53,14 @@ export function BudgetTableRow({
       setMode("selected");
     }
   }, [isSelected]);
+
+  useEffect(() => {
+    if (type === "spent") {
+      setSpentRemainValue(data.spent);
+    } else {
+      setSpentRemainValue(String(Number(data.planned) - Number(data.spent)));
+    }
+  }, [type, data.planned, data.spent]);
 
   const handleRowClick = () => {
     if (
@@ -120,31 +139,36 @@ export function BudgetTableRow({
           <RemoveTableBtn handleClick={onClose} />
         )}
 
-        <EditRowName
-          name={name}
+        <RowName
+          name={data.name}
           isEditing={mode === "editingName"}
           isClickInside={isClickedInside}
-          onNameChange={setName}
+          onNameChange={onNameChange}
           onClick={handleNameClick}
           onBlurAfterEdit={handleAfterBlur}
         />
       </div>
       <RowValue
-        value={plannedValue}
+        value={data.planned}
         isEditing={mode === "editingPlannedValue"}
         isClickInside={isClickedInside}
-        onValueChange={setPlannedValue}
+        onValueChange={onPlannedChange}
         onClick={handlePlannedValueClick}
         onBlurAfterEdit={handleAfterBlur}
       />
-      <RowValue
-        value={receivedValue}
-        isEditing={mode === "editingReceivedValue"}
-        isClickInside={isClickedInside}
-        onValueChange={setReceivedValue}
-        onClick={handleReceivedValueClick}
-        onBlurAfterEdit={handleAfterBlur}
-      />
+      <p className="w-full text-right">
+        $
+        {type === "spent"
+          ? data.spent
+          : getRightFormatedNumber(
+              String(
+                Number(getReplaceCalmaWithDot(data.planned)) -
+                  Number(getReplaceCalmaWithDot(data.spent))
+              ),
+              getDecimalSeparator(),
+              getValueSeparator()
+            )}
+      </p>
     </div>
   );
 }

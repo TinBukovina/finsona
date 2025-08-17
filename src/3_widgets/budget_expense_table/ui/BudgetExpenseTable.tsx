@@ -16,14 +16,14 @@ import { useSettings } from "@/5_entities";
 import { useOnClickOutside } from "@/6_shared/lib/hooks/useOnClickOutside";
 
 const data = [
-  { id: 1, name: "Paycheck 1", value: "200.00", received: "100.00" },
-  { id: 2, name: "Side Hustle", value: "500.00", received: "500.00" },
-  { id: 3, name: "Freelance", value: "150.00", received: "120.50" },
+  { id: 1, name: "Morgage/Rent", planned: "200.00", spent: "100.00" },
+  { id: 2, name: "Water", planned: "500.00", spent: "500.00" },
+  { id: 3, name: "Electricity", planned: "150.00", spent: "120.50" },
 ];
 
-const INCOM_TABLE_NAME = "Income";
+const INCOM_TABLE_NAME = "Housing/Utils";
 
-export function BudgetTable() {
+export function BudgetExpenseTable() {
   const { getDecimalSeparator } = useSettings();
 
   const [isOpen, setIsOpen] = useState<boolean>(true);
@@ -38,6 +38,10 @@ export function BudgetTable() {
   const [selectedRowIndex, setSelectedRowIndex] = useState<number | null>(null);
 
   const [mockBudgetData, setMockBudgetData] = useState(data);
+
+  const [lastRowData, setLastRowData] = useState<"spent" | "remaining">(
+    "spent"
+  );
 
   const handleRowSelect = (index: number, unselect: boolean) => {
     if (unselect) return setSelectedRowIndex(null);
@@ -56,6 +60,10 @@ export function BudgetTable() {
   };
 
   useOnClickOutside(editingZoneRef, handlerExitEditingMode);
+
+  useEffect(() => {
+    console.log(mockBudgetData);
+  }, [mockBudgetData]);
 
   return (
     <div ref={editingZoneRef} className="flex items-start gap-4 w-full">
@@ -96,7 +104,20 @@ export function BudgetTable() {
 
           {/*COLUMNS*/}
           <p className="text-muted-foreground text-sm text-right">Planned</p>
-          <p className="text-muted-foreground text-sm text-right">Received</p>
+          <div
+            className="text-muted-foreground cursor-pointer hover:text-primary"
+            onClick={() =>
+              setLastRowData((prev) =>
+                prev === "spent" ? "remaining" : "spent"
+              )
+            }
+          >
+            {lastRowData === "spent" ? (
+              <p className="text-sm text-right">Spent</p>
+            ) : (
+              <p className="text-sm text-right">Remaining</p>
+            )}
+          </div>
         </div>
 
         {isOpen && (
@@ -107,6 +128,7 @@ export function BudgetTable() {
                 <BudgetTableRow
                   key={row.id}
                   data={row}
+                  type={lastRowData}
                   isSelected={index === selectedRowIndex}
                   onSelect={(unselect = false) => {
                     handleRowSelect(index, unselect);
@@ -115,6 +137,46 @@ export function BudgetTable() {
                     setMockBudgetData((data) =>
                       data.filter((r) => r.id !== row.id)
                     );
+                  }}
+                  onNameChange={(newName) =>
+                    setMockBudgetData((prev) => {
+                      const newData = [...prev];
+                      newData[index].name = newName;
+                      return newData;
+                    })
+                  }
+                  onPlannedChange={(newPlanned) =>
+                    setMockBudgetData((prev) => {
+                      const newData = [...prev];
+                      newData[index].planned = newPlanned;
+                      return newData;
+                    })
+                  }
+                  onSpentChange={(newSpent) =>
+                    setMockBudgetData((prev) => {
+                      const newData = [...prev];
+                      newData[index].spent = newSpent;
+
+                      return newData;
+                    })
+                  }
+                  onRemainingChange={(newRemaining) => {
+                    setMockBudgetData((prev) => {
+                      console.log(newRemaining);
+
+                      const newData = [...prev];
+                      newData[index].spent = String(
+                        Number(newData[index].planned) - Number(newRemaining)
+                      );
+                      console.log("math");
+                      console.log(
+                        String(
+                          Number(newData[index].planned) - Number(newRemaining)
+                        )
+                      );
+
+                      return newData;
+                    });
                   }}
                 />
               ))}
@@ -134,29 +196,6 @@ export function BudgetTable() {
             </Button>
           ) : (
             <>
-              <Iinput
-                value={newRowName}
-                setValue={setNewRowName}
-                placeholder="Enter income..."
-                initialInputWidth={150}
-              />
-              <Button
-                variant={"default"}
-                onClick={() => {
-                  setMockBudgetData((prev) => [
-                    ...prev,
-                    {
-                      id: prev[prev.length - 1].id + 1,
-                      name: newRowName,
-                      value: "0" + getDecimalSeparator() + "0",
-                      received: "0" + getDecimalSeparator() + "0",
-                    },
-                  ]);
-                  setIsEnteringNewRow(false);
-                }}
-              >
-                Confirm
-              </Button>
               <Button
                 variant={"secondary"}
                 onClick={() => {
@@ -165,12 +204,35 @@ export function BudgetTable() {
               >
                 Cancle
               </Button>
+              <Button
+                variant={"default"}
+                onClick={() => {
+                  setMockBudgetData((prev) => [
+                    ...prev,
+                    {
+                      id: prev[prev.length - 1].id + 1,
+                      name: newRowName,
+                      planned: "0.0",
+                      spent: "0.0",
+                    },
+                  ]);
+                  setIsEnteringNewRow(false);
+                }}
+              >
+                Confirm
+              </Button>
+              <Iinput
+                value={newRowName}
+                setValue={setNewRowName}
+                placeholder="Enter income..."
+                initialInputWidth={150}
+              />
             </>
           )}
         </div>
       </div>
 
-      {/*EDITING BTNS*/}
+      {/*EDITING AND DELETE BTNS*/}
       <div className="flex flex-col gap-2 ">
         <RemoveTableBtn />
         <EditTableBtn
