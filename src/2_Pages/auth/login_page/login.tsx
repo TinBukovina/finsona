@@ -41,7 +41,7 @@ export default function LoginPage() {
     >
       <div className="flex flex-col gap-2">
         {/*_TITLE_*/}
-        <div className=" text-h5 text-primary">{t("title")}</div>
+        <div className="font-semibold text-h5 text-primary">{t("title")}</div>
         {/*_DESCRIPTION_*/}
         <div className="text-normal text-muted-foreground">
           {t("description")}

@@ -1,0 +1,8 @@
+{
+  "login_page": {
+    "title": "Welcome to Finsona",
+    "description": "Please log in below.",
+    "login_btn": "Log in",
+    "email_input": "Email Address"
+  }
+}

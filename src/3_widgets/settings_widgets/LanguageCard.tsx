@@ -2,15 +2,7 @@
 
 import React from "react";
 
-import {
-  LanguageCardLoader,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-  useToast,
-} from "@/6_shared";
+import { LanguageCardLoader, useToast } from "@/6_shared";
 import { UserSettings, useSettings } from "@/5_entities/user";
 import { useTranslations } from "next-intl";
 import { ChangeLanguage } from "@/4_features/settings";

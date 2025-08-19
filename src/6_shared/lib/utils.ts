@@ -44,3 +44,17 @@ export function addSeparatorToStringNumber(
     return formatedWholePart;
   }
 }
+
+export function capitalizeFirstLetter(string: string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+export function isStringValidDecimal(str: string): boolean {
+  if (typeof str !== "string" || str.trim() === "") {
+    return false;
+  }
+
+  const numberRegex = /^-?\d+([.,]\d+)?$/;
+
+  return numberRegex.test(str);
+}

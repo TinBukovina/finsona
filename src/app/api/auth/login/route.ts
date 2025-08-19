@@ -71,9 +71,9 @@ export async function POST(request: Request) {
     );
 
     response.cookies.set("session-token", token, {
-      httpOnly: true, // Spreijčava pristup kolačiću putem JavaScripta
+      httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict", // Pomaže u zaštiti od CSRF napada
+      sameSite: "strict",
       maxAge: 60 * 60 * 24, // 24h
       path: "/",
     });

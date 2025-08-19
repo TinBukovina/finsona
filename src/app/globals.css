@@ -1,5 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@plugin 'tailwind-scrollbar';
+
 /*---break---*/
 @custom-variant dark (&:is(.dark *));
 
@@ -143,7 +145,7 @@
   --breakpoint-sm: 640px;
   --breakpoint-md: 880px;
   --breakpoint-lg: 1024px;
-  --breakpoint-xl: 1280px;
+  --breakpoint-xl: 1200px;
   --breakpoint-2xl: 1536px;
 
   /*RANDOM*/
@@ -207,6 +209,14 @@ body {
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-button {
+    display: none;
+  }
+
+  [class*="scrollbar"].hide-scrollbar-arrows::-webkit-scrollbar-button {
+    display: none;
   }
 }
 

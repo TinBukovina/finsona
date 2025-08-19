@@ -8,3 +8,5 @@ export { default as ExpandNavBtn } from "./sidebar/ExpandNavBtn";
 export { default as ThemeBtn } from "./settings/ThemeBtn";
 
 export * from "./wallet";
+
+export * from "./create_budget_table";

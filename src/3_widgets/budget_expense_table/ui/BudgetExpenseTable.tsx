@@ -12,9 +12,13 @@ import {
 import { RemoveTableBtn } from "./RemoveTableBtn";
 import { EditTableBtn } from "./EditTableBtn";
 import { BudgetTableRow } from "./BudgetTableRow";
-import { useSettings } from "@/5_entities";
 import { useOnClickOutside } from "@/6_shared/lib/hooks/useOnClickOutside";
 
+interface BudgetExpenseTableProps {
+  tableName?: string;
+  swapActionsBtns?: boolean;
+  handleDeleteClick?: () => void;
+}
 const data = [
   { id: 1, name: "Morgage/Rent", planned: "200.00", spent: "100.00" },
   { id: 2, name: "Water", planned: "500.00", spent: "500.00" },
@@ -23,13 +27,15 @@ const data = [
 
 const INCOM_TABLE_NAME = "Housing/Utils";
 
-export function BudgetExpenseTable() {
-  const { getDecimalSeparator } = useSettings();
-
+export function BudgetExpenseTable({
+  tableName: tableNameProp = INCOM_TABLE_NAME,
+  swapActionsBtns = false,
+  handleDeleteClick,
+}: BudgetExpenseTableProps) {
   const [isOpen, setIsOpen] = useState<boolean>(true);
 
   const [isInEditingMode, setIsInEditingMode] = useState<boolean>(false);
-  const [tableName, setTableName] = useState<string>(INCOM_TABLE_NAME);
+  const [tableName, setTableName] = useState<string>(tableNameProp);
   const tableNameRefInput = useRef<HTMLInputElement>(null);
 
   const [isEnteringNewRow, setIsEnteringNewRow] = useState<boolean>(false);
@@ -61,17 +67,18 @@ export function BudgetExpenseTable() {
 
   useOnClickOutside(editingZoneRef, handlerExitEditingMode);
 
-  useEffect(() => {
-    console.log(mockBudgetData);
-  }, [mockBudgetData]);
-
   return (
-    <div ref={editingZoneRef} className="flex items-start gap-4 w-full">
+    <div
+      className={`flex ${swapActionsBtns && "flex-row-reverse"} items-start gap-4 w-full`}
+    >
       {/*TABLE*/}
-      <div className="w-full bg-card border border-border rounded-card text-card-foreground fill-card-foreground">
+      <div
+        ref={editingZoneRef}
+        className="w-full bg-card border border-border rounded-card text-card-foreground fill-card-foreground"
+      >
         {/*HEADER*/}
         <div
-          className={"grid grid-cols-[1fr_120px_120px]  items-center px-6 py-4"}
+          className={"grid grid-cols-[1fr_80px_80px]  items-center px-6 py-4"}
         >
           {/*NAME*/}
           {!isInEditingMode ? (
@@ -234,7 +241,7 @@ export function BudgetExpenseTable() {
 
       {/*EDITING AND DELETE BTNS*/}
       <div className="flex flex-col gap-2 ">
-        <RemoveTableBtn />
+        <RemoveTableBtn handleClick={handleDeleteClick} />
         <EditTableBtn
           isActive={isInEditingMode}
           handleClick={() => {

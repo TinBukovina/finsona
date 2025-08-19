@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/6_shared/lib";
 import { useState, useLayoutEffect, useRef } from "react";
 
 interface IinputProps {
@@ -8,6 +9,9 @@ interface IinputProps {
   initialInputWidth?: number;
   placeholder?: string;
   ref?: React.RefObject<HTMLInputElement | null>;
+  disableAutoWidth?: boolean;
+  className?: string;
+  type?: string;
 }
 
 export function Iinput({
@@ -16,13 +20,16 @@ export function Iinput({
   initialInputWidth = 130,
   placeholder,
   ref,
+  disableAutoWidth = false,
+  className,
+  type = "text",
 }: IinputProps) {
   const [inputWidth, setInputWidth] = useState<number>(initialInputWidth);
 
   const spanForCalculatingInputWidth = useRef<HTMLSpanElement>(null);
 
   useLayoutEffect(() => {
-    if (!spanForCalculatingInputWidth.current) return;
+    if (!spanForCalculatingInputWidth.current || disableAutoWidth) return;
 
     if (!value || value.length <= 0) {
       setInputWidth(initialInputWidth);
@@ -30,7 +37,7 @@ export function Iinput({
     }
 
     setInputWidth(spanForCalculatingInputWidth.current.offsetWidth + 5);
-  }, [value, initialInputWidth]);
+  }, [value, initialInputWidth, disableAutoWidth]);
 
   return (
     <>
@@ -43,14 +50,19 @@ export function Iinput({
       <input
         ref={ref}
         placeholder={placeholder ? placeholder : ""}
-        type="text"
+        type={type}
         value={value}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={(e) => {
+          setValue(e.target.value.replace("$", ""));
+        }}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === "Escape") e.currentTarget.blur();
         }}
-        style={{ width: `${inputWidth}px` }}
-        className="px-4 py-2 border border-border rounded-max"
+        style={{ width: `${disableAutoWidth ? "100%" : `${inputWidth}px`}` }}
+        className={cn(
+          "px-4 py-2 border border-border rounded-max hover:bg-secondary/70",
+          className
+        )}
       />
     </>
   );

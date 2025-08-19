@@ -120,7 +120,7 @@ export function BudgetTableRow({
 
   return (
     <div
-      className="grid grid-cols-[1fr_120px_120px] items-center px-2 py-3 border-b-2 border-border cursor-pointer hover:bg-accent"
+      className="grid grid-cols-[1fr_80px_80px] items-center px-2 py-3 border-b-2 border-border cursor-pointer hover:bg-accent"
       onClick={handleRowClick}
       onMouseDown={() => {
         isClickedInside.current = true;
@@ -159,7 +159,11 @@ export function BudgetTableRow({
       <p className="w-full text-right">
         $
         {type === "spent"
-          ? data.spent
+          ? getRightFormatedNumber(
+              data.spent,
+              getDecimalSeparator(),
+              getValueSeparator()
+            )
           : getRightFormatedNumber(
               String(
                 Number(getReplaceCalmaWithDot(data.planned)) -

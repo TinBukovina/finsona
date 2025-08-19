@@ -23,7 +23,11 @@ const data = [
 
 const INCOM_TABLE_NAME = "Income";
 
-export function BudgetIncomeTable() {
+export function BudgetIncomeTable({
+  swapActionsBtns,
+}: {
+  swapActionsBtns: boolean;
+}) {
   const { getDecimalSeparator } = useSettings();
 
   const [isOpen, setIsOpen] = useState<boolean>(true);
@@ -58,12 +62,15 @@ export function BudgetIncomeTable() {
   useOnClickOutside(editingZoneRef, handlerExitEditingMode);
 
   return (
-    <div ref={editingZoneRef} className="flex items-start gap-4 w-full">
+    <div
+      ref={editingZoneRef}
+      className={`flex ${swapActionsBtns && "flex-row-reverse"} items-start gap-4 w-full`}
+    >
       {/*TABLE*/}
       <div className="w-full bg-card border border-border rounded-card text-card-foreground fill-card-foreground">
         {/*HEADER*/}
         <div
-          className={"grid grid-cols-[1fr_120px_120px]  items-center px-6 py-4"}
+          className={"grid grid-cols-[1fr_80px_80px]  items-center px-6 py-4"}
         >
           {/*NAME*/}
           {!isInEditingMode ? (
@@ -192,7 +199,7 @@ export function BudgetIncomeTable() {
       </div>
 
       {/*EDITING AND DELETE BTNS*/}
-      <div className="flex flex-col gap-2 ">
+      <div className="flex flex-col gap-2 invisible">
         <RemoveTableBtn />
         <EditTableBtn
           isActive={isInEditingMode}

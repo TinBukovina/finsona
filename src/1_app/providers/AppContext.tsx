@@ -5,6 +5,7 @@ import {
   PropsWithChildren,
   useCallback,
   useContext,
+  useEffect,
   useState,
 } from "react";
 import Cookies from "js-cookie";
@@ -43,6 +44,10 @@ export function AppProvider({ children }: PropsWithChildren) {
   const setSelectedBudget = useCallback((budgetId: string | null) => {
     setAppState((prevState) => ({ ...prevState, selectedBudgetId: budgetId }));
   }, []);
+
+  useEffect(() => {
+    console.log(appState);
+  }, [appState]);
 
   const value = { appState, setActiveWallet, setSelectedBudget };
 
