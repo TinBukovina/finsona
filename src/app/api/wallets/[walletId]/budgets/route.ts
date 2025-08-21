@@ -123,6 +123,194 @@ export async function POST(
 
     if (insertError) throw insertError;
 
+    // Creating essential budget items
+    const itemsToInsert = [
+      {
+        budget_id: newBudget.id,
+        name: "Paycheck 1",
+        planned_amount: "0",
+        category: "Income",
+      },
+      // Charity
+      {
+        budget_id: newBudget.id,
+        name: "Church",
+        planned_amount: "0",
+        category: "Charity",
+      },
+      // Housing
+      {
+        budget_id: newBudget.id,
+        name: "Morgage/Rent",
+        planned_amount: "0",
+        category: "Housing",
+      },
+      {
+        budget_id: newBudget.id,
+        name: "Water",
+        planned_amount: "0",
+        category: "Housing",
+      },
+      {
+        budget_id: newBudget.id,
+        name: "Natural gas",
+        planned_amount: "0",
+        category: "Housing",
+      },
+      {
+        budget_id: newBudget.id,
+        name: "Electricity",
+        planned_amount: "0",
+        category: "Housing",
+      },
+      {
+        budget_id: newBudget.id,
+        name: "Cable",
+        planned_amount: "0",
+        category: "Housing",
+      },
+      {
+        budget_id: newBudget.id,
+        name: "Trash",
+        planned_amount: "0",
+        category: "Housing",
+      },
+      // Transport
+      {
+        budget_id: newBudget.id,
+        name: "Gas",
+        planned_amount: "0",
+        category: "Transport",
+      },
+      {
+        budget_id: newBudget.id,
+        name: "Auto maintance",
+        planned_amount: "0",
+        category: "Transport",
+      },
+      {
+        budget_id: newBudget.id,
+        name: "Public transport",
+        planned_amount: "0",
+        category: "Transport",
+      },
+      // Food
+      {
+        budget_id: newBudget.id,
+        name: "Groceries",
+        planned_amount: "0",
+        category: "Food",
+      },
+      {
+        budget_id: newBudget.id,
+        name: "Restaurants",
+        planned_amount: "0",
+        category: "Food",
+      },
+      {
+        budget_id: newBudget.id,
+        name: "Fast food",
+        planned_amount: "0",
+        category: "Food",
+      },
+      // Personal
+      {
+        budget_id: newBudget.id,
+        name: "Clothing",
+        planned_amount: "0",
+        category: "Personal",
+      },
+      {
+        budget_id: newBudget.id,
+        name: "Phone",
+        planned_amount: "0",
+        category: "Personal",
+      },
+      {
+        budget_id: newBudget.id,
+        name: "Hair/Cosmetics",
+        planned_amount: "0",
+        category: "Personal",
+      },
+      {
+        budget_id: newBudget.id,
+        name: "Subscriptions",
+        planned_amount: "0",
+        category: "Personal",
+      },
+      // Lifestyle
+      {
+        budget_id: newBudget.id,
+        name: "Pet Care",
+        planned_amount: "0",
+        category: "Lifestyle",
+      },
+      {
+        budget_id: newBudget.id,
+        name: "Child Care",
+        planned_amount: "0",
+        category: "Lifestyle",
+      },
+      {
+        budget_id: newBudget.id,
+        name: "Entertainment",
+        planned_amount: "0",
+        category: "Lifestyle",
+      },
+      {
+        budget_id: newBudget.id,
+        name: "Miscellaneous",
+        planned_amount: "0",
+        category: "Lifestyle",
+      },
+      // Health
+      {
+        budget_id: newBudget.id,
+        name: "Gym",
+        planned_amount: "0",
+        category: "Health",
+      },
+      {
+        budget_id: newBudget.id,
+        name: "Medicine",
+        planned_amount: "0",
+        category: "Health",
+      },
+      {
+        budget_id: newBudget.id,
+        name: "Suplements",
+        planned_amount: "0",
+        category: "Health",
+      },
+      // Insurance
+      {
+        budget_id: newBudget.id,
+        name: "Health insurance",
+        planned_amount: "0",
+        category: "Insurance",
+      },
+      {
+        budget_id: newBudget.id,
+        name: "Life insurance",
+        planned_amount: "0",
+        category: "Insurance",
+      },
+      {
+        budget_id: newBudget.id,
+        name: "Auto insurance",
+        planned_amount: "0",
+        category: "Insurance",
+      },
+    ];
+
+    const { error: errorBudgetItmes } = await supabaseAdmin
+      .from("budget_item")
+      .insert(itemsToInsert);
+
+    if (errorBudgetItmes) {
+      throw errorBudgetItmes;
+    }
+
     return NextResponse.json<CreateBudgetResponse>(
       { message: "Success", newBudget },
       { status: 201 }

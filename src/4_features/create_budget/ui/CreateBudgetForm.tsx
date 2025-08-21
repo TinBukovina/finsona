@@ -82,7 +82,7 @@ export function CreateBudgetForm({
       setName("");
     } catch (error) {
       console.error("Error creating wallet:", error);
-      addToast(t("generic_error"), "error");
+      addToast("Something went wrong!", "error");
     } finally {
       setIsLoading(false);
     }

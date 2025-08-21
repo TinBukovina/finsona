@@ -12,6 +12,7 @@ interface IinputProps {
   disableAutoWidth?: boolean;
   className?: string;
   type?: string;
+  onKeyDown?: () => void;
 }
 
 export function Iinput({
@@ -23,6 +24,7 @@ export function Iinput({
   disableAutoWidth = false,
   className,
   type = "text",
+  onKeyDown,
 }: IinputProps) {
   const [inputWidth, setInputWidth] = useState<number>(initialInputWidth);
 
@@ -56,13 +58,24 @@ export function Iinput({
           setValue(e.target.value.replace("$", ""));
         }}
         onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === "Escape") e.currentTarget.blur();
+          if (e.key === "Enter" || e.key === "Escape") {
+            e.currentTarget.blur();
+
+            if (onKeyDown) onKeyDown();
+          }
         }}
         style={{ width: `${disableAutoWidth ? "100%" : `${inputWidth}px`}` }}
         className={cn(
           "px-4 py-2 border border-border rounded-max hover:bg-secondary/70",
           className
         )}
+        onBlur={() => {
+          if (value.length <= 0) {
+            setValue("Unknown");
+          }
+
+          if (onKeyDown) onKeyDown();
+        }}
       />
     </>
   );

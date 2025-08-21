@@ -1,3 +1,5 @@
+import { useRouter } from "next/router";
+
 class CustomError extends Error {
   info: string;
   status: number;
@@ -11,7 +13,6 @@ class CustomError extends Error {
 
 export const fetcher = async (url: string) => {
   const res = await fetch(url);
-
   if (!res.ok) {
     let errorInfo;
 

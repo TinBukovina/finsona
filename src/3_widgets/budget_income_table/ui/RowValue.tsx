@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useLayoutEffect } from "react";
+import React, { useState, useRef, useLayoutEffect, useEffect } from "react";
 import { addSeparatorToStringNumber, useToast } from "@/6_shared";
 import { useSettings } from "@/5_entities";
 import { getRightFormatedNumber } from "@/3_widgets/budget_expense_table/uitls";
@@ -12,6 +12,9 @@ interface EditableNameProps {
   onValueChange: (newValue: string) => void;
   onClick: (e: React.MouseEvent) => void;
   onBlurAfterEdit: () => void;
+  setTrigerBudgetItemUpdateInDatabase: React.Dispatch<
+    React.SetStateAction<boolean>
+  >;
 }
 
 export function RowValue({
@@ -21,6 +24,7 @@ export function RowValue({
   onValueChange,
   onClick,
   onBlurAfterEdit,
+  setTrigerBudgetItemUpdateInDatabase,
 }: EditableNameProps) {
   const { addToast } = useToast();
   const { getDecimalSeparator, getValueSeparator } = useSettings();
@@ -37,7 +41,12 @@ export function RowValue({
 
   const handleBlur = () => {
     // If value is empty
-    if (value.trim() === "") {
+    let valueString = value;
+    if (typeof valueString === "number") {
+      valueString = String(value);
+    }
+
+    if (String(valueString).trim() === "") {
       if (isClickInside.current) {
         addToast("You need to eneter a number!", "error");
         inputRef.current?.focus();
@@ -50,7 +59,7 @@ export function RowValue({
     }
 
     // JS doesn't understand , in Number() function
-    const normalizedValue = value.replace(",", ".");
+    const normalizedValue = valueString.replace(",", ".");
     const numberRegex = /^-?\d+(\.\d+)?$/;
 
     if (!numberRegex.test(normalizedValue) && normalizedValue !== "") {
@@ -78,7 +87,8 @@ export function RowValue({
     const finalFormattedValue =
       formattedIntegerPart + getDecimalSeparator() + formattedDecimalPart;
 
-    onValueChange(finalFormattedValue);
+    console.log(finalFormattedValue);
+    setTrigerBudgetItemUpdateInDatabase(true);
 
     onBlurAfterEdit();
   };
@@ -88,7 +98,7 @@ export function RowValue({
       <p onClick={onClick} className="w-full text-right">
         $
         {getRightFormatedNumber(
-          value,
+          String(value),
           getDecimalSeparator(),
           getValueSeparator()
         )}
@@ -106,7 +116,9 @@ export function RowValue({
           ref={inputRef}
           type="text"
           value={value}
-          onChange={(e) => onValueChange(e.target.value)}
+          onChange={(e) => {
+            onValueChange(e.target.value);
+          }}
           onBlur={handleBlur}
           onClick={(e) => e.stopPropagation()}
           onKeyDown={(e) => {

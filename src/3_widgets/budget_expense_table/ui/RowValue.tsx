@@ -36,7 +36,12 @@ export function RowValue({
   }, [value, isEditing]);
 
   const handleBlur = () => {
-    if (value.trim() === "") {
+    let valueString = value;
+    if (typeof valueString === "number") {
+      valueString = String(value);
+    }
+
+    if (valueString.trim() === "") {
       if (isClickInside.current) {
         addToast("You need to eneter a number!", "error");
         inputRef.current?.focus();
@@ -49,7 +54,7 @@ export function RowValue({
     }
 
     // JS doesn't understand , in Number() function
-    const normalizedValue = value.replace(",", ".");
+    const normalizedValue = valueString.replace(",", ".");
     const numberRegex = /^-?\d+(\.\d+)?$/;
 
     if (!numberRegex.test(normalizedValue) && normalizedValue !== "") {
@@ -83,7 +88,7 @@ export function RowValue({
       <p onClick={onClick} className="w-full text-right">
         $
         {getRightFormatedNumber(
-          value,
+          String(value),
           getDecimalSeparator(),
           getValueSeparator()
         )}

@@ -39,12 +39,12 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-    const { wallet_id, budge_item_id, type, amount, description } =
+    const { wallet_id, budget_item_id, type, amount, description } =
       await request.json();
 
     const { data: createdTransaction, error } = await supabaseAdmin
       .from("transactions")
-      .insert({ wallet_id, budge_item_id, type, amount, description })
+      .insert({ wallet_id, budget_item_id, type, amount, description })
       .single();
 
     if (error) {

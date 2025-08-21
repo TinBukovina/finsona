@@ -32,7 +32,9 @@ export function RowName({
   }, [name, isEditing]);
 
   const handleBlur = () => {
-    if (name.length < 6) {
+    const isInputValid = !(name.length < 6);
+
+    if (!isInputValid) {
       if (isClickInside.current) {
         addToast("Name must be at least 6 characters long!", "error");
         inputRef.current?.focus();

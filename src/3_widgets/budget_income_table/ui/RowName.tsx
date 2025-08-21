@@ -10,6 +10,9 @@ interface EditableNameProps {
   onNameChange: (newName: string) => void;
   onClick: (e: React.MouseEvent) => void;
   onBlurAfterEdit: () => void;
+  setTrigerBudgetItemUpdateInDatabase: React.Dispatch<
+    React.SetStateAction<boolean>
+  >;
 }
 
 export function RowName({
@@ -19,6 +22,7 @@ export function RowName({
   onNameChange,
   onClick,
   onBlurAfterEdit,
+  setTrigerBudgetItemUpdateInDatabase,
 }: EditableNameProps) {
   const { addToast } = useToast();
   const [inputWidth, setInputWidth] = useState(0);
@@ -41,8 +45,10 @@ export function RowName({
 
       const neededChars = 6 - name.length;
       const padding = "_".repeat(neededChars);
+
       onNameChange(name + padding);
     }
+    setTrigerBudgetItemUpdateInDatabase(true);
     onBlurAfterEdit();
   };
 

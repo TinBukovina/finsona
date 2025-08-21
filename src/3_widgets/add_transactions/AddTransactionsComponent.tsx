@@ -19,7 +19,8 @@ import {
   SelectValue,
   useToast,
 } from "@/6_shared";
-import { useSettings } from "@/5_entities";
+import { BudgetItemInterface, useSettings } from "@/5_entities";
+import { useAppContext } from "@/1_app";
 
 interface AddTransactionsComponentProps {
   flowing?: boolean;
@@ -37,12 +38,15 @@ export function AddTransactionsComponent({
 }: AddTransactionsComponentProps) {
   const { getDecimalSeparator } = useSettings();
   const { addToast } = useToast();
+  const { appState } = useAppContext();
 
   const [hideContent, setHideContent] = useState<boolean>(false);
 
   const [transactionType, setTransactionType] = useState<"income" | "expense">(
     "expense"
   );
+
+  const [expenses, setExpenses] = useState<BudgetItemInterface[]>([]);
 
   // Form state
   const [amount, setAmount] = useState<string>("");
@@ -96,12 +100,22 @@ export function AddTransactionsComponent({
         return;
       }
 
+      if (!appState.selectedBudgetId) {
+        addToast("Please select a budget!", "error");
+        return;
+      }
+
+      if (!appState.activeWalletId) {
+        addToast("Please select a wallet!", "error");
+        return;
+      }
+
       const response = await fetch("/api/transactions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          wallet_id: "010b3bb7-56c8-4557-b83c-8e05cc6642fb",
-          budget_item_id: "38cb81ce-ab73-4660-a1bd-7f477d9323db",
+          wallet_id: appState.activeWalletId,
+          budget_item_id: budgetItem, // budgetItem == budgetItemId
           type: transactionType,
           amount: amount,
           description: description,
@@ -113,6 +127,7 @@ export function AddTransactionsComponent({
         addToast(responseData.message, "error");
       } else {
         addToast("Successfuly created transaction!", "success");
+        if (onClose) onClose();
         resetInputs();
       }
     } catch (error) {
@@ -120,6 +135,35 @@ export function AddTransactionsComponent({
       addToast("Something went wrong.", "error");
     }
   };
+
+  useEffect(() => {
+    if (!appState.selectedBudgetId) return;
+
+    const handleExpensesFetch = async () => {
+      try {
+        const response = await fetch(
+          `/api/budget-items/getAll/${appState.selectedBudgetId}`,
+          {
+            method: "GET",
+          }
+        );
+
+        const responseData = await response.json();
+
+        if (!response.ok) {
+          console.log(responseData);
+          addToast("Error loading expenses!", "error");
+        } else {
+          setExpenses(responseData);
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        addToast("Something went wrong.", "error");
+      }
+    };
+
+    handleExpensesFetch();
+  }, [addToast, appState.selectedBudgetId]);
 
   return (
     <div
@@ -185,10 +229,19 @@ export function AddTransactionsComponent({
                   <SelectValue placeholder={"Choose Budget category"} />
                 </SelectTrigger>
                 <SelectContent className="bg-popover p-[2px]">
-                  <SelectItem value="housing">{"Housing"}</SelectItem>
-                  <SelectItem value="housing/utils">
-                    {"housing/utils"}
-                  </SelectItem>
+                  {expenses
+                    .filter((el) => {
+                      if (transactionType === "income") {
+                        return el.category.toLowerCase() === "income";
+                      } else {
+                        return el.category.toLowerCase() !== "income";
+                      }
+                    })
+                    .map((expense) => (
+                      <SelectItem key={expense.id} value={expense.id}>
+                        {expense.category + " - " + expense.name}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
             </div>

@@ -4,8 +4,15 @@ import React, { useEffect, useRef, useState } from "react";
 import { RemoveTableBtn } from "./RemoveTableBtn";
 import { RowName } from "./RowName";
 import { RowValue } from "./RowValue";
+import {
+  BudgetItemInterface,
+  TransactionInterface,
+  useSettings,
+} from "@/5_entities";
+import { useToast } from "@/6_shared";
+import { set } from "date-fns";
 import { getReplaceCalmaWithDot, getRightFormatedNumber } from "../uitls";
-import { useSettings } from "@/5_entities";
+import { useAppContext } from "@/1_app";
 
 type RowMode =
   | "view"
@@ -15,15 +22,11 @@ type RowMode =
   | "editingReceivedValue";
 
 interface BudgetTableRowProps {
-  data: { id: number; name: string; planned: string; spent: string };
+  data: BudgetItemInterface;
   isSelected: boolean;
   type: "spent" | "remaining";
   onSelect: (unselect?: boolean) => void;
   onClose?: () => void;
-  onNameChange: (newName: string) => void;
-  onPlannedChange: (newPlanned: string) => void;
-  onSpentChange: (newSpent: string) => void;
-  onRemainingChange: (newRemaining: string) => void;
 }
 
 export function BudgetTableRow({
@@ -32,11 +35,8 @@ export function BudgetTableRow({
   type,
   onSelect,
   onClose,
-  onNameChange,
-  onPlannedChange,
-  onSpentChange,
-  onRemainingChange,
 }: BudgetTableRowProps) {
+  const { addToast } = useToast();
   const { getDecimalSeparator, getValueSeparator } = useSettings();
 
   const [mode, setMode] = useState<RowMode>("view");
@@ -46,6 +46,16 @@ export function BudgetTableRow({
 
   const isClickedInside = useRef<boolean>(false);
 
+  const [budgetItem, setBudgetItem] = useState<BudgetItemInterface>(data);
+
+  const [
+    trigerBudgetItemUpdateInDatabase,
+    setTrigerBudgetItemUpdateInDatabase,
+  ] = useState<boolean>(false);
+  const [hasChangeHappened, setHasChangeHappened] = useState<boolean>(false);
+
+  const [receivedAmount, setReceivedAmount] = useState<string>("0");
+
   useEffect(() => {
     if (!isSelected) {
       setMode("view");
@@ -54,15 +64,8 @@ export function BudgetTableRow({
     }
   }, [isSelected]);
 
-  useEffect(() => {
-    if (type === "spent") {
-      setSpentRemainValue(data.spent);
-    } else {
-      setSpentRemainValue(String(Number(data.planned) - Number(data.spent)));
-    }
-  }, [type, data.planned, data.spent]);
-
   const handleRowClick = () => {
+    console.log(budgetItem);
     if (
       mode === "editingName" ||
       mode === "editingPlannedValue" ||
@@ -99,17 +102,6 @@ export function BudgetTableRow({
     }
   };
 
-  const handleReceivedValueClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setKeepFromClosing(true);
-
-    if (isSelected) {
-      setMode("editingReceivedValue");
-    } else {
-      onSelect();
-    }
-  };
-
   const handleAfterBlur = () => {
     setMode("view");
     setKeepFromClosing(false);
@@ -117,6 +109,76 @@ export function BudgetTableRow({
       onSelect(false);
     }
   };
+
+  useEffect(() => {
+    if (trigerBudgetItemUpdateInDatabase && hasChangeHappened) {
+      (async () => {
+        try {
+          const result = await fetch(`/api/budget-items/${budgetItem.id}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name: budgetItem.name,
+              planned_amount: String(budgetItem.planned_amount).replace(
+                ",",
+                "."
+              ),
+            }),
+          });
+
+          const resultData = await result.json();
+          if (!result.ok) {
+            console.log("Error occured: ", resultData.message);
+            addToast("Something went wrong!", "error");
+          } else {
+            console.log(resultData);
+            addToast("Successfully updated row!", "success");
+          }
+        } catch (error) {
+          console.error(error);
+          addToast("There was a error!", "error");
+        }
+
+        setTrigerBudgetItemUpdateInDatabase(false);
+        setHasChangeHappened(false);
+      })();
+    }
+  }, [
+    budgetItem,
+    addToast,
+    trigerBudgetItemUpdateInDatabase,
+    setTrigerBudgetItemUpdateInDatabase,
+    hasChangeHappened,
+    setHasChangeHappened,
+  ]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        if (!budgetItem.id) return;
+
+        const response = await fetch(`/api/transactions/${budgetItem.id}`, {
+          method: "GET",
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+          addToast("Something went wrong!", "error");
+        } else {
+          const sumAmount = responseData
+            .filter(
+              (el: TransactionInterface) => el.type.toLowerCase() === "expense"
+            )
+            .map((el: TransactionInterface) => el.amount)
+            .reduce((a: number, b: number) => a + b, 0);
+          setReceivedAmount(String(sumAmount));
+        }
+      } catch (error) {
+        console.error(error);
+        addToast("Something went wrong!", "error");
+      }
+    })();
+  }, [budgetItem.id, addToast]);
 
   return (
     <div
@@ -140,34 +202,62 @@ export function BudgetTableRow({
         )}
 
         <RowName
-          name={data.name}
+          name={budgetItem.name}
           isEditing={mode === "editingName"}
           isClickInside={isClickedInside}
-          onNameChange={onNameChange}
+          onNameChange={(newName: string) => {
+            setBudgetItem((prev) => {
+              if (prev.name !== newName) {
+                setHasChangeHappened(true);
+              }
+
+              return {
+                ...prev,
+                name: newName,
+              };
+            });
+          }}
           onClick={handleNameClick}
-          onBlurAfterEdit={handleAfterBlur}
+          onBlurAfterEdit={() => {
+            setTrigerBudgetItemUpdateInDatabase(true);
+            handleAfterBlur();
+          }}
         />
       </div>
       <RowValue
-        value={data.planned}
+        value={budgetItem.planned_amount}
         isEditing={mode === "editingPlannedValue"}
         isClickInside={isClickedInside}
-        onValueChange={onPlannedChange}
+        onValueChange={(newPlannedAmount: string) => {
+          setBudgetItem((prev) => {
+            if (String(prev.planned_amount) !== String(newPlannedAmount)) {
+              setHasChangeHappened(true);
+            }
+
+            return {
+              ...prev,
+              planned_amount: newPlannedAmount,
+            };
+          });
+        }}
         onClick={handlePlannedValueClick}
-        onBlurAfterEdit={handleAfterBlur}
+        onBlurAfterEdit={() => {
+          setTrigerBudgetItemUpdateInDatabase(true);
+          handleAfterBlur();
+        }}
       />
       <p className="w-full text-right">
         $
         {type === "spent"
           ? getRightFormatedNumber(
-              data.spent,
+              receivedAmount,
               getDecimalSeparator(),
               getValueSeparator()
             )
           : getRightFormatedNumber(
               String(
-                Number(getReplaceCalmaWithDot(data.planned)) -
-                  Number(getReplaceCalmaWithDot(data.spent))
+                Number(getReplaceCalmaWithDot(budgetItem.planned_amount)) -
+                  Number(getReplaceCalmaWithDot(receivedAmount))
               ),
               getDecimalSeparator(),
               getValueSeparator()

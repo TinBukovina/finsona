@@ -15,6 +15,6 @@ export function useBudgetItems(budgetId: string | null) {
     data,
     isLoading,
     error,
-    mutateBudgets: mutate,
+    mutateBudgetItems: mutate,
   };
 }

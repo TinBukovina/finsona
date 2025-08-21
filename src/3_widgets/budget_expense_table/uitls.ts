@@ -25,5 +25,5 @@ export function getRightFormatedNumber(
 }
 
 export function getReplaceCalmaWithDot(number: string) {
-  return number.replace(",", ".");
+  return String(number).replace(",", ".");
 }

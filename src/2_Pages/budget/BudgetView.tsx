@@ -13,41 +13,13 @@ import {
 import {
   AddTransactionsComponent,
   AddTransactionsPopup,
-  BudgetExpenseTable,
-  BudgetIncomeTable,
   BudgetMonthPicker,
 } from "@/3_widgets";
 import { BudgetInterface, useBudgets, useWallets } from "@/5_entities";
-import {
-  Button,
-  capitalizeFirstLetter,
-  SpinnerLoader,
-  useToast,
-} from "@/6_shared";
-import { CreateBudgetTableBtn } from "@/4_features";
-import { useBudgetItems } from "@/5_entities/budget_items";
-
-interface TestBudgetTableDataInterfac {
-  name: string;
-  planned_amount: number;
-  category: string;
-}
-
-const testBudgetTableData = [
-  { name: "Paycheck 1", planned_amount: 200.0, category: "Income" },
-  { name: "Side hustle", planned_amount: 500.0, category: "Income" },
-  { name: "Freelance", planned_amount: 150.0, category: "Income" },
-  { name: "Morgage/Rent", planned_amount: 200.0, category: "Housing" },
-  { name: "Water", planned_amount: 500.0, category: "Housing/Utils" },
-  { name: "Electricity", planned_amount: 150.0, category: "Housing/Utils" },
-  /* { name: "Electricity", planned_amount: 150.0, category: "Charity" }, */
-];
+import { capitalizeFirstLetter, SpinnerLoader } from "@/6_shared";
+import { BudgetTables } from "./BudgetTables";
 
 export function BudgetView() {
-  const [budgetTableData, setBudgetTableData] = useState(testBudgetTableData);
-
-  const { addToast } = useToast();
-
   const { appState, setSelectedBudget } = useAppContext();
   const { isLoading: isWalletLoading } = useWallets(); // Need this to see when is active wallet selected
   const { activeWalletId } = appState;
@@ -59,30 +31,10 @@ export function BudgetView() {
   const [displayTransactionSection, setDidsplayTransactionSection] =
     useState<boolean>(false);
 
-  const { data, isLoading, error } = useBudgets(activeWalletId);
+  const { data, isLoading, error, mutateBudgets } = useBudgets(activeWalletId);
 
   const { budgets } = data || {};
-
-  const {
-    data: budgetItems,
-    isLoading: isLoadingBudgetItems,
-    error: errorBudgetItems,
-  } = useBudgetItems(appState.selectedBudgetId);
-
-  const getDifferentTableNames = (
-    budgetsData: TestBudgetTableDataInterfac[]
-  ): string[] => {
-    const result: string[] = [];
-    for (const category of budgetsData.map((b) => b.category) as string[]) {
-      if (!result.includes(category)) {
-        result.push(category);
-      }
-    }
-
-    return result;
-  };
-
-  const tableNames = getDifferentTableNames(budgetTableData);
+  console.log(budgets);
 
   useEffect(() => {
     if (budgets && budgets.length > 0) {
@@ -162,7 +114,6 @@ export function BudgetView() {
     }
   }
 
-  console.log(budgetItems);
   return (
     <div className="flex flex-col gap-4 flex-1 min-h-0">
       <p className={"text-h6 font-bold"}>
@@ -173,72 +124,13 @@ export function BudgetView() {
         className={`flex ${displayTransactionSection ? "gap-4" : "gap-0"} relative flex-1 min-h-0`}
       >
         {/*BUDGET PART*/}
-        <div className="flex flex-col flex-1 gap-4 min-w-0 overflow-auto scrollbar-none scrollbar-w-8  scroll-thumb-rounded-max scrollbar-thumb-secondary scrollbar-track-transparent hide-scrollbar-arrows">
-          <p className="text-h5 hidden">
-            {capitalizeFirstLetter(selectedBudget?.name) ||
-              "No budget for that month"}
-          </p>
+        <BudgetTables
+          selectedBudget={selectedBudget}
+          displayingTransactions={displayTransactionSection}
+          /* setBudgetTableData={setBudgetTableData} */
+          onAddtransactionClick={() => setDidsplayTransactionSection(true)}
+        />
 
-          {tableNames.map((tableName) => {
-            if (tableName === "Income") {
-              return (
-                <BudgetIncomeTable
-                  key={tableName}
-                  swapActionsBtns={displayTransactionSection}
-                />
-              );
-            } else {
-              return (
-                <BudgetExpenseTable
-                  key={tableName}
-                  tableName={tableName}
-                  swapActionsBtns={displayTransactionSection}
-                  handleDeleteClick={() => {
-                    setBudgetTableData((prev) =>
-                      prev.filter((b) => b.category !== tableName)
-                    );
-                  }}
-                />
-              );
-            }
-          })}
-
-          <div
-            className={`flex items-center gap-4 ${displayTransactionSection ? "flex-row-reverse" : ""}`}
-          >
-            <CreateBudgetTableBtn
-              text="Add table"
-              handleClick={() => {
-                setBudgetTableData((prev) => {
-                  if (prev.find((b) => b.category === "Category")) {
-                    addToast(
-                      "You already have table with name Cateogry",
-                      "error"
-                    );
-
-                    return prev;
-                  }
-
-                  return [
-                    ...prev,
-                    {
-                      name: "Expense",
-                      planned_amount: 0,
-                      category: "Category",
-                    },
-                  ];
-                });
-              }}
-            />
-            <div className={displayTransactionSection ? "hidden" : "block"}>
-              <Button onClick={() => setDidsplayTransactionSection(true)}>
-                Add transaction
-              </Button>
-            </div>
-
-            <div className={`w-[40px] h-[40px] invisible`}></div>
-          </div>
-        </div>
         {/*TRANSACTION PART*/}
         <div>
           {displayTransactionSection && (
@@ -247,6 +139,7 @@ export function BudgetView() {
                 <AddTransactionsComponent
                   onClose={() => {
                     setDidsplayTransactionSection(false);
+                    window.location.reload();
                   }}
                 />
               </div>
@@ -254,6 +147,7 @@ export function BudgetView() {
                 <AddTransactionsPopup
                   onClose={() => {
                     setDidsplayTransactionSection(false);
+                    window.location.reload();
                   }}
                 />
               </div>

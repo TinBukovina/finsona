@@ -8,32 +8,32 @@ import {
   Iinput,
   keyboard_arrow_down_r_400,
   keyboard_arrow_up_r_400,
+  useToast,
 } from "@/6_shared";
 import { RemoveTableBtn } from "./RemoveTableBtn";
 import { EditTableBtn } from "./EditTableBtn";
 import { BudgetTableRow } from "./BudgetTableRow";
-import { useSettings } from "@/5_entities";
+import { BudgetItemInterface, useSettings } from "@/5_entities";
 import { useOnClickOutside } from "@/6_shared/lib/hooks/useOnClickOutside";
 
-const data = [
-  { id: 1, name: "Paycheck 1", value: "200.00", received: "100.00" },
-  { id: 2, name: "Side Hustle", value: "500.00", received: "500.00" },
-  { id: 3, name: "Freelance", value: "150.00", received: "120.50" },
-];
-
-const INCOM_TABLE_NAME = "Income";
-
 export function BudgetIncomeTable({
+  data: budgetItems,
+  budget_id,
+  category,
   swapActionsBtns,
 }: {
+  data: BudgetItemInterface[];
+  budget_id: string | undefined;
+  category: string;
   swapActionsBtns: boolean;
 }) {
   const { getDecimalSeparator } = useSettings();
+  const { addToast } = useToast();
 
   const [isOpen, setIsOpen] = useState<boolean>(true);
 
   const [isInEditingMode, setIsInEditingMode] = useState<boolean>(false);
-  const [tableName, setTableName] = useState<string>(INCOM_TABLE_NAME);
+  const [tableName, setTableName] = useState<string>(category);
   const tableNameRefInput = useRef<HTMLInputElement>(null);
 
   const [isEnteringNewRow, setIsEnteringNewRow] = useState<boolean>(false);
@@ -41,7 +41,12 @@ export function BudgetIncomeTable({
 
   const [selectedRowIndex, setSelectedRowIndex] = useState<number | null>(null);
 
-  const [mockBudgetData, setMockBudgetData] = useState(data);
+  const [mockBudgetData, setMockBudgetData] = useState(budgetItems);
+
+  /*   const [
+    trigerBudgetItemUpdateInDatabase,
+    setTrigerBudgetItemUpdateInDatabase,
+  ] = useState<boolean>(false); */
 
   const handleRowSelect = (index: number, unselect: boolean) => {
     if (unselect) return setSelectedRowIndex(null);
@@ -60,6 +65,99 @@ export function BudgetIncomeTable({
   };
 
   useOnClickOutside(editingZoneRef, handlerExitEditingMode);
+
+  const handleAddIncome = async () => {
+    if (!newRowName || newRowName.length === 0) {
+      addToast("You need to enter a name!", "error");
+      return;
+    }
+
+    if (newRowName.length < 4) {
+      addToast("Name is too short, 4 characters at least!", "error");
+      return;
+    }
+
+    setIsEnteringNewRow(false);
+    setMockBudgetData((prev) => [
+      ...prev,
+      {
+        id: "",
+        budget_id: budget_id || "",
+        name: newRowName,
+        planned_amount: "0",
+        category: category,
+      },
+    ]);
+
+    try {
+      const response = await fetch(`/api/budgets/${budget_id}/items`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: newRowName,
+          planned_amount: 0,
+          category,
+        }),
+      });
+
+      const responseData = await response.json();
+      if (!response.ok) {
+        console.log(responseData);
+        addToast("Something went wrong!", "error");
+        setMockBudgetData((prev) => [
+          ...prev.filter((item) => item.name !== newRowName),
+        ]);
+        setIsEnteringNewRow(true);
+      } else {
+        setMockBudgetData((prev) => [
+          ...prev.filter((item) => item.name !== newRowName),
+          responseData,
+        ]);
+        addToast("Item added!", "success");
+        setIsEnteringNewRow(false);
+        setNewRowName("");
+      }
+    } catch (error) {
+      console.error(error);
+      addToast("Something went wrong!", "error");
+      setMockBudgetData((prev) => [
+        ...prev.filter((item) => item.name !== newRowName),
+      ]);
+      setIsEnteringNewRow(true);
+    }
+  };
+
+  const handleRemoveIncome = async (budgetItemId: string) => {
+    const removedItem = mockBudgetData.find((item) => item.id === budgetItemId);
+
+    setMockBudgetData((prev) =>
+      prev.filter((item) => item.id !== budgetItemId)
+    );
+
+    try {
+      const response = await fetch(`/api/budget-items/${budgetItemId}`, {
+        method: "DELETE",
+      });
+
+      const responseData = await response.json();
+      if (!response.ok) {
+        console.log(responseData);
+        addToast("Something went wrong!", "error");
+        if (!removedItem) return;
+        setMockBudgetData((prev) => [...prev, removedItem]);
+      } else {
+        addToast("Item removed!", "success");
+        setIsEnteringNewRow(false);
+      }
+    } catch (error) {
+      console.error(error);
+      addToast("Something went wrong!", "error");
+      if (!removedItem) return;
+      setMockBudgetData((prev) => [...prev, removedItem]);
+    }
+  };
 
   return (
     <div
@@ -118,32 +216,7 @@ export function BudgetIncomeTable({
                   onSelect={(unselect = false) => {
                     handleRowSelect(index, unselect);
                   }}
-                  onClose={() => {
-                    setMockBudgetData((data) =>
-                      data.filter((r) => r.id !== row.id)
-                    );
-                  }}
-                  onNameChange={(newName: string) =>
-                    setMockBudgetData((prev) => {
-                      const newData = [...prev];
-                      newData[index].name = newName;
-                      return newData;
-                    })
-                  }
-                  onPlannedChange={(newPlanned: string) =>
-                    setMockBudgetData((prev) => {
-                      const newData = [...prev];
-                      newData[index].value = newPlanned;
-                      return newData;
-                    })
-                  }
-                  onReceivedChange={(newReceived: string) =>
-                    setMockBudgetData((prev) => {
-                      const newData = [...prev];
-                      newData[index].received = newReceived;
-                      return newData;
-                    })
-                  }
+                  onClose={() => handleRemoveIncome(row.id)}
                 />
               ))}
             </div>
@@ -156,6 +229,7 @@ export function BudgetIncomeTable({
               variant={"secondary"}
               onClick={() => {
                 setIsEnteringNewRow(true);
+                setIsOpen(true);
               }}
             >
               Add Income
@@ -170,21 +244,7 @@ export function BudgetIncomeTable({
               >
                 Cancle
               </Button>
-              <Button
-                variant={"default"}
-                onClick={() => {
-                  setMockBudgetData((prev) => [
-                    ...prev,
-                    {
-                      id: prev[prev.length - 1].id + 1,
-                      name: newRowName,
-                      value: "0" + getDecimalSeparator() + "0",
-                      received: "0" + getDecimalSeparator() + "0",
-                    },
-                  ]);
-                  setIsEnteringNewRow(false);
-                }}
-              >
+              <Button variant={"default"} onClick={handleAddIncome}>
                 Confirm
               </Button>
               <Iinput
