@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 
-import { SelectActiveWallet, ThemeBtn } from "@/4_features";
+import { ThemeBtn } from "@/4_features";
 import { cn, IconTemplate, person_r_400 } from "@/6_shared";
 import {
   DropdownMenu,
@@ -14,7 +14,11 @@ import {
 } from "@/6_shared/ui/components/dropdown-menu";
 import { CreateWalletButton } from "@/4_features/create_wallet";
 
-export default function Navigation() {
+export default function Navigation({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [isActiveAccountButton, setIsActiveAccountButton] =
     useState<boolean>(false);
 
@@ -28,7 +32,7 @@ export default function Navigation() {
     >
       <div className="flex items-center gap-4">
         {/*ACTIVE WALLET SELECTION*/}
-        <SelectActiveWallet />
+        {children}
         {/*OPEN WALLET MODAL BTN*/}
         <CreateWalletButton />
       </div>

@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
       throw settingsInsertError;
     }
 
-    const loginUrl = new URL("/auth/login", process.env.NEXT_PUBLIC_BASE_URL!);
+    const loginUrl = new URL("/auth/login", process.env.NEXT_PUBLIC_API_URL!);
     loginUrl.searchParams.set("verified", "true");
     return NextResponse.redirect(loginUrl);
   } catch (error) {

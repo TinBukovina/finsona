@@ -71,7 +71,9 @@ export async function POST(request: Request) {
 
     return NextResponse.json<CreateWalletResponse>(
       { message: "Success", wallet },
-      { status: 201 }
+      {
+        status: 201,
+      }
     );
   } catch (error) {
     console.error("[WALLET_POST_ERROR]: ", error);

@@ -1,10 +1,9 @@
 "use client";
 
-import react, { useEffect, useState } from "react";
-import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
+import { useState } from "react";
 
+import { useWallets, WalletInterface } from "@/5_entities";
 import { useAppContext } from "@/1_app";
-import { useWallets } from "@/5_entities";
 import {
   Button,
   cn,
@@ -18,12 +17,29 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/6_shared";
+import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 
-export function SelectActiveWallet() {
-  const [open, setOpen] = useState(false);
+interface SelectActiveWalletClientProps {
+  initialWallets: WalletInterface[];
+  initialSelectedWallet: WalletInterface;
+}
 
+export function SelectActiveWalletClient({
+  initialWallets,
+  initialSelectedWallet,
+}: SelectActiveWalletClientProps) {
+  const [open, setOpen] = useState<boolean>(false);
   const { appState, setActiveWallet } = useAppContext();
-  const { data, error, isLoading } = useWallets();
+
+  const { data } = useWallets({
+    fallbackData: { wallets: initialWallets },
+  });
+
+  const wallets = data?.wallets || [];
+
+  const currentWalletId = appState.activeWalletId || initialSelectedWallet.id;
+  const currentWallet =
+    wallets.find((w) => w.id === currentWalletId) || initialSelectedWallet;
 
   const handleWalletSelect = (newActiveWalletId: string) => {
     if (newActiveWalletId === appState.activeWalletId) {
@@ -34,20 +50,6 @@ export function SelectActiveWallet() {
     setOpen(false);
   };
 
-  useEffect(() => {
-    if (
-      data?.wallets &&
-      data?.wallets.length > 0 &&
-      appState.activeWalletId === null
-    ) {
-      setActiveWallet(data.wallets[0].id || null);
-    }
-  }, [appState.activeWalletId, data?.wallets, setActiveWallet]);
-
-  const selectWalletName =
-    data?.wallets?.find((wallet) => wallet.id === appState.activeWalletId)
-      ?.name || "Select account...";
-
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -56,9 +58,8 @@ export function SelectActiveWallet() {
           role="combobox"
           aria-expanded={open}
           className="w-[200px] justify-between"
-          disabled={isLoading}
         >
-          {isLoading ? "Loading..." : selectWalletName}
+          {currentWallet.name}
           <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -66,13 +67,9 @@ export function SelectActiveWallet() {
         <Command>
           <CommandInput placeholder="Search account..." />
           <CommandList>
-            {error && <CommandEmpty>Failed to load accounts.</CommandEmpty>}
-            {!error && !isLoading && (
-              <CommandEmpty>No accounts found.</CommandEmpty>
-            )}
-
+            <CommandEmpty>No accounts found.</CommandEmpty>
             <CommandGroup>
-              {data?.wallets?.map((wallet) => (
+              {wallets.map((wallet) => (
                 <CommandItem
                   key={wallet.id}
                   value={wallet.id}
@@ -81,7 +78,7 @@ export function SelectActiveWallet() {
                   <CheckIcon
                     className={cn(
                       "mr-2 h-4 w-4",
-                      appState.activeWalletId === wallet.id
+                      currentWalletId === wallet.id
                         ? "opacity-100"
                         : "opacity-0"
                     )}

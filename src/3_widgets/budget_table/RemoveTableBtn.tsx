@@ -5,7 +5,7 @@ import React from "react";
 import { Button, delete_r_400, IconTemplate } from "@/6_shared";
 
 interface RemoveTableBtnProps {
-  handleClick?: () => void;
+  handleClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 export function RemoveTableBtn({ handleClick }: RemoveTableBtnProps) {

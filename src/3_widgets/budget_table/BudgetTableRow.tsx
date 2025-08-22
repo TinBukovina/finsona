@@ -1,0 +1,142 @@
+"use client";
+
+import React, { useState, useEffect, useRef } from "react";
+import { BudgetItemInterface, useSettings } from "@/5_entities";
+import { RemoveTableBtn } from "./RemoveTableBtn";
+import { RowName } from "./RowName";
+import { RowValue } from "./RowValue";
+import {
+  getReplaceCalmaWithDot,
+  getRightFormatedNumber,
+} from "../budget_expense_table/uitls";
+
+export interface BudgetTableRowProps {
+  data: BudgetItemInterface;
+  actualAmount: number;
+  displayMode: "income" | "spent" | "remaining";
+  isSelected: boolean;
+  onSelect: (unselect?: boolean) => void;
+  onClose?: () => void;
+  onUpdate: (
+    itemId: string,
+    updatedData: { name?: string; planned_amount?: string }
+  ) => void;
+}
+
+type RowMode = "view" | "open" | "editingName" | "editingPlannedValue";
+
+const unformatValue = (value: string | number, valueSeparator: string) => {
+  return String(value).replace(new RegExp(`\\${valueSeparator}`, "g"), "");
+};
+
+export function BudgetTableRow({
+  data,
+  actualAmount,
+  displayMode,
+  isSelected,
+  onSelect,
+  onClose,
+  onUpdate,
+}: BudgetTableRowProps) {
+  const [mode, setMode] = useState<RowMode>("view");
+  const [editingValue, setEditingValue] = useState<string>("");
+  const { getValueSeparator, getDecimalSeparator } = useSettings();
+
+  useEffect(() => {
+    if (!isSelected) {
+      setMode("view");
+    }
+  }, [isSelected]);
+
+  const handleStartEditing = (
+    currentValue: string | number,
+    editMode: RowMode
+  ) => {
+    if (isSelected) {
+      const cleanValue = unformatValue(currentValue, getValueSeparator());
+      setEditingValue(cleanValue);
+      setMode(editMode);
+    }
+  };
+
+  const handleUpdate = () => {
+    let hasChanged = false;
+    let valueToSend: { name?: string; planned_amount?: string } = {};
+
+    if (mode === "editingName") {
+      hasChanged =
+        editingValue.trim() !== data.name && editingValue.trim().length > 0;
+      valueToSend = { name: editingValue.trim() || data.name };
+    } else if (mode === "editingPlannedValue") {
+      const cleanOriginal = unformatValue(
+        data.planned_amount,
+        getValueSeparator()
+      ).replace(",", ".");
+      const cleanNew = editingValue.replace(",", ".");
+      hasChanged = cleanOriginal !== cleanNew;
+      valueToSend = { planned_amount: cleanNew };
+    }
+
+    if (hasChanged) {
+      onUpdate(data.id, valueToSend);
+    }
+    setMode("view");
+  };
+
+  let thirdColumnValue: number;
+  if (displayMode === "remaining") {
+    const planned = parseFloat(
+      getReplaceCalmaWithDot(String(data.planned_amount))
+    );
+    thirdColumnValue = planned - actualAmount;
+  } else {
+    thirdColumnValue = actualAmount;
+  }
+
+  return (
+    <div
+      className="grid grid-cols-[1fr_80px_80px] items-center px-2 py-3 border-b-2 border-border cursor-pointer hover:bg-accent"
+      onClick={() => {
+        if (mode === "view") {
+          onSelect();
+        } else {
+          onSelect(true);
+          handleUpdate();
+        }
+      }}
+    >
+      <div className="flex gap-4 items-center">
+        {isSelected && onClose && <RemoveTableBtn handleClick={onClose} />}
+        <RowName
+          value={mode === "editingName" ? editingValue : data.name}
+          isEditing={mode === "editingName"}
+          onValueChange={setEditingValue}
+          onClick={() => handleStartEditing(data.name, "editingName")}
+          onUpdate={handleUpdate}
+        />
+      </div>
+
+      <RowValue
+        value={
+          mode === "editingPlannedValue"
+            ? editingValue
+            : String(data.planned_amount)
+        }
+        isEditing={mode === "editingPlannedValue"}
+        onValueChange={setEditingValue}
+        onClick={() =>
+          handleStartEditing(data.planned_amount, "editingPlannedValue")
+        }
+        onUpdate={handleUpdate}
+      />
+
+      <p className="w-full text-right">
+        {getRightFormatedNumber(
+          String(thirdColumnValue),
+          getDecimalSeparator(),
+          getValueSeparator()
+        )}
+      </p>
+    </div>
+  );
+}

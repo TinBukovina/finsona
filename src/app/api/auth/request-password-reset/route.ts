@@ -43,7 +43,7 @@ export async function POST(request: Request) {
       .setIssuedAt()
       .sign(secret);
 
-    const resetUrl = `${process.env.NEXT_PUBLIC_BASE_URL}${PUBLIC_ROUTES_CONFIG.reset_password}?token=${token}`;
+    const resetUrl = `${process.env.NEXT_PUBLIC_API_URL}${PUBLIC_ROUTES_CONFIG.reset_password}?token=${token}`;
 
     // 3. Send the reset email
     await resend.emails.send({

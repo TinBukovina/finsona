@@ -1,109 +1,53 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-
-import { BudgetExpenseTable, BudgetIncomeTable } from "@/3_widgets";
+import React, { useMemo } from "react";
 import {
   BudgetInterface,
   BudgetItemInterface,
+  TransactionInterface,
   useBudgetItems,
 } from "@/5_entities";
-import {
-  Button,
-  capitalizeFirstLetter,
-  SpinnerLoader,
-  useToast,
-} from "@/6_shared";
-import { useAppContext } from "@/1_app";
-import { SomethingWentWrong } from "../SomethingWentWrong";
-import { set } from "date-fns";
+import { SpinnerLoader, Button } from "@/6_shared";
 import { CreateBudgetTableBtn } from "@/4_features";
+import { SomethingWentWrong } from "../SomethingWentWrong";
+import { BudgetCategoryTable } from "@/3_widgets/budget_table/BudgetTable";
 
 interface BudgetTablesProps {
   selectedBudget: BudgetInterface;
+  transactions: TransactionInterface[];
   displayingTransactions: boolean;
-  onAddtransactionClick: () => void;
-  refreshData?: boolean;
+  onAddTransactionClick: () => void;
+  onItemsMutate: () => void;
 }
 
 export function BudgetTables({
   selectedBudget,
+  transactions,
   displayingTransactions,
-  onAddtransactionClick,
-  refreshData,
+  onAddTransactionClick,
+  onItemsMutate,
 }: BudgetTablesProps) {
-  const { addToast } = useToast();
-  const { appState } = useAppContext();
-
   const {
     data: budgetItems,
     isLoading,
     error,
     mutateBudgetItems,
-  } = useBudgetItems(appState.selectedBudgetId);
+  } = useBudgetItems(selectedBudget.id);
 
-  const [budgetItemsState, setBudgetItemsState] = useState<
-    BudgetItemInterface[]
-  >(budgetItems || []);
+  const transactionSums = useMemo(() => {
+    const sums: { [key: string]: number } = {};
 
-  useEffect(() => {
-    setBudgetItemsState(budgetItems || []);
-  }, [budgetItems]);
+    for (const transaction of transactions) {
+      if (!transaction.budget_item_id) continue;
 
-  const handleCreateTable = async () => {
-    setBudgetItemsState((prev) => {
-      if (prev.find((b) => b.category === "Category")) {
-        addToast("You already have table with name Cateogry", "error");
-
-        return prev;
+      if (!sums[transaction.budget_item_id]) {
+        sums[transaction.budget_item_id] = 0;
       }
 
-      return [
-        ...prev,
-        {
-          id: "",
-          budget_id: "",
-          name: "Expense",
-          planned_amount: "0",
-          category: "Category",
-        },
-      ];
-    });
-
-    try {
-      const response = await fetch("/api/budget-items", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          budget_id: appState.selectedBudgetId,
-          name: "Expense",
-          planned_amount: "0",
-          category: "New Category",
-        }),
-      });
-
-      const responseData = await response.json();
-      if (!response.ok) {
-        console.log(responseData);
-        addToast("Something went wrong", "error");
-        return;
-      } else {
-        addToast("Item created", "success");
-        mutateBudgetItems();
-        return;
-      }
-    } catch (error) {
-      console.log(error);
-      addToast("Something went wrong", "error");
-      return;
+      sums[transaction.budget_item_id] += Number(transaction.amount) || 0;
     }
-  };
-
-  useEffect(() => {
-    if (refreshData) {
-      mutateBudgetItems();
-    }
-  }, [refreshData, mutateBudgetItems]);
+    return sums;
+  }, [transactions]);
 
   if (isLoading) {
     return (
@@ -113,72 +57,51 @@ export function BudgetTables({
     );
   }
 
-  if (error) {
-    console.error("Error loading budgets:", error);
+  if (error || !budgetItems) {
     return <SomethingWentWrong />;
   }
 
-  if (!budgetItems || budgetItems.length <= 0) {
-    return <div>There is no budget_items</div>;
+  if (budgetItems.length === 0) {
+    return <div>There are no budget items for this month.</div>;
   }
 
   const tableNames = Array.from(
-    new Set(budgetItemsState.map((b) => b.category))
-  ).sort((name) => (name.toLowerCase() === "income" ? -1 : 1));
-  /*   console.log(budgetItems);
-  console.log(tableNames); */
+    new Set(budgetItems.map((b) => b.category))
+  ).sort((a, b) => {
+    if (a.toLowerCase() === "income") return -1;
+    if (b.toLowerCase() === "income") return 1;
+    return a.localeCompare(b);
+  });
 
   return (
-    <div className="flex flex-col flex-1 gap-4 min-w-0 overflow-auto scrollbar-none scrollbar-w-8  scroll-thumb-rounded-max scrollbar-thumb-secondary scrollbar-track-transparent hide-scrollbar-arrows">
-      <p className="text-h5 hidden">
-        {capitalizeFirstLetter(selectedBudget?.name) ||
-          "No budget for that month"}
-      </p>
-
+    <div className="flex flex-col flex-1 gap-4 min-w-0 overflow-auto scrollbar-none">
       {tableNames.map((tableName) => {
-        if (tableName.toLowerCase() === "income") {
-          return (
-            <BudgetIncomeTable
-              key={tableName}
-              data={budgetItemsState.filter(
-                (bi) => bi.category.toLowerCase() === tableName.toLowerCase()
-              )}
-              category={tableName}
-              budget_id={budgetItemsState.at(0)?.budget_id}
-              swapActionsBtns={displayingTransactions}
-            />
-          );
-        } else {
-          return (
-            <BudgetExpenseTable
-              key={tableName}
-              data={budgetItemsState.filter(
-                (bi) => bi.category.toLowerCase() === tableName.toLowerCase()
-              )}
-              category={tableName}
-              budget_id={budgetItemsState.at(0)?.budget_id}
-              swapActionsBtns={displayingTransactions}
-              setBudgetItemsState={setBudgetItemsState}
-              handleDeleteClick={() => {
-                mutateBudgetItems();
-              }}
-            />
-          );
-        }
+        const itemsForTable = budgetItems.filter(
+          (bi) => bi.category === tableName
+        );
+        const type =
+          tableName.toLowerCase() === "income" ? "income" : "expense";
+
+        return (
+          <BudgetCategoryTable
+            key={tableName}
+            category={tableName}
+            type={type}
+            items={itemsForTable}
+            budgetId={selectedBudget.id}
+            onMutate={mutateBudgetItems}
+            transactionSums={transactionSums}
+          />
+        );
       })}
 
       <div
         className={`flex items-center gap-4 ${displayingTransactions ? "flex-row-reverse" : ""}`}
       >
-        <CreateBudgetTableBtn
-          text="Add table"
-          handleClick={handleCreateTable}
-        />
+        <CreateBudgetTableBtn text="Add table" handleClick={() => {}} />
         <div className={displayingTransactions ? "hidden" : "block"}>
-          <Button onClick={onAddtransactionClick}>Add transaction</Button>
+          <Button onClick={onAddTransactionClick}>Add transaction</Button>
         </div>
-
-        <div className={`w-[40px] h-[40px] invisible`}></div>
       </div>
     </div>
   );

@@ -12,7 +12,9 @@ interface IinputProps {
   disableAutoWidth?: boolean;
   className?: string;
   type?: string;
-  onKeyDown?: () => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void; // Ispravan tip za event
+  onBlur?: () => void;
+  autoFocus?: boolean;
 }
 
 export function Iinput({
@@ -25,6 +27,8 @@ export function Iinput({
   className,
   type = "text",
   onKeyDown,
+  onBlur,
+  autoFocus,
 }: IinputProps) {
   const [inputWidth, setInputWidth] = useState<number>(initialInputWidth);
 
@@ -51,30 +55,29 @@ export function Iinput({
       </span>
       <input
         ref={ref}
+        autoFocus={autoFocus}
         placeholder={placeholder ? placeholder : ""}
         type={type}
         value={value}
         onChange={(e) => {
           setValue(e.target.value.replace("$", ""));
         }}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === "Escape") {
-            e.currentTarget.blur();
-
-            if (onKeyDown) onKeyDown();
-          }
-        }}
         style={{ width: `${disableAutoWidth ? "100%" : `${inputWidth}px`}` }}
         className={cn(
           "px-4 py-2 border border-border rounded-max hover:bg-secondary/70",
           className
         )}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === "Escape") {
+            e.currentTarget.blur();
+            if (onKeyDown) onKeyDown(e);
+          }
+        }}
         onBlur={() => {
           if (value.length <= 0) {
             setValue("Unknown");
           }
-
-          if (onKeyDown) onKeyDown();
+          if (onBlur) onBlur();
         }}
       />
     </>

@@ -14,7 +14,7 @@ export async function getBudgetsForWallet(
     // 2. Kreiraj apsolutni URL za API endpoint
     const apiUrl = new URL(
       `/api/wallets/${walletId}/budgets`,
-      process.env.NEXT_PUBLIC_BASE_URL!
+      process.env.NEXT_PUBLIC_API_URL!
     );
 
     // 3. Pošalji fetch zahtjev, PROSLJEĐUJUĆI KOLAČIĆE

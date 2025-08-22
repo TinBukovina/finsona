@@ -1,13 +1,9 @@
 import { PropsWithChildren } from "react";
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import "./globals.css";
-import { UserSettingsProvider } from "@/5_entities/user";
-import { ToastProvider } from "@/6_shared";
-import { cookies } from "next/headers";
-import { AppProvider } from "@/1_app/providers/AppContext";
-import { Providers } from "@/1_app";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

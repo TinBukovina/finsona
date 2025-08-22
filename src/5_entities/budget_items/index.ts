@@ -1,3 +1,3 @@
 export * from "./types";
 
-export * from "./model/useBudgetItems";
+export * from "../budgets/lib/useBudgetItems";

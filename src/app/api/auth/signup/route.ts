@@ -50,7 +50,7 @@ export async function POST(request: Request) {
     );
 
     // Generating verification link
-    const verificationUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/verify-email?token=${verificationToken}`;
+    const verificationUrl = `${process.env.NEXT_PUBLIC_API_URL}/api/auth/verify-email?token=${verificationToken}`;
 
     // Send email with Resend
     const { error: resendError } = await resend.emails.send({

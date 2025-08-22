@@ -1,7 +1,8 @@
-import { CreateBudgetButton } from "@/4_features/create_budget";
-import { useTranslations } from "next-intl";
-import Image from "next/image";
 import React from "react";
+import Image from "next/image";
+import { useTranslations } from "next-intl";
+
+import { CreateBudgetButton } from "@/4_features/create_budget";
 
 export function NoBudgetPage() {
   const t = useTranslations("no_budget_page");

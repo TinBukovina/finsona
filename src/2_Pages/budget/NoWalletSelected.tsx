@@ -1,8 +1,8 @@
-import { CreateWalletButton } from "@/4_features/create_wallet";
-import { Button } from "@/6_shared";
-import { useTranslations } from "next-intl";
-import Image from "next/image";
 import React from "react";
+import Image from "next/image";
+import { useTranslations } from "next-intl";
+
+import { CreateWalletButton } from "@/4_features/create_wallet";
 
 export function NoWalletSelected() {
   const t = useTranslations("no_wallet_page");

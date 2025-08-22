@@ -9,8 +9,7 @@ import {
   useState,
 } from "react";
 import Cookies from "js-cookie";
-
-export const WALLET_ID_COOKIE_KEY = "active-wallet-id";
+import { WALLET_ID_COOKIE_KEY } from "../config/constants";
 
 interface AppState {
   activeWalletId: string | null;
