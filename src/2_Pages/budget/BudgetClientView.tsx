@@ -5,10 +5,14 @@
 import React, { useEffect, useState } from "react";
 
 import { useAppContext } from "@/1_app";
-import { AddTransactionsComponent, BudgetMonthPicker } from "@/3_widgets";
+import {
+  AddTransactionsComponent,
+  AddTransactionsPopup,
+  BudgetMonthPicker,
+} from "@/3_widgets";
 import { BudgetInterface, useBudgets, useTransactions } from "@/5_entities";
 import { capitalizeFirstLetter } from "@/6_shared";
-import { BudgetTables } from "./BudgetTables";
+import { BudgetTables } from "../../3_widgets/budget_table/BudgetTables";
 import {
   NoBudgetThisMonthFuturePage,
   NoBudgetThisMonthPastPage,
@@ -32,19 +36,20 @@ export function BudgetClientView({ initialBudgets }: BudgetClientViewProps) {
   const budgets = budgetsData?.budgets;
 
   const { data: transactionsData } = useTransactions(selectedBudgetId);
-  const transactions = transactionsData?.transactions || [];
+  const transactions = transactionsData || [];
 
+  console.log(transactions);
   const [displayTransactionSection, setDisplayTransactionSection] =
     useState<boolean>(false);
 
   useEffect(() => {
-    if (budgets && budgets.length > 0 && !selectedBudgetId) {
+    if (budgets) {
       const budgetForCurrentMonth = budgets.find(
-        (b) => new Date(b.start_date).getMonth() === new Date().getMonth()
+        (b) => new Date(b.start_date).getMonth() === selectedMonth
       );
-      setSelectedBudget(budgetForCurrentMonth?.id || budgets[0].id);
+      setSelectedBudget(budgetForCurrentMonth?.id || null);
     }
-  }, [budgets, selectedBudgetId, setSelectedBudget]);
+  }, [budgets, selectedBudgetId, setSelectedBudget, selectedMonth]);
 
   const selectedBudget = budgets?.find((b) => b.id === selectedBudgetId);
 
@@ -54,20 +59,19 @@ export function BudgetClientView({ initialBudgets }: BudgetClientViewProps) {
 
   if (!selectedBudget) {
     const defaultBudget = budgets[0];
-    const selectedMonth = new Date().getMonth();
 
     return (
       <>
         <BudgetMonthPicker
-          selectedBudget={undefined}
-          budgets={budgets}
-          handleBudgetChange={(id) => setSelectedBudget(id)}
           selectedMonth={selectedMonth}
           setSelectedMonth={setSelectedMonth}
         />
         {selectedMonth < new Date(defaultBudget.start_date).getMonth() ? (
           <NoBudgetThisMonthPastPage
-            handleBtnClick={() => setSelectedBudget(defaultBudget.id)}
+            handleBtnClick={() => {
+              setSelectedMonth(new Date().getMonth());
+              setSelectedBudget(defaultBudget.id);
+            }}
           />
         ) : (
           <NoBudgetThisMonthFuturePage customMonth={selectedMonth} />
@@ -83,9 +87,6 @@ export function BudgetClientView({ initialBudgets }: BudgetClientViewProps) {
       </p>
 
       <BudgetMonthPicker
-        selectedBudget={selectedBudget}
-        budgets={budgets}
-        handleBudgetChange={(id) => setSelectedBudget(id)}
         selectedMonth={selectedMonth}
         setSelectedMonth={setSelectedMonth}
       />
@@ -103,14 +104,24 @@ export function BudgetClientView({ initialBudgets }: BudgetClientViewProps) {
         />
 
         {displayTransactionSection && (
-          <div>
-            <AddTransactionsComponent
-              onClose={() => {
-                setDisplayTransactionSection(false);
-                mutateBudgets();
-              }}
-            />
-          </div>
+          <>
+            <div className="min-w-[400px] hidden xl:block">
+              <AddTransactionsComponent
+                onClose={() => {
+                  setDisplayTransactionSection(false);
+                  mutateBudgets();
+                }}
+              />
+            </div>
+            <div className="xl:hidden">
+              <AddTransactionsPopup
+                onClose={() => {
+                  setDisplayTransactionSection(false);
+                  mutateBudgets();
+                }}
+              />
+            </div>
+          </>
         )}
       </div>
     </div>

@@ -5,10 +5,7 @@ import { BudgetItemInterface, useSettings } from "@/5_entities";
 import { RemoveTableBtn } from "./RemoveTableBtn";
 import { RowName } from "./RowName";
 import { RowValue } from "./RowValue";
-import {
-  getReplaceCalmaWithDot,
-  getRightFormatedNumber,
-} from "../budget_expense_table/uitls";
+import { getReplaceCalmaWithDot, getRightFormatedNumber } from "./utils";
 
 export interface BudgetTableRowProps {
   data: BudgetItemInterface;
@@ -48,6 +45,14 @@ export function BudgetTableRow({
     }
   }, [isSelected]);
 
+  useEffect(() => {
+    if (mode === "view") {
+      onSelect(true);
+    } else {
+      onSelect();
+    }
+  }, [mode]);
+
   const handleStartEditing = (
     currentValue: string | number,
     editMode: RowMode
@@ -59,7 +64,7 @@ export function BudgetTableRow({
     }
   };
 
-  const handleUpdate = () => {
+  const handleUpdate = (previusMode?: RowMode) => {
     let hasChanged = false;
     let valueToSend: { name?: string; planned_amount?: string } = {};
 
@@ -80,7 +85,8 @@ export function BudgetTableRow({
     if (hasChanged) {
       onUpdate(data.id, valueToSend);
     }
-    setMode("view");
+
+    setMode(previusMode || "view");
   };
 
   let thirdColumnValue: number;
@@ -97,8 +103,13 @@ export function BudgetTableRow({
     <div
       className="grid grid-cols-[1fr_80px_80px] items-center px-2 py-3 border-b-2 border-border cursor-pointer hover:bg-accent"
       onClick={() => {
+        console.log(mode);
         if (mode === "view") {
+          setMode("open");
           onSelect();
+        } else if (mode === "open") {
+          setMode("view");
+          onSelect(true);
         } else {
           onSelect(true);
           handleUpdate();
@@ -111,8 +122,11 @@ export function BudgetTableRow({
           value={mode === "editingName" ? editingValue : data.name}
           isEditing={mode === "editingName"}
           onValueChange={setEditingValue}
-          onClick={() => handleStartEditing(data.name, "editingName")}
-          onUpdate={handleUpdate}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleStartEditing(data.name, "editingName");
+          }}
+          onUpdate={() => handleUpdate()}
         />
       </div>
 
@@ -124,10 +138,11 @@ export function BudgetTableRow({
         }
         isEditing={mode === "editingPlannedValue"}
         onValueChange={setEditingValue}
-        onClick={() =>
-          handleStartEditing(data.planned_amount, "editingPlannedValue")
-        }
-        onUpdate={handleUpdate}
+        onClick={(e) => {
+          e.stopPropagation();
+          handleStartEditing(data.planned_amount, "editingPlannedValue");
+        }}
+        onUpdate={() => handleUpdate(mode)}
       />
 
       <p className="w-full text-right">

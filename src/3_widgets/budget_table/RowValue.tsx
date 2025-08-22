@@ -2,7 +2,7 @@
 
 import React, { useRef, useLayoutEffect, useState } from "react";
 import { useSettings } from "@/5_entities";
-import { getRightFormatedNumber } from "@/3_widgets/budget_expense_table/uitls";
+import { getRightFormatedNumber } from "./utils";
 
 interface RowValueProps {
   value: string;
@@ -56,6 +56,9 @@ export function RowValue({
           ref={inputRef}
           type="text"
           value={value}
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
           onChange={(e) => onValueChange(e.target.value)}
           onBlur={onUpdate}
           onKeyDown={(e) => {

@@ -7,7 +7,7 @@ interface RowNameProps {
   isEditing: boolean;
   onValueChange: (newValue: string) => void;
   onClick: (e: React.MouseEvent<HTMLParagraphElement, MouseEvent>) => void;
-  onUpdate: () => void;
+  onUpdate: (previusMode) => void;
 }
 
 export function RowName({
@@ -44,6 +44,7 @@ export function RowName({
         ref={inputRef}
         type="text"
         value={value}
+        onClick={(e) => e.stopPropagation()}
         onChange={(e) => onValueChange(e.target.value)}
         onBlur={onUpdate}
         onKeyDown={(e) => {

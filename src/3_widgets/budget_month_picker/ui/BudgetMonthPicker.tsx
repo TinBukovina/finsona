@@ -1,6 +1,5 @@
 "use client";
 
-import { useAppContext } from "@/1_app";
 import { BudgetInterface } from "@/5_entities";
 import {
   arrow_back_IOS_r_400,
@@ -67,19 +66,13 @@ const moths: Month[] = [
 ];
 
 interface BudgetMonthPickerProps {
-  budgets?: BudgetInterface[];
-  selectedBudget?: BudgetInterface;
   selectedMonth: number;
   setSelectedMonth: React.Dispatch<React.SetStateAction<number>>;
-  handleBudgetChange: (budget: string | null) => void;
 }
 
 export function BudgetMonthPicker({
-  budgets,
-  selectedBudget,
   selectedMonth,
   setSelectedMonth,
-  handleBudgetChange,
 }: BudgetMonthPickerProps) {
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
@@ -117,42 +110,23 @@ export function BudgetMonthPicker({
     }
   };
 
-  const handleMonthClick = (month: Month) => {
-    setSelectedMonth(month.value);
-
-    const newSelectedBudget = budgets?.find(
-      (budget) => new Date(budget.start_date).getMonth() === month.value
+  useEffect(() => {
+    const selectedMonthElement = document.getElementById(
+      `month-${selectedMonth}`
     );
 
-    if (newSelectedBudget) {
-      handleBudgetChange(newSelectedBudget.id);
-    } else {
-      handleBudgetChange(null);
+    if (selectedMonthElement) {
+      selectedMonthElement.scrollIntoView({
+        behavior: "smooth",
+        inline: "center",
+        block: "nearest",
+      });
+
+      setTimeout(() => {
+        checkScrollability();
+      }, 500);
     }
-  };
-
-  useEffect(() => {
-    if (selectedBudget && scrollContainerRef.current) {
-      const selectedMonthValue =
-        new Date(selectedBudget.start_date).getMonth() + 1;
-
-      const selectedMonthElement = document.getElementById(
-        `month-${selectedMonthValue}`
-      );
-
-      if (selectedMonthElement) {
-        selectedMonthElement.scrollIntoView({
-          behavior: "smooth",
-          inline: "center",
-          block: "nearest",
-        });
-
-        setTimeout(() => {
-          checkScrollability();
-        }, 500);
-      }
-    }
-  }, [selectedBudget, checkScrollability]);
+  }, [checkScrollability, selectedMonth]);
 
   return (
     <div className="flex items-center gap-4 w-full min-w-0">
@@ -182,9 +156,7 @@ export function BudgetMonthPicker({
           className="flex gap-2 w-full text-normal overflow-x-auto scrollbar-hide"
         >
           {moths.map((month) => {
-            const isSelected = selectedBudget
-              ? new Date(selectedBudget.start_date).getMonth() === month.value
-              : selectedMonth === month.value;
+            const isSelected = selectedMonth === month.value;
 
             return (
               <div
@@ -198,7 +170,9 @@ export function BudgetMonthPicker({
                     "border-transparent": !isSelected,
                   }
                 )}
-                onClick={() => handleMonthClick(month)}
+                onClick={() => {
+                  setSelectedMonth(month.value);
+                }}
               >
                 {month.name}
               </div>

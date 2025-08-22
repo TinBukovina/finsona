@@ -32,6 +32,7 @@ export interface BudgetCategoryTableProps {
   budgetId: string;
   onMutate: () => void;
   transactionSums: { [key: string]: number };
+  swapActionsBtns?: boolean;
 }
 
 export function BudgetCategoryTable({
@@ -41,6 +42,7 @@ export function BudgetCategoryTable({
   budgetId,
   onMutate,
   transactionSums,
+  swapActionsBtns = false,
 }: BudgetCategoryTableProps) {
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const [isInEditingMode, setIsInEditingMode] = useState<boolean>(false);
@@ -87,6 +89,7 @@ export function BudgetCategoryTable({
       addToast("Item removed!", "success");
       onMutate();
     } catch (error) {
+      console.log(error);
       addToast("Seomthing went wrong.", "error");
     }
   };
@@ -115,7 +118,6 @@ export function BudgetCategoryTable({
   };
 
   const handleDeleteCategory = async () => {
-    // Add to ask some type of confirmation
     try {
       await deleteBudgetCategory({ budgetId, name: category });
       addToast("Category deleted!", "success");
@@ -147,8 +149,11 @@ export function BudgetCategoryTable({
   const addButtonText = type === "income" ? "Add Income" : "Add Expense";
 
   return (
-    <div ref={editingZoneRef} className="flex items-start gap-4 w-full">
-      {/* GLAVNA TABLICA */}
+    <div
+      ref={editingZoneRef}
+      className={`flex ${swapActionsBtns && "flex-row-reverse"} items-start gap-4 w-full`}
+    >
+      {/* TABLE */}
       <div className="w-full bg-card border border-border rounded-card text-card-foreground fill-card-foreground">
         {/* HEADER */}
         <div className="grid grid-cols-[1fr_80px_80px] items-center px-6 py-4">
@@ -262,24 +267,24 @@ export function BudgetCategoryTable({
         </div>
       </div>
 
-      {/* GUMBI ZA EDITIRANJE CIJELE TABLICE (samo za 'expense') */}
-      {type === "expense" && (
-        <div className="flex flex-col gap-2">
-          <RemoveTableBtn handleClick={handleDeleteCategory} />
-          <EditTableBtn
-            isActive={isInEditingMode}
-            handleClick={() => {
-              const newEditMode = !isInEditingMode;
-              setIsInEditingMode(newEditMode);
-              if (newEditMode) {
-                setTimeout(() => tableNameRefInput.current?.focus(), 0);
-              } else {
-                handleRenameCategory();
-              }
-            }}
-          />
-        </div>
-      )}
+      {/*BUTTON FOR EDITING EXPENSES TABLE*/}
+      <div
+        className={`flex flex-col gap-2 ${type === "income" && "invisible"}`}
+      >
+        <RemoveTableBtn handleClick={handleDeleteCategory} />
+        <EditTableBtn
+          isActive={isInEditingMode}
+          handleClick={() => {
+            const newEditMode = !isInEditingMode;
+            setIsInEditingMode(newEditMode);
+            if (newEditMode) {
+              setTimeout(() => tableNameRefInput.current?.focus(), 0);
+            } else {
+              handleRenameCategory();
+            }
+          }}
+        />
+      </div>
     </div>
   );
 }

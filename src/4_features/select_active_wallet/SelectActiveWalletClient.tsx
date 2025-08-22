@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useWallets, WalletInterface } from "@/5_entities";
 import { useAppContext } from "@/1_app";
@@ -40,6 +40,12 @@ export function SelectActiveWalletClient({
   const currentWalletId = appState.activeWalletId || initialSelectedWallet.id;
   const currentWallet =
     wallets.find((w) => w.id === currentWalletId) || initialSelectedWallet;
+
+  useEffect(() => {
+    if (appState.activeWalletId !== initialSelectedWallet.id) {
+      setActiveWallet(initialSelectedWallet.id);
+    }
+  }, [initialSelectedWallet.id, appState.activeWalletId, setActiveWallet]);
 
   const handleWalletSelect = (newActiveWalletId: string) => {
     if (newActiveWalletId === appState.activeWalletId) {

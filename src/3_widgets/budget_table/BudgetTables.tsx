@@ -3,13 +3,12 @@
 import React, { useMemo } from "react";
 import {
   BudgetInterface,
-  BudgetItemInterface,
   TransactionInterface,
   useBudgetItems,
 } from "@/5_entities";
 import { SpinnerLoader, Button } from "@/6_shared";
 import { CreateBudgetTableBtn } from "@/4_features";
-import { SomethingWentWrong } from "../SomethingWentWrong";
+import { SomethingWentWrong } from "../../2_Pages/SomethingWentWrong";
 import { BudgetCategoryTable } from "@/3_widgets/budget_table/BudgetTable";
 
 interface BudgetTablesProps {
@@ -25,7 +24,6 @@ export function BudgetTables({
   transactions,
   displayingTransactions,
   onAddTransactionClick,
-  onItemsMutate,
 }: BudgetTablesProps) {
   const {
     data: budgetItems,
@@ -91,6 +89,7 @@ export function BudgetTables({
             budgetId={selectedBudget.id}
             onMutate={mutateBudgetItems}
             transactionSums={transactionSums}
+            swapActionsBtns={displayingTransactions}
           />
         );
       })}

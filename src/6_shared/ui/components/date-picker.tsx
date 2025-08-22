@@ -12,9 +12,10 @@ import { calendar_month_r_400 } from "@/6_shared/lib";
 interface DatePickerProps {
   value: Date | undefined;
   setValue: React.Dispatch<React.SetStateAction<Date | undefined>>;
+  disabled?: boolean;
 }
 
-export function DatePicker({ value, setValue }: DatePickerProps) {
+export function DatePicker({ value, setValue, disabled }: DatePickerProps) {
   const [open, setOpen] = React.useState(false);
 
   return (
@@ -25,6 +26,7 @@ export function DatePicker({ value, setValue }: DatePickerProps) {
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
+            disabled={disabled || false}
             variant="secondary"
             id="date"
             className="w-48 bg-input/30 justify-between font-normal"

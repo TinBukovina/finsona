@@ -15,6 +15,10 @@ export async function GET(
 
   const { budgetId } = await params;
 
+  console.log(
+    `[API TRANSACTIONS] GET handler pokrenut za budgetId: ${budgetId} u ${new Date().toLocaleTimeString()}`
+  );
+
   if (!budgetId) {
     return NextResponse.json(
       { message: "Budget ID required." },

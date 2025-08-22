@@ -15,6 +15,7 @@ interface IinputProps {
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void; // Ispravan tip za event
   onBlur?: () => void;
   autoFocus?: boolean;
+  disabled?: boolean;
 }
 
 export function Iinput({
@@ -29,6 +30,7 @@ export function Iinput({
   onKeyDown,
   onBlur,
   autoFocus,
+  disabled,
 }: IinputProps) {
   const [inputWidth, setInputWidth] = useState<number>(initialInputWidth);
 
@@ -59,6 +61,7 @@ export function Iinput({
         placeholder={placeholder ? placeholder : ""}
         type={type}
         value={value}
+        disabled={disabled}
         onChange={(e) => {
           setValue(e.target.value.replace("$", ""));
         }}
