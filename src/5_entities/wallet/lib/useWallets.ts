@@ -8,9 +8,6 @@ export function useWallets(options?: SWRConfiguration) {
     fetcher,
     {
       ...options,
-      onSuccess: (data, key, config) => {
-        console.log("SWR Uspjeh! Podaci dohvaćeni za ključ:", key);
-      },
     }
   );
 

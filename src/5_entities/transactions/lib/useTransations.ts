@@ -15,12 +15,10 @@ async function getTransactionsRequest(
 }
 
 export function useTransactions(budgetId: string | null | undefined) {
-  console.log("fdsfadslkfhdsaf", budgetId);
   const { data, error, isLoading, mutate } = useSWR<TransactionInterface[]>(
     budgetId ? `/api/budgets/${budgetId}/transactions` : null,
     getTransactionsRequest
   );
 
-  console.log(data);
   return { data, isLoading, error, mutateTransactions: mutate };
 }

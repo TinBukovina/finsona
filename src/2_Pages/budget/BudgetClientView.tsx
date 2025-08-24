@@ -5,11 +5,7 @@
 import React, { useEffect, useState } from "react";
 
 import { useAppContext } from "@/1_app";
-import {
-  AddTransactionsComponent,
-  AddTransactionsPopup,
-  BudgetMonthPicker,
-} from "@/3_widgets";
+import { AddTransactions, BudgetMonthPicker } from "@/3_widgets";
 import { BudgetInterface, useBudgets, useTransactions } from "@/5_entities";
 import { capitalizeFirstLetter } from "@/6_shared";
 import { BudgetTables } from "../../3_widgets/budget_table/BudgetTables";
@@ -104,24 +100,12 @@ export function BudgetClientView({ initialBudgets }: BudgetClientViewProps) {
         />
 
         {displayTransactionSection && (
-          <>
-            <div className="min-w-[400px] hidden xl:block">
-              <AddTransactionsComponent
-                onClose={() => {
-                  setDisplayTransactionSection(false);
-                  mutateBudgets();
-                }}
-              />
-            </div>
-            <div className="xl:hidden">
-              <AddTransactionsPopup
-                onClose={() => {
-                  setDisplayTransactionSection(false);
-                  mutateBudgets();
-                }}
-              />
-            </div>
-          </>
+          <AddTransactions
+            onClose={() => {
+              setDisplayTransactionSection(false);
+              mutateBudgets();
+            }}
+          />
         )}
       </div>
     </div>
