@@ -42,13 +42,11 @@ export default function Navigation({
       {/*_ACTIONS IN NAVIGATION_*/}
       <div className="hidden sm:flex gap-3">
         {/*_ACCOUNT BTN_*/}
-        <DropdownMenu>
+        {/* <DropdownMenu>
           <DropdownMenuTrigger
             asChild
-            // 2. Dodajemo event handlere za mousedown i mouseup
             onMouseDown={() => setIsActiveAccountButton(true)}
             onMouseUp={() => setIsActiveAccountButton(false)}
-            // onMouseLeave se dodaje kao osigurač ako korisnik odvuče miš s gumba
             onMouseLeave={() => setIsActiveAccountButton(false)}
           >
             <button
@@ -74,7 +72,7 @@ export default function Navigation({
             <DropdownMenuItem>Team</DropdownMenuItem>
             <DropdownMenuItem>Subscription</DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu> */}
 
         {/*_THEME BTN_*/}
         <ThemeBtn />

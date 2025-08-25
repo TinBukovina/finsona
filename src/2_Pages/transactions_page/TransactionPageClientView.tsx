@@ -140,7 +140,7 @@ export function TransactionPageClientView() {
           </div>
 
           {/*TABLE BODY*/}
-          <div className="flex-1 min-h-0 flex flex-col gap-0 justify-start items-center sm:overflow-auto scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-slate-700 scrollbar-track-transparent border border-border">
+          <div className="flex-1 min-h-0 flex flex-col gap-0 justify-start items-start sm:overflow-auto scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-slate-700 scrollbar-track-transparent border border-border">
             {/*TABLE ROWS*/}
             {isLoading ? (
               <div className="flex-1 h-min-0 flex flex-col gap-4 px-4 py-4 w-full">
@@ -155,80 +155,86 @@ export function TransactionPageClientView() {
                 ))}
               </div>
             ) : (
-              filteredTransactions?.map((tr) => {
-                const item = tr.budget_item_id
-                  ? budgetItemsMap.get(tr.budget_item_id)
-                  : null;
+              filteredTransactions
+                ?.toSorted(
+                  (a, b) =>
+                    new Date(b.transaction_date).getTime() -
+                    new Date(a.transaction_date).getTime()
+                )
+                ?.map((tr) => {
+                  const item = tr.budget_item_id
+                    ? budgetItemsMap.get(tr.budget_item_id)
+                    : null;
 
-                return (
-                  <div
-                    key={tr.id}
-                    className="flex-1 w-full flex-col gap-4  justify-start items-center"
-                  >
-                    {/*DESKTOM ROW VERSION*/}
+                  return (
                     <div
-                      key={tr.id + "desktop"}
-                      className="flex-1 hidden sm:grid grid-cols-4 gap-4 px-6 py-4 w-full border-b border-border"
+                      key={tr.id}
+                      className="w-full h-fit flex-col gap-4 justify-start items-center"
                     >
-                      <span>
-                        {item
-                          ? `${item.category} - ${item.name}`
-                          : "Uncategorized"}
-                      </span>
-                      <span>
-                        $
-                        {getRightFormatedNumber(
-                          String(tr.amount),
-                          getDecimalSeparator(),
-                          getValueSeparator()
-                        )}
-                      </span>
-                      <span>
-                        {new Date(tr.transaction_date).toLocaleDateString()}
-                      </span>
-                      <span>{tr.type}</span>
-                    </div>
-
-                    {/*Mobile ROW VERSION*/}
-                    <div
-                      key={tr.id + "mobile"}
-                      className="sm:hidden flex-1 flex gap-4 w-full px-4 py-2 items-center border-b border-border"
-                    >
-                      <div className="flex flex-col justify-center items-center gap-0 text-sm">
-                        <p className="font-semibold">
-                          {format(tr.transaction_date, "dd")}
-                        </p>
-                        <p className="text-muted-foreground">
-                          {format(tr.transaction_date, "MMM").toUpperCase()}
-                        </p>
-                      </div>
-                      <div className="flex-1">
-                        <div className="text-h6">
+                      {/*DESKTOM ROW VERSION*/}
+                      <div
+                        key={tr.id + "desktop"}
+                        className="flex-1 hidden sm:grid grid-cols-4 gap-4 px-6 py-4 w-full border-b border-border "
+                      >
+                        <span>
                           {item
                             ? `${item.category} - ${item.name}`
                             : "Uncategorized"}
-                        </div>
-                        <div className="text-muted-foreground">
-                          {tr.description}.
-                        </div>
+                        </span>
+                        <span>
+                          $
+                          {getRightFormatedNumber(
+                            String(tr.amount),
+                            getDecimalSeparator(),
+                            getValueSeparator()
+                          )}
+                        </span>
+                        <span>
+                          {new Date(tr.transaction_date).toLocaleDateString()}
+                        </span>
+                        <span>{tr.type}</span>
                       </div>
-                      <p
-                        className={
-                          `${
-                            tr.type === "expense"
-                              ? "text-destructive"
-                              : "text-success"
-                          }` +
-                          " " +
-                          "font-semibold"
-                        }
+
+                      {/*Mobile ROW VERSION*/}
+                      <div
+                        key={tr.id + "mobile"}
+                        className="sm:hidden flex-1 flex gap-4 w-full px-4 py-2 items-center border-b border-border"
                       >
-                        {tr.type === "expense" ? "-" : "+"} ${tr.amount}
-                      </p>
+                        <div className="flex flex-col justify-center items-center gap-0 text-sm">
+                          <p className="font-semibold">
+                            {format(tr.transaction_date, "dd")}
+                          </p>
+                          <p className="text-muted-foreground">
+                            {format(tr.transaction_date, "MMM").toUpperCase()}
+                          </p>
+                        </div>
+                        <div className="flex-1">
+                          <div className="text-h6">
+                            {item
+                              ? `${item.category} - ${item.name}`
+                              : "Uncategorized"}
+                          </div>
+                          <div className="text-muted-foreground">
+                            {tr.description}.
+                          </div>
+                        </div>
+                        <p
+                          className={
+                            `${
+                              tr.type === "expense"
+                                ? "text-destructive"
+                                : "text-success"
+                            }` +
+                            " " +
+                            "font-semibold"
+                          }
+                        >
+                          {tr.type === "expense" ? "-" : "+"} ${tr.amount}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                );
-              })
+                  );
+                })
             )}
           </div>
 

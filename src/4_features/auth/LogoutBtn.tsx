@@ -26,7 +26,7 @@ export function LogoutBtn({ hideText = false }: LogoutBtnProps) {
         throw new Error(responseData.message);
       }
 
-      addToast(responseData.message, "success");
+      setTimeout(() => addToast(responseData.message, "success"), 600);
       router.refresh();
     } catch (error) {
       console.error(error);

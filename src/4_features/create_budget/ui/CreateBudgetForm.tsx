@@ -32,7 +32,7 @@ export function CreateBudgetForm({
   const t = useTranslations("add_budget_modal");
 
   const { addToast } = useToast();
-  const { appState } = useAppContext();
+  const { appState, setSelectedBudget } = useAppContext();
   const { settings } = useSettings();
 
   const [name, setName] = useState("");
@@ -76,10 +76,15 @@ export function CreateBudgetForm({
 
       if (!response.ok) throw new Error("Failed to create budget.");
 
+      const data = await response.json();
+      const newBudget = data.newBudget;
+      setSelectedBudget(newBudget.id);
+
       addToast(t("success_toast"), "success");
       mutate(`/api/wallets/${appState.activeWalletId}/budgets`);
       onClose();
       setName("");
+      window.location.reload();
     } catch (error) {
       console.error("Error creating wallet:", error);
       addToast("Something went wrong!", "error");

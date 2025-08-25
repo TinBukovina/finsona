@@ -97,8 +97,10 @@ export default function EmailLoginPage() {
           );
           setPasscode("");
         } else {
-          addToast(t("login_success"), "success");
           router.refresh();
+          setTimeout(() => {
+            addToast(t("login_success"), "success");
+          }, 500);
         }
       } catch (error) {
         console.log(error);

@@ -8,16 +8,13 @@ export async function getBudgetsForWallet(
   noStore();
 
   try {
-    // 1. Dohvati kolačiće iz dolaznog zahtjeva
     const cookieStore = await cookies();
 
-    // 2. Kreiraj apsolutni URL za API endpoint
     const apiUrl = new URL(
       `/api/wallets/${walletId}/budgets`,
       process.env.NEXT_PUBLIC_API_URL!
     );
 
-    // 3. Pošalji fetch zahtjev, PROSLJEĐUJUĆI KOLAČIĆE
     const response = await fetch(apiUrl.toString(), {
       headers: {
         Cookie: cookieStore.toString(), // Proslijedi sve kolačiće

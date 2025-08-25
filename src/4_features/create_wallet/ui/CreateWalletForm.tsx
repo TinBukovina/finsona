@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import { useSWRConfig } from "swr";
 import { useTranslations } from "next-intl";
+
+import { useAppContext } from "1_app/providers/AppContext";
 import {
   Button,
   Input,
@@ -23,6 +25,7 @@ export function CreateWalletForm({ onClose }: CreateWalletFormProps) {
   const { mutate } = useSWRConfig();
   const t = useTranslations("add_wallet_modal");
   const { addToast } = useToast();
+  const { setActiveWallet } = useAppContext();
 
   const [name, setName] = useState("");
   const [walletType, setWalletType] = useState<
@@ -47,11 +50,15 @@ export function CreateWalletForm({ onClose }: CreateWalletFormProps) {
 
       if (!response.ok) throw new Error("Failed to create wallet.");
 
+      const newWallet = await response.json();
+      setActiveWallet(newWallet.id);
+
       addToast(t("success_toast"), "success");
       mutate("/api/wallets");
       onClose();
       setName("");
       setWalletType(undefined);
+      window.location.reload();
     } catch (error) {
       console.error("Error creating wallet:", error);
       addToast(t("generic_error"), "error");

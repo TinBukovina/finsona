@@ -63,18 +63,16 @@ export async function POST(request: Request) {
         name,
         initial_balance: 0,
       })
+      .select()
       .single();
 
     if (error) {
       throw error;
     }
 
-    return NextResponse.json<CreateWalletResponse>(
-      { message: "Success", wallet },
-      {
-        status: 201,
-      }
-    );
+    return NextResponse.json(wallet, {
+      status: 201,
+    });
   } catch (error) {
     console.error("[WALLET_POST_ERROR]: ", error);
     return NextResponse.json(

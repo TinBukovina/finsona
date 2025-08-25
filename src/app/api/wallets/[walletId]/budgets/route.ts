@@ -52,7 +52,6 @@ export async function GET(
   }
 }
 
-// Define Zod Schema for validation of input
 const createBudgetSchema = z
   .object({
     name: z
