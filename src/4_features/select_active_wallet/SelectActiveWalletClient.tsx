@@ -42,7 +42,10 @@ export function SelectActiveWalletClient({
     wallets.find((w) => w.id === currentWalletId) || initialSelectedWallet;
 
   useEffect(() => {
-    if (appState.activeWalletId !== initialSelectedWallet.id) {
+    if (
+      !appState.activeWalletId &&
+      appState.activeWalletId !== initialSelectedWallet.id
+    ) {
       setActiveWallet(initialSelectedWallet.id);
     }
   }, [initialSelectedWallet.id, appState.activeWalletId, setActiveWallet]);

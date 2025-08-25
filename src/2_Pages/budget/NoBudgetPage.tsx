@@ -8,7 +8,7 @@ export function NoBudgetPage() {
   const t = useTranslations("no_budget_page");
 
   return (
-    <div className="absolute top-10 left-0 flex justify-center items-center w-full h-full">
+    <div className="absolute top-10 left-0 sm:static flex justify-center items-center w-full h-full">
       <div className="flex flex-col justify-center items-center gap-6">
         <div className="flex flex-col justify-center items-center gap-3">
           <Image

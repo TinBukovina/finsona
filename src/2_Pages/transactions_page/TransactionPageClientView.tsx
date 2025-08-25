@@ -84,12 +84,12 @@ export function TransactionPageClientView() {
   console.log(filteredTransactions);
 
   return (
-    <div className="flex gap-4 flex-1 min-h-0">
+    <div className="flex gap-4 flex-1 min-h-0 ">
       <div
         className={
-          "flex flex-col gap-4 flex-1 min-h-0" +
+          "flex flex-col gap-4 flex-1 min-h-0 sm:overflow-auto scrollbar-none" +
           " " +
-          `${isAddingTransaction && "hidden sm:block"}`
+          `${isAddingTransaction && "hidden sm:flex"}`
         }
       >
         <div className="flex flex-col gap-3">
