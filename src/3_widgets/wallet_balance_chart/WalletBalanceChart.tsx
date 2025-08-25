@@ -30,7 +30,7 @@ export function WalletBalanceChart({
   walletNames,
 }: WalletBalanceChartProps) {
   return (
-    <div className="bg-card rounded-lg border border-border p-6 pt-14 pr-14 shadow-sm h-full flex flex-col">
+    <div className="min-h-[400px] h-[400px] sm:min-h-[300px] sm:h-full bg-card rounded-lg border border-border p-6 pt-14 pr-14 shadow-sm  flex flex-col">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           data={serverData}

@@ -10,7 +10,7 @@ import { getReplaceCalmaWithDot, getRightFormatedNumber } from "./utils";
 export interface BudgetTableRowProps {
   data: BudgetItemInterface;
   actualAmount: number;
-  displayMode: "income" | "spent" | "remaining";
+  displayMode: "planned" | "remaining" | "spent" | "income";
   isSelected: boolean;
   onSelect: (unselect?: boolean) => void;
   onClose?: () => void;
@@ -101,7 +101,7 @@ export function BudgetTableRow({
 
   return (
     <div
-      className="grid grid-cols-[1fr_80px_80px] items-center px-2 py-3 border-b-2 border-border cursor-pointer hover:bg-accent"
+      className="grid grid-cols-[1fr_80px] sm:grid-cols-[1fr_80px_80px] items-center px-2 py-3 border-b-2 border-border cursor-pointer hover:bg-accent"
       onClick={() => {
         console.log(mode);
         if (mode === "view") {
@@ -130,28 +130,63 @@ export function BudgetTableRow({
         />
       </div>
 
-      <RowValue
-        value={
-          mode === "editingPlannedValue"
-            ? editingValue
-            : String(data.planned_amount)
-        }
-        isEditing={mode === "editingPlannedValue"}
-        onValueChange={setEditingValue}
-        onClick={(e) => {
-          e.stopPropagation();
-          handleStartEditing(data.planned_amount, "editingPlannedValue");
-        }}
-        onUpdate={() => handleUpdate(mode)}
-      />
+      {/*EDITABLE VALUE*/}
+      {/*-DESKTOP*/}
+      <div className="hidden sm:block">
+        <RowValue
+          value={
+            mode === "editingPlannedValue"
+              ? editingValue
+              : String(data.planned_amount)
+          }
+          isEditing={mode === "editingPlannedValue"}
+          onValueChange={setEditingValue}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleStartEditing(data.planned_amount, "editingPlannedValue");
+          }}
+          onUpdate={() => handleUpdate(mode)}
+        />
+      </div>
+      {/*-MOBILE*/}
+      {(displayMode === "planned" || displayMode === "income") && (
+        <div className="sm:hidden">
+          <RowValue
+            value={
+              mode === "editingPlannedValue"
+                ? editingValue
+                : String(data.planned_amount)
+            }
+            isEditing={mode === "editingPlannedValue"}
+            onValueChange={setEditingValue}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleStartEditing(data.planned_amount, "editingPlannedValue");
+            }}
+            onUpdate={() => handleUpdate(mode)}
+          />
+        </div>
+      )}
 
-      <p className="w-full text-right">
+      {/*DISPLAY VALUES*/}
+      {/*-DESKTOP*/}
+      <p className="hidden sm:block w-full text-right">
         {getRightFormatedNumber(
           String(thirdColumnValue),
           getDecimalSeparator(),
           getValueSeparator()
         )}
       </p>
+      {/*-MOBILE*/}
+      {displayMode !== "planned" && displayMode !== "income" && (
+        <p className="sm:hidden w-full text-right">
+          {getRightFormatedNumber(
+            String(thirdColumnValue),
+            getDecimalSeparator(),
+            getValueSeparator()
+          )}
+        </p>
+      )}
     </div>
   );
 }

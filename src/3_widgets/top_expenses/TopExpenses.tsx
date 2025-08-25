@@ -119,7 +119,7 @@ export function TopExpenses() {
         </h3>
       </div>
 
-      <div className="flex gap-6">
+      <div className="flex flex-col-reverse sm:flex-row gap-6">
         {/*EXPENSE LIST*/}
         <div className="flex-1 flex flex-col gap-4">
           {processedData.topExpenses.map((expense) => {
@@ -152,7 +152,7 @@ export function TopExpenses() {
         </div>
 
         {/* Pie Chart */}
-        <div className="relative w-[160px] h-[160px] flex-shrink-0">
+        <div className="relative w-full sm:w-[160px] h-[160px] flex-shrink-0 flex justify-center items-center ">
           <ResponsiveContainer>
             <PieChart>
               <Tooltip

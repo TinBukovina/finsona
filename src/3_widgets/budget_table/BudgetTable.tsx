@@ -2,9 +2,10 @@
 
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Button,
+  capitalizeFirstLetter,
   cn,
   IconTemplate,
   Iinput,
@@ -33,6 +34,7 @@ export interface BudgetCategoryTableProps {
   onMutate: () => void;
   transactionSums: { [key: string]: number };
   swapActionsBtns?: boolean;
+  lastRowData?: "spent" | "remaining" | "planned";
 }
 
 export function BudgetCategoryTable({
@@ -43,6 +45,7 @@ export function BudgetCategoryTable({
   onMutate,
   transactionSums,
   swapActionsBtns = false,
+  lastRowData: lastRow = "spent",
 }: BudgetCategoryTableProps) {
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const [isInEditingMode, setIsInEditingMode] = useState<boolean>(false);
@@ -50,9 +53,9 @@ export function BudgetCategoryTable({
   const [isEnteringNewRow, setIsEnteringNewRow] = useState<boolean>(false);
   const [newRowName, setNewRowName] = useState<string>("");
   const [selectedRowIndex, setSelectedRowIndex] = useState<number | null>(null);
-  const [lastRowData, setLastRowData] = useState<"spent" | "remaining">(
-    "spent"
-  );
+  const [lastRowData, setLastRowData] = useState<
+    "spent" | "remaining" | "planned"
+  >(lastRow);
 
   const tableNameRefInput = useRef<HTMLInputElement>(null);
   const editingZoneRef = useRef<HTMLDivElement>(null);
@@ -64,6 +67,10 @@ export function BudgetCategoryTable({
   const { updateBudgetCategory } = useUpdateBudgetCategory();
   const { deleteBudgetCategory } = useDeleteBudgetCategory();
   const { updateBudgetItem, isUpdating } = useUpdateBudgetItem();
+
+  useEffect(() => {
+    setLastRowData(lastRow);
+  }, [lastRow]);
 
   // --- EVENT HANDLERS ---
   const handleCreateItem = async () => {
@@ -156,7 +163,10 @@ export function BudgetCategoryTable({
       {/* TABLE */}
       <div className="w-full bg-card border border-border rounded-card text-card-foreground fill-card-foreground">
         {/* HEADER */}
-        <div className="grid grid-cols-[1fr_80px_80px] items-center px-6 py-4">
+        <div
+          className={`grid grid-cols-[1fr_80px] sm:grid-cols-[1fr_80px_80px] items-center px-6 py-4`}
+        >
+          {/*TABLE NAMEs*/}
           {!isInEditingMode ? (
             <button
               className="flex gap-1 items-center w-fit cursor-pointer hover:text-primary hover:fill-primary"
@@ -186,12 +196,19 @@ export function BudgetCategoryTable({
               autoFocus
             />
           )}
-          <p className="text-muted-foreground text-sm text-right">Planned</p>
+
+          {/*VALUE ROWS*/}
+          {/*-DESKTOP*/}
+          <p className="hidden sm:block text-muted-foreground text-sm text-right">
+            Planned
+          </p>
           {type === "income" ? (
-            <p className="text-muted-foreground text-sm text-right">Received</p>
+            <p className="hidden sm:block text-muted-foreground text-sm text-right">
+              Received
+            </p>
           ) : (
             <div
-              className="text-muted-foreground cursor-pointer hover:text-primary text-sm text-right"
+              className="hidden sm:block text-muted-foreground cursor-pointer hover:text-primary text-sm text-right"
               onClick={() =>
                 setLastRowData((prev) =>
                   prev === "spent" ? "remaining" : "spent"
@@ -201,6 +218,13 @@ export function BudgetCategoryTable({
               {lastRowData === "spent" ? "Spent" : "Remaining"}
             </div>
           )}
+
+          {/*-MOBILE*/}
+          <p className="sm:hidden text-muted-foreground text-sm text-right">
+            {type === "income" && lastRowData !== "planned"
+              ? "Received"
+              : capitalizeFirstLetter(lastRowData)}
+          </p>
         </div>
 
         {/* ROWS */}
@@ -229,7 +253,7 @@ export function BudgetCategoryTable({
         )}
 
         {/* FOOTER */}
-        <div className="flex justify-start items-center gap-4 px-4 py-4">
+        <div className="flex justify-start items-center gap-2 sm:gap-4 px-4 py-4">
           {!isEnteringNewRow ? (
             <Button
               variant="secondary"
@@ -261,6 +285,7 @@ export function BudgetCategoryTable({
                 setValue={setNewRowName}
                 placeholder="Enter name..."
                 initialInputWidth={150}
+                disableAutoWidth={true}
               />
             </>
           )}
@@ -269,7 +294,7 @@ export function BudgetCategoryTable({
 
       {/*BUTTON FOR EDITING EXPENSES TABLE*/}
       <div
-        className={`flex flex-col gap-2 ${type === "income" && "invisible"}`}
+        className={`hidden sm:flex flex-col gap-2 ${type === "income" && "invisible"}`}
       >
         <RemoveTableBtn handleClick={handleDeleteCategory} />
         <EditTableBtn

@@ -1,41 +1,57 @@
 "use client";
 
-import { GoalInterface } from "@/5_entities";
+import { GoalInterface, useGoals } from "@/5_entities";
 import { Button, DatePicker, Iinput } from "@/6_shared";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Separator } from "./Separator";
 import { Goal } from "./Goal";
+import { CreateGoalForm } from "./CreateGoalForm";
+import { useCreateGoalForm } from "./useCreateGoalForm";
 
-interface GoalsWidgetProps {}
+type ComponentStateType = "empty" | "create" | "view" | "loaindg";
 
-type ComponentStateType = "empty" | "create" | "view";
+export function GoalsWidget() {
+  const { data: goalsData, isLoading, error } = useGoals();
+  const goals = useMemo(() => goalsData || [], [goalsData]);
 
-export function GoalsWidget({}: GoalsWidgetProps) {
-  const [state, setState] = useState<ComponentStateType>("view");
-  const [goals, setGoals] = useState<Partial<GoalInterface>[]>([
-    {
-      name: "Test goal",
-      target_amount: 10000,
-      start_date: new Date(),
-      target_date: new Date(),
-    },
-  ]);
-  const [date, setDate] = useState<Date | undefined>(undefined);
+  const createForm = useCreateGoalForm({
+    onSuccess: () => setViewState(goals.length > 0 ? "view" : "empty"),
+  });
+
+  const [viewState, setViewState] = useState<ComponentStateType>("view");
 
   useEffect(() => {
-    if (state === "view" && goals.length <= 0) {
-      setState("empty");
+    if (isLoading) {
+      setViewState("loaindg");
+    } else if (error) {
+      console.log(error);
+    } else if (goals.length > 0) {
+      setViewState("view");
+    } else {
+      setViewState("empty");
     }
-  }, [state, goals]);
+  }, [goals, error, isLoading]);
+
+  useEffect(() => {
+    if (viewState === "view" && goals.length <= 0) {
+      setViewState("empty");
+    }
+  }, [goals, viewState]);
 
   return (
     <div className="flex flex-col gap-0 bg-card rounded-card border border-border p-4 h-full">
-      <h5 className="text-h5 font-semibold">Goals</h5>
+      <div className="flex justify-between items-center mb-4">
+        <h5 className="text-h5 font-semibold">Goals</h5>
+
+        {viewState === "view" && (
+          <Button onClick={() => setViewState("create")}>Add</Button>
+        )}
+      </div>
 
       <div className="flex-1 h-min-0 flex justify-center items-center">
         {/*NO GOALS*/}
-        {goals.length <= 0 && state === "empty" && (
+        {viewState === "empty" && (
           <div className="flex flex-col gap-4 items-center justify-center">
             <div className="flex flex-col gap-1 items-center">
               <Image
@@ -48,7 +64,7 @@ export function GoalsWidget({}: GoalsWidgetProps) {
             </div>
             <Button
               onClick={() => {
-                setState("create");
+                setViewState("create");
               }}
             >
               Create one
@@ -57,74 +73,20 @@ export function GoalsWidget({}: GoalsWidgetProps) {
         )}
 
         {/*ADDING GOALS*/}
-        {state === "create" && (
-          <div className="flex flex-col gap-6 flex-1 min-h-0 h-full">
-            <div className="flex gap-0 flex-1 min-h-0 h-full relative">
-              {/*NUMBERING*/}
-              <div className="flex flex-col gap-1.5 items-center py-1">
-                <div className="flex justify-center items-center w-8 h-8 bg-secondary rounded-max">
-                  1
-                </div>
-                {Array.from({ length: 3 }, (_, index) => (
-                  <Separator key={index} />
-                ))}
-                <div className="flex justify-center items-center w-8 h-8 bg-secondary rounded-max">
-                  2
-                </div>
-                {Array.from({ length: 3 }, (_, index) => (
-                  <Separator key={index} />
-                ))}
-                <div className="flex justify-center items-center w-8 h-8 bg-secondary rounded-max">
-                  3
-                </div>
-              </div>
-              {/*INPUTS*/}
-              <div className="px-4 py-2">
-                <div className="mb-6">
-                  <p className="mb-3">Name your goal</p>
-                  <Iinput
-                    placeholder={"Summer"}
-                    value={""}
-                    setValue={() => {}}
-                    disableAutoWidth={true}
-                  />
-                </div>
-
-                <div className="mb-6.5">
-                  <p className="mb-3">Enter target amount for your goal</p>
-                  <Iinput
-                    placeholder={"Summer"}
-                    value={""}
-                    setValue={() => {}}
-                    disableAutoWidth={true}
-                  />
-                </div>
-
-                <div>
-                  <p className="mb-3">Enter deadline for your goal</p>
-                  <DatePicker value={date} setValue={setDate} />
-                </div>
-              </div>
-            </div>
-            {/*BTNS*/}
-            <div className="flex items-center gap-4">
-              <Button
-                variant={"secondary"}
-                className="flex-1"
-                onClick={() => setState("view")}
-              >
-                Back
-              </Button>
-              <Button className="flex-1">Confirm</Button>
-            </div>
-          </div>
+        {viewState === "create" && (
+          <CreateGoalForm
+            {...createForm}
+            onBack={() => setViewState(goals.length > 0 ? "view" : "empty")}
+          />
         )}
 
         {/*DISPLAYING GOALS*/}
-        {goals.length > 0 && state === "view" && (
+        {viewState === "view" && (
           <div className="mt-4 flex-1 flex flex-col justify-start gap-4 h-full ">
             {/*GOALS*/}
-            <Goal goalData={goals.at(0)} />
+            {goals.map((goal) => (
+              <Goal key={goal.id} goalData={goal} />
+            ))}
           </div>
         )}
       </div>

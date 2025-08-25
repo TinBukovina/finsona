@@ -8,10 +8,10 @@ interface AddTransactionsPopup {
 export function AddTransactions({ onClose }: AddTransactionsPopup) {
   return (
     <>
-      <div className="min-w-[450px] hidden xl:block">
+      <div className="min-w-[350px] sm:max-w-[450px] w-full sm:hidden xl:block">
         <AddTransactionsComponent onClose={onClose} />
       </div>
-      <div className="xl:hidden">
+      <div className="hidden sm:block xl:hidden">
         <AddTransactionsPopup onClose={onClose} />
       </div>
     </>

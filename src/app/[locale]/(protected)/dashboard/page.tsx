@@ -93,7 +93,7 @@ export default async function DashboardPage() {
   const chartData = processDataForChart(transactions, wallets);
 
   return (
-    <div className="w-full h-full px-4 py-4 flex flex-col gap-4 lg:flex-row overflow-auto">
+    <div className="w-full h-full px-4 py-4 flex flex-col gap-4 lg:flex-row overflow-auto scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-slate-700 scrollbar-track-transparent">
       <div className="flex-3 flex flex-col gap-4">
         <WalletBalanceChart
           serverData={chartData}

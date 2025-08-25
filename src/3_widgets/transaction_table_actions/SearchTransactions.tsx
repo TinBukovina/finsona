@@ -25,7 +25,7 @@ export function SearchTransactions({ onEnter }: SearchTransactionsProps) {
     <label
       htmlFor="transaction-search"
       className={cn(
-        "flex items-center gap-1 px-4 py-2 min-w-[330px]",
+        "flex items-center gap-1 px-4 py-2 min-w-[290px]",
         "border border-border rounded-max",
         "text-muted-foreground fill-primary",
         "cursor-text transition-all",
@@ -38,7 +38,7 @@ export function SearchTransactions({ onEnter }: SearchTransactionsProps) {
         value={value}
         onChange={(e) => setValue(e.target.value)}
         className="w-full bg-transparent outline-none placeholder:text-muted-foreground"
-        placeholder="Search transactions by description"
+        placeholder="Search by description"
         onKeyDown={handleOnKeyDown}
         onBlur={handleBlur}
       />

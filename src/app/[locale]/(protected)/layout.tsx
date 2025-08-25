@@ -16,7 +16,7 @@ export default function ProtectedLayout({ children }: PropsWithChildren) {
       }
     >
       <Sidebar />
-      <div className="flex flex-col gap-2 sm:gap-0 w-full h-full min-w-0">
+      <div className="flex flex-col gap-2 sm:gap-0 w-full h-full min-w-0 ">
         <Navigation>
           <SelectActiveWalletServer />
         </Navigation>

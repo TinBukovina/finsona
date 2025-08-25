@@ -107,6 +107,7 @@ export function AddTransactionsForm({
             </SelectContent>
           </Select>
         </div>
+        <div className={"bg-blue-500 "}></div>
 
         <div className="flex items-center gap-4">
           <Button

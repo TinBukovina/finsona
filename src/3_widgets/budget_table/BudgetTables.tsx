@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import {
   BudgetInterface,
   TransactionInterface,
@@ -12,6 +12,7 @@ import { CreateBudgetTableBtn } from "@/4_features";
 import { SomethingWentWrong } from "../../2_Pages/SomethingWentWrong";
 import { BudgetCategoryTable } from "@/3_widgets/budget_table/BudgetTable";
 import { useAppContext } from "@/1_app";
+import { useRouter } from "@/i18n/navigation";
 
 interface BudgetTablesProps {
   selectedBudget: BudgetInterface;
@@ -27,6 +28,7 @@ export function BudgetTables({
   displayingTransactions,
   onAddTransactionClick,
 }: BudgetTablesProps) {
+  const router = useRouter();
   const { addToast } = useToast();
   const { appState } = useAppContext();
   const {
@@ -36,6 +38,10 @@ export function BudgetTables({
     mutateBudgetItems,
   } = useBudgetItems(selectedBudget.id);
   const { createBudgetItem } = useCreateBudgetItem(appState.selectedBudgetId);
+
+  const [lastRowData, setLastRowData] = useState<
+    "planned" | "remaining" | "spent"
+  >("planned");
 
   const transactionSums = useMemo(() => {
     const sums: { [key: string]: number } = {};
@@ -65,7 +71,6 @@ export function BudgetTables({
     }
 
     try {
-      // Kreiramo prvu, placeholder stavku za tu novu kategoriju
       await createBudgetItem({
         name: "New Expense",
         planned_amount: 0,
@@ -104,7 +109,54 @@ export function BudgetTables({
   });
 
   return (
-    <div className="flex flex-col flex-1 gap-4 min-w-0 overflow-auto scrollbar-none">
+    <div
+      className={
+        "flex flex-col flex-1 min-w-0 overflow-auto scrollbar-none" +
+        " " +
+        "gap-4 sm:gap-4"
+      }
+    >
+      {/*ROW SELECT ON MOBILE*/}
+      <div
+        className={
+          "flex items-center justify-between p-1 bg-card border border-border rounded-max" +
+          " " +
+          "sm:hidden"
+        }
+      >
+        <button
+          className={
+            "flex-1 px-3 py-2 bg-transaprent rounded-max text-center" +
+            " " +
+            `${lastRowData === "planned" ? "bg-primary font-semibold text-background" : "text-card-foreground"}`
+          }
+          onClick={() => setLastRowData("planned")}
+        >
+          Planned
+        </button>
+        <button
+          className={
+            "flex-1 px-3 py-2 bg-transaprent rounded-max text-center" +
+            " " +
+            `${lastRowData === "remaining" ? "bg-primary font-semibold text-background" : "text-card-foreground"}`
+          }
+          onClick={() => setLastRowData("remaining")}
+        >
+          Remaining
+        </button>
+        <button
+          className={
+            "flex-1 px-3 py-2 bg-transaprent rounded-max text-center" +
+            " " +
+            `${lastRowData === "spent" ? "bg-primary font-semibold text-background" : "text-card-foreground"}`
+          }
+          onClick={() => setLastRowData("spent")}
+        >
+          Spent
+        </button>
+      </div>
+
+      {/*TABLES*/}
       {tableNames.map((tableName) => {
         const itemsForTable = budgetItems.filter(
           (bi) => bi.category === tableName
@@ -122,19 +174,25 @@ export function BudgetTables({
             onMutate={mutateBudgetItems}
             transactionSums={transactionSums}
             swapActionsBtns={displayingTransactions}
+            lastRowData={lastRowData}
           />
         );
       })}
 
       <div
-        className={`flex items-center gap-4 ${displayingTransactions ? "flex-row-reverse" : ""}`}
+        className={`flex items-center gap-2 sm:gap-4 ${displayingTransactions ? "flex-row-reverse" : ""}`}
       >
         <CreateBudgetTableBtn
           text="Add table"
           handleClick={handleCreateTable}
         />
         <div className={displayingTransactions ? "hidden" : "block"}>
-          <Button onClick={onAddTransactionClick}>Add transaction</Button>
+          <div className="hidden sm:block">
+            <Button onClick={onAddTransactionClick}>Add transaction</Button>
+          </div>
+          <div className="sm:hidden">
+            <Button onClick={() => router.push("/transactions")}>Add</Button>
+          </div>
         </div>
       </div>
     </div>

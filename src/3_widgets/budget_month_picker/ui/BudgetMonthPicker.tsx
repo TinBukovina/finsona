@@ -131,23 +131,43 @@ export function BudgetMonthPicker({
   return (
     <div className="flex items-center gap-4 w-full min-w-0">
       {/*YEAR*/}
-      <p className="px-4 py-2 h-fit bg-primary rounded-max text-primary-foreground text-h6 font-semibold">
+      <p
+        className={
+          "py-2 h-fit bg-primary rounded-max text-h6 text-background font-semibold" +
+          " " +
+          "px-3 sm:px4"
+        }
+      >
         2025
       </p>
 
       {/*MONTHS*/}
-      <div className="flex justify-center items-center gap-4 px-4 py-2 w-full bg-card border border-border rounded-max text-card-foreground fill-card-foreground min-w-0">
+      <div
+        className={cn(
+          "flex justify-center items-center py-2 w-full bg-card border border-border rounded-max text-card-foreground fill-card-foreground min-w-0",
+          "gap-2 sm:gap-4 px-3 sm:px-4"
+        )}
+      >
         {/*LEFT ARROW*/}
         <button
           onClick={() => handleScroll("left")}
           disabled={!canScrollLeft}
           className="cursor-pointer disabled:opacity-25 disabled:cursor-not-allowed"
         >
-          <IconTemplate
-            svg={arrow_back_IOS_r_400()}
-            width="24px"
-            height="24px"
-          />
+          <div className="hidden sm:block">
+            <IconTemplate
+              svg={arrow_back_IOS_r_400()}
+              width="24px"
+              height="24px"
+            />
+          </div>
+          <div className="sm:hidden">
+            <IconTemplate
+              svg={arrow_back_IOS_r_400()}
+              width="16px"
+              height="16px"
+            />
+          </div>
         </button>
 
         {/*LIST OF MONTHS*/}
@@ -163,7 +183,8 @@ export function BudgetMonthPicker({
                 key={month.value}
                 id={`month-${month.value}`}
                 className={cn(
-                  "px-6 py-1 bg-background rounded-max whitespace-nowrap border cursor-pointer transition-all hover:bg-accent hover:text-accent-foreground",
+                  "bg-background rounded-max whitespace-nowrap border cursor-pointer transition-all hover:bg-accent hover:text-accent-foreground",
+                  "px-3 py-1 sm:px-6 text-sm sm:text-normal",
                   {
                     "bg-secondary text-secondary-foreground border-border":
                       isSelected,
@@ -186,11 +207,20 @@ export function BudgetMonthPicker({
           disabled={!canScrollRight}
           className="disabled:opacity-25 cursor-pointer disabled:cursor-not-allowed"
         >
-          <IconTemplate
-            svg={arrow_forward_IOS_r_400()}
-            width="24px"
-            height="24px"
-          />
+          <div className="hidden sm:block">
+            <IconTemplate
+              svg={arrow_forward_IOS_r_400()}
+              width="24px"
+              height="24px"
+            />
+          </div>
+          <div className="sm:hidden">
+            <IconTemplate
+              svg={arrow_forward_IOS_r_400()}
+              width="16px"
+              height="16px"
+            />
+          </div>
         </button>
       </div>
     </div>

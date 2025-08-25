@@ -38,7 +38,13 @@ export default async function Page() {
   }
 
   return (
-    <div className="px-6 py-4 w-full min-w-0 flex flex-col gap-4 h-full">
+    <div
+      className={
+        "w-full min-w-0 flex flex-col gap-4 h-full" +
+        " " +
+        "px-3 sm:px-6 py-3 sm:py-4"
+      }
+    >
       <Suspense
         fallback={
           <div className="flex justify-center items-center w-full h-full ">

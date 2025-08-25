@@ -77,8 +77,8 @@ export function BudgetClientView({ initialBudgets }: BudgetClientViewProps) {
   }
 
   return (
-    <div className="flex flex-col gap-4 flex-1 min-h-0">
-      <p className={"text-h6 font-bold"}>
+    <div className={"flex flex-col flex-1 min-h-0" + " " + "gap-4 sm:gap-4"}>
+      <p className={"text-h6 font-bold hidden sm:block"}>
         {capitalizeFirstLetter(selectedBudget.name)}
       </p>
 
