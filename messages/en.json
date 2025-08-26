@@ -143,5 +143,51 @@
     "type_savings": "Savings",
     "validation_error": "Please fill in all fields correctly.",
     "success_toast": "Budget created successfully!"
+  },
+  "side_navigation": {
+    "budget": "Budget",
+    "dashboard": "Dashboard",
+    "transactions": "Transactions",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+  "transactions_page": {
+    "title": "Transactions",
+    "search_placeholder": "Search by description",
+    "type_btn_placeholder": "Type",
+    "Category_btn_placeholder": "Category",
+    "add_btn_text": "Add",
+    "table_header_category": "Category",
+    "table_header_amount": "Amount",
+    "table_header_date": "Date",
+    "table_header_type": "Type",
+    "table_footer_num_transactions": "Number of transactions"
+  },
+  "add_transaction_component": {
+    "title": "Add transactions",
+    "description_placeholder": "Where did you spent this money?",
+    "category_dropdown_placeholder": "Choose budget category",
+    "confirm_btn_text": "Confirm",
+    "cancle_btn_text": "Cancel",
+    "saving": "Saving...",
+    "toggle_btn_on": "Income",
+    "toggle_btn_off": "Expense"
+  },
+  "dashboard": {
+    "dashboard_goals_title": "Goals",
+    "dashboard_goals_btn_text": "Add",
+    "top_expenses_title": "Top Expenses",
+    "top_expenses_total": "Total",
+    "loading": "Loading..."
+  },
+  "budget_pages": {
+    "table_add_expense": "Add Expense",
+    "table_add_income": "Add Income",
+    "add_table_btn_text": "Add table",
+    "add_transaction_btn_text": "Add transaction",
+    "cancle_btn_text": "Cancel",
+    "confirm_btn_text": "Confirm",
+    "creating": "Creating...",
+    "input_placeholder": "Enter name..."
   }
 }

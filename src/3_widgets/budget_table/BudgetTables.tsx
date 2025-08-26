@@ -13,6 +13,7 @@ import { SomethingWentWrong } from "../../2_Pages/SomethingWentWrong";
 import { BudgetCategoryTable } from "@/3_widgets/budget_table/BudgetTable";
 import { useAppContext } from "@/1_app";
 import { useRouter } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 
 interface BudgetTablesProps {
   selectedBudget: BudgetInterface;
@@ -28,6 +29,8 @@ export function BudgetTables({
   displayingTransactions,
   onAddTransactionClick,
 }: BudgetTablesProps) {
+  const t = useTranslations("budget_pages");
+
   const router = useRouter();
   const { addToast } = useToast();
   const { appState } = useAppContext();
@@ -188,10 +191,14 @@ export function BudgetTables({
         />
         <div className={displayingTransactions ? "hidden" : "block"}>
           <div className="hidden sm:block">
-            <Button onClick={onAddTransactionClick}>Add transaction</Button>
+            <Button onClick={onAddTransactionClick}>
+              {t("add_transaction_btn_text")}
+            </Button>
           </div>
           <div className="sm:hidden">
-            <Button onClick={() => router.push("/transactions")}>Add</Button>
+            <Button onClick={() => router.push("/transactions")}>
+              {t("add_table_btn_text")}
+            </Button>
           </div>
         </div>
       </div>

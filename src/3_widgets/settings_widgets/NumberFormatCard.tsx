@@ -16,7 +16,7 @@ import { useTranslations } from "next-intl";
 
 export default function NumberFormatCard() {
   const t = useTranslations("settings_application_page");
-  const { settings, updateUser, isSyncing } = useSettings();
+  const { settings, updateUser, isSyncing, getActiveCurrency } = useSettings();
   const { addToast } = useToast();
 
   const handleFormatChange = async (
@@ -50,10 +50,10 @@ export default function NumberFormatCard() {
         </SelectTrigger>
         <SelectContent className="bg-popover p-[2px]">
           <SelectItem value="EU" className="">
-            $1.234,56
+            {getActiveCurrency()}1.234,56
           </SelectItem>
           <SelectItem value="US" className="">
-            $1,234.56
+            {getActiveCurrency()}$1,234.56
           </SelectItem>
         </SelectContent>
       </Select>

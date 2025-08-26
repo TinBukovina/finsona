@@ -13,9 +13,12 @@ import {
 } from "@/5_entities";
 import { Button, DivLoader } from "@/6_shared";
 import { format } from "date-fns";
+import { useTranslations } from "next-intl";
 import React, { useEffect, useMemo, useState } from "react";
 
 export function TransactionPageClientView() {
+  const t = useTranslations("transactions_page");
+
   const [searchParam, setSearchParam] = useState<string>("");
   const [type, setType] = useState<string | undefined>(undefined);
   const [category, setCategory] = useState<string | undefined>(undefined);
@@ -24,7 +27,8 @@ export function TransactionPageClientView() {
 
   const { appState, setSelectedBudget } = useAppContext();
   const { selectedBudgetId, activeWalletId } = appState;
-  const { getDecimalSeparator, getValueSeparator } = useSettings();
+  const { getDecimalSeparator, getValueSeparator, getActiveCurrency } =
+    useSettings();
 
   const { data: budgetData } = useBudgets(activeWalletId);
   const budgets = budgetData?.budgets;
@@ -105,7 +109,7 @@ export function TransactionPageClientView() {
                   setIsAddingTransactions(true);
                 }}
               >
-                Add
+                {t("add_btn_text")}
               </Button>
             </div>
           </div>
@@ -113,13 +117,13 @@ export function TransactionPageClientView() {
           {/*FILTER SECTION*/}
           <div className="flex items-center gap-3">
             <TransactionsFilter
-              text="Type"
+              text={t("type_btn_placeholder")}
               values={["all", "expense", "income"]}
               value={type}
               onChange={(newType: string | undefined) => setType(newType)}
             />
             <TransactionsFilter
-              text="Category"
+              text={t("category_btn_placeholder")}
               values={["all", ...availableCategories]}
               value={category}
               onChange={(newCategory: string | undefined) =>
@@ -133,10 +137,18 @@ export function TransactionPageClientView() {
         <div className="flex-1 flex flex-col gap-0 rounded-card">
           {/*TABLE HEADER*/}
           <div className="grid grid-cols-4 gap-4 pr-7 px-6 py-4 bg-card rounded-t-card border border-border border-b-0">
-            <div className="text-card-foreground font-semibold">Category</div>
-            <div className="text-card-foreground font-semibold">Amount</div>
-            <div className="text-card-foreground font-semibold">Date</div>
-            <div className="text-card-foreground font-semibold">Type</div>
+            <div className="text-card-foreground font-semibold">
+              {t("table_header_category")}
+            </div>
+            <div className="text-card-foreground font-semibold">
+              {t("table_header_amount")}
+            </div>
+            <div className="text-card-foreground font-semibold">
+              {t("table_header_date")}
+            </div>
+            <div className="text-card-foreground font-semibold">
+              {t("table_header_type")}
+            </div>
           </div>
 
           {/*TABLE BODY*/}
@@ -182,7 +194,7 @@ export function TransactionPageClientView() {
                             : "Uncategorized"}
                         </span>
                         <span>
-                          $
+                          {getActiveCurrency()}
                           {getRightFormatedNumber(
                             String(tr.amount),
                             getDecimalSeparator(),
@@ -229,7 +241,9 @@ export function TransactionPageClientView() {
                             "font-semibold"
                           }
                         >
-                          {tr.type === "expense" ? "-" : "+"} ${tr.amount}
+                          {tr.type === "expense" ? "-" : "+"}{" "}
+                          {getActiveCurrency()}
+                          {tr.amount}
                         </p>
                       </div>
                     </div>
@@ -251,7 +265,9 @@ export function TransactionPageClientView() {
             </div>
 
             {/*DESCRIPTION OF A BTN*/}
-            <p className="text-muted-foreground">Number of transactions</p>
+            <p className="text-muted-foreground">
+              {t("table_footer_num_transactions")}
+            </p>
           </div>
           <div className={"h-[74px] bg-transaprent sm:hidden"}></div>
         </div>

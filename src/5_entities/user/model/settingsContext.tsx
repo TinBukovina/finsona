@@ -17,7 +17,7 @@ export interface UserDataInterface extends UserSettings, UserPersonalInfo {}
 
 export interface UserSettings {
   theme: "light" | "dark" | "system";
-  default_currency: "EUR" | "USD";
+  default_currency: "EUR" | "USD" | "GBP";
   number_format: "EU" | "US";
   language: "en" | "hr";
   month_start_day: number;
@@ -53,6 +53,7 @@ interface UserSettingsContextType {
   ) => Promise<ResponseInterface>;
   getValueSeparator: () => "," | ".";
   getDecimalSeparator: () => "," | ".";
+  getActiveCurrency: () => "$" | "£" | "€";
 }
 
 const UserSettingsContext = React.createContext<UserSettingsContextType | null>(
@@ -194,6 +195,16 @@ export function UserSettingsProvider({ children }: PropsWithChildren) {
     [settings]
   );
 
+  const getActiveCurrency = () => {
+    if (settings.default_currency === "USD") {
+      return "$";
+    } else if (settings.default_currency === "GBP") {
+      return "£";
+    } else {
+      return "€";
+    }
+  };
+
   const getDecimalSeparator = () => {
     if (settings.number_format === "EU") {
       return ",";
@@ -216,6 +227,7 @@ export function UserSettingsProvider({ children }: PropsWithChildren) {
     updateUser,
     getDecimalSeparator,
     getValueSeparator,
+    getActiveCurrency,
   };
 
   return (

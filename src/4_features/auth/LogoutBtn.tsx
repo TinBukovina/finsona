@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 
 import { logout_r_400, SidebarLink, useToast } from "@/6_shared";
+import { useTranslations } from "next-intl";
 
 interface LogoutBtnProps {
   hideText?: boolean;
@@ -11,6 +12,8 @@ interface LogoutBtnProps {
 
 export function LogoutBtn({ hideText = false }: LogoutBtnProps) {
   const router = useRouter();
+  const t = useTranslations("side_navigation");
+
   const { addToast } = useToast();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -43,7 +46,7 @@ export function LogoutBtn({ hideText = false }: LogoutBtnProps) {
       isDisabled={isLoading}
       hideText={hideText}
     >
-      Logout
+      {t("logout")}
     </SidebarLink>
   );
 }

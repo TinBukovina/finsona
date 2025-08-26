@@ -8,9 +8,9 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: Request) {
   try {
-    const { email, password } = await request.json();
+    const { email, password, fullName } = await request.json();
 
-    if (!email || !password) {
+    if (!email || !password || !fullName) {
       return new NextResponse("Email and password are required", {
         status: 400,
       });
@@ -35,7 +35,7 @@ export async function POST(request: Request) {
     // Creating and fetching user
     const { data: newUser, error: insertError } = await supabaseAdmin
       .from("users")
-      .insert({ email, password_hash, is_verified: false })
+      .insert({ email, password_hash, is_verified: false, full_name: fullName })
       .select()
       .single();
 

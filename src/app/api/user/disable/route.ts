@@ -1,5 +1,5 @@
-import { supabaseAdmin } from "@/6_shared/api";
 import { getSession } from "@/6_shared/auth";
+import { supabaseAdmin } from "@/6_shared/server";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 

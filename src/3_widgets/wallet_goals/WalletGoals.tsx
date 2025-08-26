@@ -8,10 +8,13 @@ import { Separator } from "./Separator";
 import { Goal } from "./Goal";
 import { CreateGoalForm } from "./CreateGoalForm";
 import { useCreateGoalForm } from "./useCreateGoalForm";
+import { useTranslations } from "next-intl";
 
 type ComponentStateType = "empty" | "create" | "view" | "loaindg";
 
 export function GoalsWidget() {
+  const t = useTranslations("dashboard");
+
   const { data: goalsData, isLoading, error } = useGoals();
   const goals = useMemo(() => goalsData || [], [goalsData]);
 
@@ -42,10 +45,12 @@ export function GoalsWidget() {
   return (
     <div className="flex flex-col gap-0 bg-card rounded-card border border-border p-4 h-full">
       <div className="flex justify-between items-center mb-4">
-        <h5 className="text-h5 font-semibold">Goals</h5>
+        <h5 className="text-h5 font-semibold">{t("dashboard_goals_title")}</h5>
 
         {viewState === "view" && (
-          <Button onClick={() => setViewState("create")}>Add</Button>
+          <Button onClick={() => setViewState("create")}>
+            {t("dashboard_goals_btn_text")}
+          </Button>
         )}
       </div>
 

@@ -19,7 +19,8 @@ export function RowValue({
   onClick,
   onUpdate,
 }: RowValueProps) {
-  const { getDecimalSeparator, getValueSeparator } = useSettings();
+  const { getDecimalSeparator, getValueSeparator, getActiveCurrency } =
+    useSettings();
   const [inputWidth, setInputWidth] = useState(0);
   const spanRef = useRef<HTMLSpanElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -33,6 +34,7 @@ export function RowValue({
   if (!isEditing) {
     return (
       <p className="w-full text-right cursor-pointer" onClick={onClick}>
+        {getActiveCurrency()}
         {getRightFormatedNumber(
           String(value),
           getDecimalSeparator(),

@@ -100,5 +100,55 @@
     "light_option": "Svijetla",
     "dark_option": "Tamna",
     "system_option": "Sistemska"
+  },
+  "side_navigation": {
+    "budget": "Proračun",
+    "dashboard": "Nadzorna ploča",
+    "transactions": "Transakcije",
+    "settings": "Postavke",
+    "logout": "Odjava"
+  },
+  "transactions_page": {
+    "title": "Transakcije",
+    "search_placeholder": "Pretraži po opisu",
+    "type_btn_placeholder": "Tip",
+    "category_btn_placeholder": "Kategorija",
+    "add_btn_text": "Dodaj",
+    "table_header_category": "Kategorija",
+    "table_header_amount": "Iznos",
+    "table_header_date": "Datum",
+    "table_header_type": "Tip",
+    "table_footer_num_transactions": "Broj transakcija"
+  },
+  "add_transaction_component": {
+    "title": "Dodaj Transakciju",
+    "description_placeholder": "Gdje ste potrošili ovaj novac?",
+    "category_dropdown_placeholder": "Odaberite kategoriju proračuna",
+    "confirm_btn_text": "Potvrdi",
+    "cancle_btn_text": "Odustani",
+    "saving": "Spremanje...",
+    "toggle_btn_on": "Prihod",
+    "toggle_btn_off": "Trošak"
+  },
+  "dashboard": {
+    "dashboard_goals_title": "Ciljevi",
+    "dashboard_goals_btn_text": "Dodaj",
+    "top_expenses_title": "Najveći troškovi",
+    "top_expenses_total": "Ukupno",
+    "loading": "Učitavanje..."
+  },
+  "budget_pages": {
+    "table_add_expense": "Dodaj trošak",
+    "table_add_income": "Dodaj prihod",
+    "add_table_btn_text": "Dodaj tablicu",
+    "add_transaction_btn_text": "Dodaj transakciju",
+    "cancle_btn_text": "Odusatni",
+    "confirm_btn_text": "Spremi",
+    "creating": "Kreiranje...",
+    "input_placeholder": "Unesi ime..."
+  },
+  "no_wallet_page": {
+    "text": "Nema novčanik?",
+    "button": "Kreirajte ga"
   }
 }

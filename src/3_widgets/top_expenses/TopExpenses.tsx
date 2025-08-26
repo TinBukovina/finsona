@@ -10,6 +10,7 @@ import {
 } from "@/5_entities";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import { getRightFormatedNumber } from "../budget_table/utils";
+import { useTranslations } from "next-intl";
 
 // Definicija tipa za obrađene podatke radi čistoće koda
 interface ProcessedExpenseData {
@@ -21,9 +22,11 @@ interface ProcessedExpenseData {
 }
 
 export function TopExpenses() {
+  const t = useTranslations("dashboard");
   const { appState, setSelectedBudget } = useAppContext();
   const { selectedBudgetId, activeWalletId } = appState;
-  const { getDecimalSeparator, getValueSeparator } = useSettings();
+  const { getDecimalSeparator, getValueSeparator, getActiveCurrency } =
+    useSettings();
 
   const { data: transactions, isLoading: isTransactionsLoading } =
     useTransactions(selectedBudgetId);
@@ -90,7 +93,7 @@ export function TopExpenses() {
   if (isLoading) {
     return (
       <div className="bg-card rounded-lg border border-border p-6 shadow-sm min-h-[250px] flex justify-center items-center">
-        Učitavanje troškova...
+        {t("loading")}
       </div>
     );
   }
@@ -115,7 +118,7 @@ export function TopExpenses() {
       {/*TITLE*/}
       <div className="flex justify-between items-center">
         <h3 className="font-semibold text-h5 text-card-foreground">
-          Top Expenses
+          {t("top_expenses_title")}
         </h3>
       </div>
 
@@ -132,7 +135,7 @@ export function TopExpenses() {
                     {expense.category}
                   </span>
                   <span className="font-medium text-primary text-normal">
-                    $
+                    {getActiveCurrency()}
                     {getRightFormatedNumber(
                       String(expense.amount),
                       getDecimalSeparator(),
@@ -185,14 +188,16 @@ export function TopExpenses() {
           </ResponsiveContainer>
           <div className="absolute inset-0 flex items-center justify-center flex-col pointer-events-none">
             <span className="text-2xl font-bold text-card-foreground">
-              $
+              {getActiveCurrency()}
               {getRightFormatedNumber(
                 String(processedData.totalExpenses),
                 getDecimalSeparator(),
                 getValueSeparator()
               )}
             </span>
-            <span className="text-xs text-muted-foreground">Total</span>
+            <span className="text-xs text-muted-foreground">
+              {t("top_expenses_total")}
+            </span>
           </div>
         </div>
       </div>

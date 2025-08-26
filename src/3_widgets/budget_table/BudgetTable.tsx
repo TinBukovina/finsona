@@ -25,6 +25,7 @@ import { BudgetTableRow } from "./BudgetTableRow";
 import { useOnClickOutside } from "@/6_shared/lib/hooks/useOnClickOutside";
 import { RemoveTableBtn } from "./RemoveTableBtn";
 import { EditTableBtn } from "./EditTableBtn";
+import { useTranslations } from "next-intl";
 
 export interface BudgetCategoryTableProps {
   category: string;
@@ -47,6 +48,8 @@ export function BudgetCategoryTable({
   swapActionsBtns = false,
   lastRowData: lastRow = "spent",
 }: BudgetCategoryTableProps) {
+  const t = useTranslations("budget_pages");
+
   const [isOpen, setIsOpen] = useState<boolean>(true);
   const [isInEditingMode, setIsInEditingMode] = useState<boolean>(false);
   const [tableName, setTableName] = useState<string>(category);
@@ -262,7 +265,9 @@ export function BudgetCategoryTable({
                 setIsOpen(true);
               }}
             >
-              {addButtonText}
+              {type === "income"
+                ? t("table_add_income")
+                : t("table_add_expense")}
             </Button>
           ) : (
             <>
@@ -271,19 +276,19 @@ export function BudgetCategoryTable({
                 onClick={() => setIsEnteringNewRow(false)}
                 disabled={isCreating}
               >
-                Cancel
+                {t("cancle_btn_text")}
               </Button>
               <Button
                 variant="default"
                 onClick={handleCreateItem}
                 disabled={isCreating}
               >
-                {isCreating ? "Creating..." : "Confirm"}
+                {isCreating ? t("creating") : t("confirm_btn_text")}
               </Button>
               <Iinput
                 value={newRowName}
                 setValue={setNewRowName}
-                placeholder="Enter name..."
+                placeholder={t("input_placeholder")}
                 initialInputWidth={150}
                 disableAutoWidth={true}
               />

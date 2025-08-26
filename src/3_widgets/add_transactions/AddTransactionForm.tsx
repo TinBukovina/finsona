@@ -15,6 +15,7 @@ import {
 } from "@/6_shared";
 import { BudgetItemInterface, useSettings } from "@/5_entities";
 import { useAddTransactionForm } from "./useAddTransactionForm";
+import { useTranslations } from "next-intl";
 
 type AddTransactionsFormProps = ReturnType<typeof useAddTransactionForm> & {
   onClose?: () => void;
@@ -36,13 +37,15 @@ export function AddTransactionsForm({
   handleSubmit,
   onClose,
 }: AddTransactionsFormProps) {
+  const t = useTranslations("add_transaction_component");
+
   const { getDecimalSeparator } = useSettings();
 
   return (
     <div className="flex flex-col h-full bg-card border border-border rounded-card px-4 py-3">
       {/* HEADER */}
       <div className="flex flex-none justify-between items-center">
-        <h6 className="text-h6 font-bold">Add Transaction</h6>
+        <h6 className="text-h6 font-bold">{t("title")}</h6>
 
         {/* TOGGLE ELEMENT */}
         <div
@@ -54,7 +57,9 @@ export function AddTransactionsForm({
           }
         >
           <p className="text-primary-foreground font-semibold">
-            {capitalizeFirstLetter(transactionType)}
+            {transactionType === "expense"
+              ? t("toggle_btn_off")
+              : t("toggle_btn_on")}
           </p>
           <div
             className={`flex ${
@@ -85,7 +90,7 @@ export function AddTransactionsForm({
           <Iinput
             value={description}
             setValue={setDescription}
-            placeholder="Description (e.g., Groceries)"
+            placeholder={t("description_placeholder")}
             disableAutoWidth={true}
             className="bg-input/30"
             disabled={isLoading}
@@ -96,7 +101,7 @@ export function AddTransactionsForm({
             disabled={isLoading}
           >
             <SelectTrigger className="w-full text-normal justify-between">
-              <SelectValue placeholder="Choose Budget Category" />
+              <SelectValue placeholder={t("category_dropdown_placeholder")} />
             </SelectTrigger>
             <SelectContent>
               {availableBudgetItems.map((item: BudgetItemInterface) => (
@@ -117,10 +122,10 @@ export function AddTransactionsForm({
             className="flex-1"
             disabled={isLoading}
           >
-            Cancel
+            {t("cancle_btn_text")}
           </Button>
           <Button type="submit" className="flex-1" disabled={isLoading}>
-            {isLoading ? "Saving..." : "Confirm"}
+            {isLoading ? t("saving") : t("confirm_btn_text")}
           </Button>
         </div>
       </form>

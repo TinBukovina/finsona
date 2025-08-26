@@ -10,6 +10,7 @@ import {
 } from "@/6_shared";
 import { format } from "date-fns";
 import { GoalInterface, useUpdateGoal, useGoals } from "@/5_entities/goal";
+import { useSettings } from "@/5_entities";
 interface GoalProps {
   goalData: GoalInterface;
 }
@@ -19,6 +20,7 @@ export function Goal({ goalData }: GoalProps) {
   const [amount, setAmount] = useState<string>("");
 
   const { addToast } = useToast();
+  const { getActiveCurrency } = useSettings();
   const { updateGoal, isUpdating } = useUpdateGoal(goalData.id);
 
   const { mutate: mutateGoals } = useGoals();
@@ -87,7 +89,8 @@ export function Goal({ goalData }: GoalProps) {
           {/*PROGRESS BAR*/}
           <div className="flex flex-col gap-2">
             <p className="text-center text-card-foreground">
-              ${goalData.current_amount.toFixed(2)} / $
+              {getActiveCurrency()}
+              {goalData.current_amount.toFixed(2)} / {getActiveCurrency()}
               {goalData.target_amount.toFixed(2)}
             </p>
             <div className="bg-card w-full h-4 border border-border rounded-max overflow-hidden">

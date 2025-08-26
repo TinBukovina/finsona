@@ -26,7 +26,9 @@ export default function DisableAccountCard() {
         throw new Error("Failed to disable account.");
       }
 
-      addToast("Account disabled successfully.", "info");
+      setTimeout(() => {
+        addToast("Account disabled successfully.", "info");
+      }, 500);
       router.push("/auth/login");
       router.refresh();
     } catch (error) {

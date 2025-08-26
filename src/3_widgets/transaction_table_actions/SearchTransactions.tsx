@@ -3,12 +3,15 @@
 import React, { useState } from "react";
 
 import { cn, IconTemplate, search_r_400 } from "@/6_shared";
+import { useTranslations } from "next-intl";
 
 interface SearchTransactionsProps {
   onEnter: (value: string) => void;
 }
 
 export function SearchTransactions({ onEnter }: SearchTransactionsProps) {
+  const t = useTranslations("transactions_page");
+
   const [value, setValue] = useState<string | undefined>(undefined);
 
   const handleBlur = () => {
@@ -38,7 +41,7 @@ export function SearchTransactions({ onEnter }: SearchTransactionsProps) {
         value={value}
         onChange={(e) => setValue(e.target.value)}
         className="w-full bg-transparent outline-none placeholder:text-muted-foreground"
-        placeholder="Search by description"
+        placeholder={t("search_placeholder")}
         onKeyDown={handleOnKeyDown}
         onBlur={handleBlur}
       />

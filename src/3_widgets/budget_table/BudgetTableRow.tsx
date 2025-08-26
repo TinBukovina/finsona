@@ -37,7 +37,8 @@ export function BudgetTableRow({
 }: BudgetTableRowProps) {
   const [mode, setMode] = useState<RowMode>("view");
   const [editingValue, setEditingValue] = useState<string>("");
-  const { getValueSeparator, getDecimalSeparator } = useSettings();
+  const { getValueSeparator, getDecimalSeparator, getActiveCurrency } =
+    useSettings();
 
   useEffect(() => {
     if (!isSelected) {
@@ -171,6 +172,7 @@ export function BudgetTableRow({
       {/*DISPLAY VALUES*/}
       {/*-DESKTOP*/}
       <p className="hidden sm:block w-full text-right">
+        {getActiveCurrency()}
         {getRightFormatedNumber(
           String(thirdColumnValue),
           getDecimalSeparator(),
@@ -180,6 +182,7 @@ export function BudgetTableRow({
       {/*-MOBILE*/}
       {displayMode !== "planned" && displayMode !== "income" && (
         <p className="sm:hidden w-full text-right">
+          {getActiveCurrency()}
           {getRightFormatedNumber(
             String(thirdColumnValue),
             getDecimalSeparator(),
